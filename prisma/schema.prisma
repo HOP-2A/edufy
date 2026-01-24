@@ -22,8 +22,7 @@ model Roadmap {
   description String           @default("")
   levelFrom   String           
   levelTo     String           
-  duration    Int?             
-  purpose     String?          
+  purpose     String          
   projectQuestions ProjectQuestion[] 
   learningSections LearningSection[]
   createdAt   DateTime         @default(now())
@@ -35,6 +34,7 @@ model ProjectQuestion {
   roadmap   Roadmap  @relation(fields: [roadmapId], references: [id])
   text      String   
   answer    String? 
+  asked  Boolean   @default(false)
 }
 
 model LearningSection {
