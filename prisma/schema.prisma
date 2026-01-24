@@ -1,0 +1,110 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        String    @id @default(nanoid())
+  username  String    @unique
+  email     String    @unique
+  clerkId   String    @unique
+  createdAt DateTime  @default(now())
+  projects  Project[]
+}
+
+model Project {
+  id          String     @id @default(nanoid())
+  userId      String
+  user        User       @relation(fields: [userId], references: [id])
+  title       String
+  description String     @default("")
+  levelFrom   String    
+  levelTo     String     
+  purpose     String?    
+  questions   Question[]
+  roadmap     Roadmap[]  
+  createdAt   DateTime   @default(now())
+}
+
+model Question {
+  id        String   @id @default(nanoid())
+  projectId String?
+  project   Project? @relation(fields: [projectId], references: [id])
+  taskId    String?
+  task      Task?    @relation(fields: [taskId], references: [id])
+  text      String   
+  answer    String?  
+  userAnswer String 
+  isCorrect Boolean? @default(false)
+}
+
+model Roadmap {
+  id        String       @id @default(nanoid())
+  projectId String
+  project   Project      @relation(fields: [projectId], references: [id])
+  parentId  String?      
+  parent    Roadmap?     @relation("RoadmapHierarchy", fields: [parentId], references: [id])
+  children  Roadmap[]    @relation("RoadmapHierarchy")
+
+  title     String       
+  type      RoadmapType  
+  startDate DateTime?
+  endDate   DateTime?
+
+  learningSections LearningSection[]
+  tasks           Task[]
+}
+
+model LearningSection {
+  id          String      @id @default(nanoid())
+  roadmapId   String
+  roadmap     Roadmap     @relation(fields: [roadmapId], references: [id])
+  title       String      
+  description String      
+  resources   Resource[]
+  tasks       Task[]      
+}
+
+model Task {
+  id          String      @id @default(nanoid())
+  roadmapId   String
+  roadmap     Roadmap     @relation(fields: [roadmapId], references: [id])
+  learningSectionId String?   
+  learningSection LearningSection? @relation(fields: [learningSectionId], references: [id])
+
+  title       String      
+  content     String      
+  completed   Boolean     @default(false)
+
+  resources   Resource[]
+  questions   Question[]  
+}
+
+model Resource {
+  id         String      @id @default(nanoid())
+  taskId     String?     
+  learningSectionId String? 
+  task       Task?       @relation(fields: [taskId], references: [id])
+  learningSection LearningSection? @relation(fields: [learningSectionId], references: [id])
+  type       ResourceType
+  title      String
+  url        String?     
+}
+
+enum RoadmapType {
+  YEAR
+  MONTH
+  WEEK
+  DAY
+}
+
+enum ResourceType {
+  VIDEO
+  ARTICLE
+  BOOK
+  EXERCISE
+  OTHER
+}
