@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import prisma from "@/lib/prisma";
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_KEY || "");
 const model = genAI.getGenerativeModel({
   model: "gemini-2.5-flash",
@@ -64,5 +65,22 @@ FINAL CHECK:
 - No text outside JSON
 `;
   const result = await model.generateContent(prompt);
-  return NextResponse.json(JSON.parse(result.response.text()));
+  const ress = result.response.text();
+  const jsonMatch = ress.match(/\{[\s\S]*\}/);
+  if (!jsonMatch) {
+    throw new Error("No JSON found in AI response");
+  }
+
+  const aiQs = JSON.parse(jsonMatch[0]);
+  await Promise.all(
+    aiQs.questions.map((qt: { id: string; question: string }) =>
+      prisma.projectQuestion.create({
+        data: {
+          roadmapId: body.roadmapId,
+          text: qt.question,
+        },
+      }),
+    ),
+  );
+  return NextResponse.json({ message: "Successful" });
 };
