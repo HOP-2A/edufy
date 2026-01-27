@@ -11,7 +11,11 @@ export default function Library() {
       <div className="flex flex-1">
         <Sidebar />
 
-        <UserTests />
+        <div className="flex flex-1 justify-center">
+          <div className="w-full max-w-6xl">
+            <UserTests />
+          </div>
+        </div>
       </div>
 
       <Footer />

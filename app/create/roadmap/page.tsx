@@ -11,7 +11,9 @@ export default function Home() {
       <Sidebar />
 
       <main className="flex-1 flex flex-col">
-        <CreateRoadmap />
+        <div className="mt-40">
+          <CreateRoadmap />
+        </div>
 
         <Footer />
       </main>

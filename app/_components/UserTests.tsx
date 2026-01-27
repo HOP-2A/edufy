@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-import { Plus, Search } from "lucide-react";
+import { Plus, Search, Sparkles } from "lucide-react";
 
 export default function UserTests() {
   const router = useRouter();
@@ -40,29 +40,29 @@ export default function UserTests() {
           </div>
         </div>
       </div>
-      {/* <div className="flex flex-1 flex-col px-6 pb-12">
-            <div className="mx-auto w-full max-w-6xl flex-1">
-              <div className="flex min-h-[70vh] w-full flex-col items-center justify-center rounded-[3rem] border-2 border-dashed border-slate-200 bg-white/60 p-20 text-center backdrop-blur-sm">
-                <div className="relative mb-10">
-                  <div className="absolute inset-0 bg-blue-400 opacity-20 blur-3xl" />
-                  <div className="relative flex h-32 w-32 rotate-3 items-center justify-center rounded-[2.5rem] border border-blue-100 bg-blue-50 text-blue-500">
-                    <Sparkles className="h-14 w-14" />
-                  </div>
-                </div>
-
-                <h2 className="mb-6 text-4xl font-extrabold text-slate-900">
-                  No roadmaps found
-                </h2>
-
-                <Button
-                  className="h-18 rounded-2xl bg-slate-900 px-14 text-xl font-bold text-white shadow-xl transition-all hover:bg-blue-600 active:scale-95"
-                  onClick={() => router.push("create/test")}
-                >
-                  Create your first test
-                </Button>
+      <div className="flex flex-1 flex-col px-6 pb-12">
+        <div className="mx-auto w-full max-w-6xl flex-1">
+          <div className="flex min-h-[70vh] w-full flex-col items-center justify-center rounded-[3rem] border-2 border-dashed border-slate-200 bg-white/60 p-20 text-center backdrop-blur-sm">
+            <div className="relative mb-10">
+              <div className="absolute inset-0 bg-blue-400 opacity-20 blur-3xl" />
+              <div className="relative flex h-32 w-32 rotate-3 items-center justify-center rounded-[2.5rem] border border-blue-100 bg-blue-50 text-blue-500">
+                <Sparkles className="h-14 w-14" />
               </div>
             </div>
-          </div> */}
+
+            <h2 className="mb-6 text-4xl font-extrabold text-slate-900">
+              No roadmaps found
+            </h2>
+
+            <Button
+              className="h-18 rounded-2xl bg-slate-900 px-14 text-xl font-bold text-white shadow-xl transition-all hover:bg-blue-600 active:scale-95"
+              onClick={() => router.push("create/test")}
+            >
+              Create your first test
+            </Button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
