@@ -21,7 +21,7 @@ model Roadmap {
   title       String
   description String           @default("")
   levelFrom   String           
-  levelTo     String           
+  levelTo     String          
   purpose     String          
   projectQuestions ProjectQuestion[] 
   learningSections LearningSection[]
