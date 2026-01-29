@@ -60,9 +60,11 @@ export default function Home() {
                 Community
               </div>
             </Link>
-            <button className="px-6 py-2.5 bg-[#87C4FF] rounded-full text-white font-bold shadow-md hover:shadow-[#87C4FF]/40 hover:-translate-y-1 transition-all duration-300 pointer-events-auto">
-              Get Started
-            </button>
+            <Link href="/signIn">
+              <button className="px-6 py-2.5 bg-[#87C4FF] rounded-full text-white font-bold shadow-md hover:shadow-[#87C4FF]/40 hover:-translate-y-1 transition-all duration-300 pointer-events-auto">
+                Get Started
+              </button>
+            </Link>
           </nav>
         </div>
       </header>
@@ -94,9 +96,12 @@ export default function Home() {
 
                 <button className="px-14 py-5 bg-[#87C4FF] rounded-full text-white font-bold text-xl shadow-[0_10px_25px_rgba(135,196,255,0.5)] hover:shadow-[0_20px_50px_rgba(135,196,255,0.8)] hover:-translate-y-2 hover:scale-[1.05] transition-all duration-500 relative overflow-hidden group/btn flex items-center justify-center gap-3 mx-auto mt-6">
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover/btn:translate-x-full transition-transform duration-1000 ease-in-out"></div>
-
-                  <span className="relative z-10 tracking-tight">
-                    Start Learning Today
+                  <span>
+                    <Link href="/signIn">
+                      <span className="relative z-10 tracking-tight">
+                        Start Learning Today
+                      </span>
+                    </Link>
                   </span>
 
                   <div className="relative z-10 group-hover/btn:translate-x-2 transition-transform duration-300">
