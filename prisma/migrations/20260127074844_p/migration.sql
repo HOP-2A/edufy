@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Roadmap" ALTER COLUMN "levelFrom" DROP NOT NULL,
+ALTER COLUMN "levelTo" DROP NOT NULL;

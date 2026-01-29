@@ -20,8 +20,8 @@ model Roadmap {
   user        User             @relation(fields: [userId], references: [id])
   title       String
   description String           @default("")
-  levelFrom   String           
-  levelTo     String           
+  levelFrom   String?           
+  levelTo     String?          
   purpose     String          
   projectQuestions ProjectQuestion[] 
   learningSections LearningSection[]
