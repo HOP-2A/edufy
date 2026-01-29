@@ -76,15 +76,8 @@ model Resource {
   taskId             String?     
   learningSection    LearningSection? @relation(fields: [learningSectionId], references: [id])
   task               Task?       @relation(fields: [taskId], references: [id])
-  type               ResourceType
+  type               String
   title              String
   url                String?     
 }
 
-enum ResourceType {
-  VIDEO
-  ARTICLE
-  BOOK
-  EXERCISE
-  OTHER
-}

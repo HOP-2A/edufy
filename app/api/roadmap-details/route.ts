@@ -39,104 +39,79 @@ type RoadmapAIResponse = {
   learningSections: LearningSection[];
 };
 
-// API handler
 export const POST = async (req: NextRequest) => {
   const body = await req.json();
 
-  // Fetch user's questions
   const questions = await prisma.projectQuestion.findMany({
     where: { roadmapId: body.roadmapId },
   });
 
-  // Build AI prompt
-  const prompt = `You are an expert AI Roadmap Generator.
+  const prompt = `You are an expert AI Learning Section Creator.
 
-Generate a COMPLETE learning roadmap in STRICTLY VALID JSON.
+Your task is to generate **learning sections only** for a roadmap based on the following user questions and answers. Focus only on beginner-level topics ("Түвшин 1").
 
 INPUT DATA:
 ${JSON.stringify(
   {
     roadmapTitle: body.title,
     purpose: body.purpose,
-    questionsAndAnswers: questions.map(
-      (q: { text: string; answer: string | null }) => ({
-        question: q.text,
-        answer: q.answer,
-      }),
-    ),
+    questionsAndAnswers: questions.map((q) => ({
+      question: q.text,
+      answer: q.answer,
+    })),
   },
   null,
   2,
 )}
 
 RULES:
-- Output ONLY valid JSON
-- No markdown, no explanations, no extra text
-- No trailing commas
-- All content must be in Mongolian
-- Progress from beginner to advanced
-- Create 15–30+ sections if needed
-- Use levels: "Түвшин 1", "Түвшин 2", "Түвшин 3", "Түвшин 4", etc.
-
-STRUCTURE:
-- Each learning section must include:
-  - id (e.g. "section1")
-  - title
-  - level
-  - content (4–6 sentences)
-  - EXACTLY ONE task
-  - 2–4 section resources with real URLs
-
-- Each task must include:
-  - id (e.g. "task1")
-  - title
-  - content (6–10 sentences)
-  - order: 1
-  - 3–5 taskQuestions (text + detailed answer)
-  - 3–6 high-quality resources with REAL URLs
-
-RESOURCE TYPES:
-VIDEO | ARTICLE | BOOK | EXERCISE | OTHER
+- Output ONLY valid JSON. No markdown, no extra text.
+- Language: Mongolian.
+- Focus exclusively on **beginner-level learning sections (Түвшин 1)**.
+- Each section must include:
+  - id (e.g., "section1")
+  - title (specific beginner topic)
+  - level ("Түвшин 1")
+  - content (4–6 sentences explaining the concept, why it matters, and what the learner will achieve)
+  - resources (2–4 high-quality, actionable resources with real URLs)
+    - Resource types: VIDEO | ARTICLE | BOOK | EXERCISE | OTHER
+    - Each resource must include instructions on **how to use it**:
+      * Example: "Go to this page, scroll to chapter X, complete exercises 1–5"
+    - Include only free or widely accessible resources if possible.
+- Learning sections should **cover all beginner concepts needed to understand the topic** based on the user’s questions.
+- Create 5–10 sections.
+- Resources must directly match what the learning section teaches.
+- Do not create tasks or taskQuestions.
 
 OUTPUT FORMAT:
 {
-  "description": "...",
-  "levelFrom": "...",
-  "levelTo": "...",
   "learningSections": [
     {
       "id": "section1",
-      "title": "...",
+      "title": "Суурь ойлголт",
       "level": "Түвшин 1",
-      "content": "...",
-      "tasks": [
-        {
-          "id": "task1",
-          "title": "...",
-          "content": "...",
-          "order": 1,
-          "taskQuestions": [
-            { "text": "...", "answer": "..." }
-          ],
-          "resources": [
-            { "type": "VIDEO", "title": "...", "url": "https://..." }
-          ]
-        }
-      ],
+      "content": "Энэ хэсэгт сурагч нь суурь ойлголтуудыг сурна. ...",
       "resources": [
-        { "type": "ARTICLE", "title": "...", "url": "https://..." }
+        {
+          "type": "BOOK",
+          "title": "English Grammar in Use - Elementary",
+          "url": "https://www.cambridge.org/grammar",
+        },
+        {
+          "type": "EXERCISE",
+          "title": "Relative Clauses Exercises",
+          "url": "https://www.perfect-english-grammar.com/relative-clauses-exercise-1.html",
+        }
       ]
     }
   ]
 }
 
-Generate the roadmap now. Use small, concise data.`;
+Only output valid JSON. Do not include anything outside JSON.`;
 
-  // Generate content
   const response = await model.generateContent(prompt);
   const aiRes = response.response.text();
 
-  // Extract JSON safely
   const jsonMatch = aiRes.match(/\{[\s\S]*\}/);
   if (!jsonMatch) throw new Error("No JSON found in AI response");
 
@@ -145,7 +120,6 @@ Generate the roadmap now. Use small, concise data.`;
   if (!Array.isArray(aiQs.learningSections))
     throw new Error("Invalid AI response structure");
 
-  // Save to database
   for (const section of aiQs.learningSections) {
     const createdSection = await prisma.learningSection.create({
       data: {
@@ -156,30 +130,19 @@ Generate the roadmap now. Use small, concise data.`;
       },
     });
 
-    for (const task of section.tasks) {
-      const createdTask = await prisma.task.create({
-        data: {
-          learningSectionId: createdSection.id,
-          title: task.title,
-          order: task.order,
-          content: task.content,
-        },
-      });
-
-      await Promise.all(
-        task.taskQuestions.map((q) =>
-          prisma.taskQuestion.create({
-            data: {
-              taskId: createdTask.id,
-              text: q.text,
-              answer: q.answer,
-            },
-          }),
-        ),
-      );
+    if (section.resources && section.resources.length > 0) {
+      for (const res of section.resources) {
+        await prisma.resource.create({
+          data: {
+            learningSectionId: createdSection.id,
+            type: res.type,
+            title: res.title,
+            url: res.url,
+          },
+        });
+      }
     }
   }
 
-  // Return structured roadmap
   return NextResponse.json(aiQs);
 };
