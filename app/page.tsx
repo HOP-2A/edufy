@@ -6,16 +6,16 @@ export default function Home() {
     <div className="min-h-screen bg-white relative overflow-hidden text-[#213448]">
       <div className="fixed inset-0 z-0 pointer-events-none">
         <div className="fixed inset-0 z-0 pointer-events-none">
-          <div className="absolute w-[700px] h-[700px] bg-[#87C4FF] rounded-full blur-[150px] opacity-30 -top-40 -left-20 animate-pulse"></div>
+          <div className="absolute w-175 h-175 bg-[#87C4FF] rounded-full blur-[150px] opacity-30 -top-40 -left-20 animate-pulse"></div>
           <div
-            className="absolute w-[600px] h-[600px] bg-[#547792] rounded-full blur-[130px] opacity-20 -bottom-20 -right-20 animate-pulse"
+            className="absolute w-150 h-150 bg-[#547792] rounded-full blur-[130px] opacity-20 -bottom-20 -right-20 animate-pulse"
             style={{ animationDelay: "4s" }}
           ></div>
 
           <div className="absolute top-[10%] left-[5%] w-20 h-20 border-4 border-[#87C4FF]/30 rounded-2xl rotate-45 animate-[spin_10s_linear_infinite] blur-[1px]"></div>
 
           <div
-            className="absolute top-[15%] right-[10%] w-32 h-32 bg-gradient-to-br from-[#87C4FF]/20 to-transparent rounded-full animate-bounce blur-sm"
+            className="absolute top-[15%] right-[10%] w-32 h-32 bg-linear-to-br from-[#87C4FF]/20 to-transparent rounded-full animate-bounce blur-sm"
             style={{ animationDuration: "7s" }}
           ></div>
 
@@ -23,7 +23,7 @@ export default function Home() {
 
           <div className="absolute top-[40%] left-[45%] w-64 h-64 bg-[#87C4FF]/10 rounded-full blur-3xl animate-pulse"></div>
 
-          <div className="absolute top-[50%] right-[12%] w-40 h-[2px] bg-gradient-to-r from-transparent via-[#87C4FF]/40 to-transparent rotate-[30deg]"></div>
+          <div className="absolute top-[50%] right-[12%] w-40 h-0.5 bg-linear-to-r from-transparent via-[#87C4FF]/40 to-transparent rotate-30"></div>
 
           <div
             className="absolute bottom-[15%] left-[12%] w-24 h-24 border border-[#87C4FF]/40 rounded-full flex items-center justify-center animate-bounce"
@@ -41,7 +41,7 @@ export default function Home() {
 
       <header className="sticky top-0 z-50 backdrop-blur-xl bg-white/90 border-b border-[#87C4FF]/30 shadow-sm">
         <div className="max-w-7xl mx-auto px-6 py-4 h-24 flex justify-between items-center">
-          <div className="text-5xl font-black bg-gradient-to-r from-[#213448] to-[#87C4FF] bg-clip-text text-transparent">
+          <div className="text-5xl font-black bg-linear-to-r from-[#213448] to-[#87C4FF] bg-clip-text text-transparent">
             Edufy
           </div>
           <nav className="hidden md:flex gap-8 items-center">
@@ -71,7 +71,7 @@ export default function Home() {
 
       <main className="relative z-10">
         <section className="px-6 py-20 md:py-32 text-center">
-          <h1 className="text-6xl md:text-8xl font-black mb-8 bg-gradient-to-r from-[#213448] via-[#547792] to-[#87C4FF] bg-clip-text text-transparent leading-tight drop-shadow-sm">
+          <h1 className="text-6xl md:text-8xl font-black mb-8 bg-linear-to-r from-[#213448] via-[#547792] to-[#87C4FF] bg-clip-text text-transparent leading-tight drop-shadow-sm">
             Learn Anything
             <br />
             <span className="text-[#87C4FF]">Master Everything</span>
@@ -83,7 +83,7 @@ export default function Home() {
 
           <section className="relative px-6 py-20">
             <div className="max-w-5xl mx-auto bg-white/40 backdrop-blur-2xl md:p-20 p-10 rounded-[3rem] border-2 border-[#87C4FF]/40 shadow-xl text-center relative overflow-hidden group hover:border-[#87C4FF] transition-all duration-500">
-              <div className="absolute inset-0 bg-gradient-to-br from-[#87C4FF]/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              <div className="absolute inset-0 bg-linear-to-br from-[#87C4FF]/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               <div className="absolute -top-24 -right-24 w-48 h-48 bg-[#87C4FF]/20 rounded-full blur-3xl group-hover:bg-[#87C4FF]/40 transition-all duration-700"></div>
 
               <div className="relative z-10">
@@ -95,6 +95,7 @@ export default function Home() {
                 </p>
 
                 <button className="px-14 py-5 bg-[#87C4FF] rounded-full text-white font-bold text-xl shadow-[0_10px_25px_rgba(135,196,255,0.5)] hover:shadow-[0_20px_50px_rgba(135,196,255,0.8)] hover:-translate-y-2 hover:scale-[1.05] transition-all duration-500 relative overflow-hidden group/btn flex items-center justify-center gap-3 mx-auto mt-6">
+<<<<<<< HEAD
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover/btn:translate-x-full transition-transform duration-1000 ease-in-out"></div>
                   <span>
                     <Link href="/signIn">
@@ -102,6 +103,12 @@ export default function Home() {
                         Start Learning Today
                       </span>
                     </Link>
+=======
+                  <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover/btn:translate-x-full transition-transform duration-1000 ease-in-out"></div>
+
+                  <span className="relative z-10 tracking-tight">
+                    Start Learning Today
+>>>>>>> ab6d7f5 (P)
                   </span>
 
                   <div className="relative z-10 group-hover/btn:translate-x-2 transition-transform duration-300">
