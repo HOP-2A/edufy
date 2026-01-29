@@ -4,5 +4,5 @@ export const POST = async (
   req: NextRequest,
   context: { params: { userId: string } },
 ) => {
-    // const 
+  // const
 };

@@ -48,6 +48,6 @@ export async function POST(req: Request) {
       username: user.first_name ?? "user",
     },
   });
-  console.log(user, "aksdl;asdlak;sdka;sdka;lkdl;asksd;asd");
+
   return NextResponse.json({ success: true });
 }

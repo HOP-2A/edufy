@@ -62,8 +62,6 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
 
       setUser(userData);
       setLoading(false);
-
-      //   router.push("/mainMenu");
     };
     find();
   }, [clerkUser, isLoaded, router]);
