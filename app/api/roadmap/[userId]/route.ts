@@ -1,12 +1,13 @@
 import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
-export const POST = async (
+export async function POST(
   req: NextRequest,
-  context: { params: { userId: string } },
-) => {
-  const { userId } = await context.params;
+  { params }: { params: { userId: string } },
+) {
+  const { userId } = params;
   const body = await req.json();
+
   const createdRoadmap = await prisma.roadmap.create({
     data: {
       userId,
@@ -14,5 +15,6 @@ export const POST = async (
       purpose: body.purpose,
     },
   });
+
   return NextResponse.json(createdRoadmap);
-};
+}
