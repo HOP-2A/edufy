@@ -9,6 +9,21 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import Sidebar from "../../_components/SideBar";
+import {
+  ArrowRight,
+  Badge,
+  BookOpen,
+  Check,
+  CheckCircle2,
+  ChevronRight,
+  Circle,
+  ExternalLink,
+  FileText,
+  HelpCircle,
+  Layers,
+  LinkIcon,
+  Trophy,
+} from "lucide-react";
 
 // Type definitions
 interface Resource {
@@ -55,6 +70,10 @@ interface Roadmap {
   learningSections: LearningSection[];
 }
 
+const getLevelNumber = (level: string) => {
+  return Number(level.match(/\d+/)?.[0] ?? 0);
+};
+
 export default function RoadmapPage() {
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
@@ -72,7 +91,16 @@ export default function RoadmapPage() {
         const res = await fetch(`/api/getroadmapinfo/${id}`);
         if (!res.ok) throw new Error("Failed to fetch roadmap");
         const data = await res.json();
-        setRoadmap(data);
+
+        const sortedData = {
+          ...data,
+          learningSections: [...data.learningSections].sort(
+            (a: LearningSection, b: LearningSection) =>
+              getLevelNumber(a.level) - getLevelNumber(b.level),
+          ),
+        };
+
+        setRoadmap(sortedData);
       } catch (err) {
         console.error("Error:", err);
         setError(err instanceof Error ? err.message : "An error occurred");
@@ -109,163 +137,141 @@ export default function RoadmapPage() {
   }
 
   return (
-    <div className="relative h-screen">
+    <div className="flex min-h-screen bg-[#F8FAFC] text-slate-900 font-sans">
       <Sidebar />
-      <div className="absolute inset-0 flex justify-center items-start pointer-events-none overflow-auto">
-        <div className="w-full max-w-7xl mx-auto pointer-events-auto px-8 py-16">
-          <div className="text-center mb-8">
-            <h1 className="text-5xl font-bold mb-4">{roadmap.title}</h1>
-            <p className="text-xl text-gray-400 mb-2">{roadmap.description}</p>
-            <p className="text-lg">
-              Level: {roadmap.levelFrom} → {roadmap.levelTo}
+
+      <main className="flex-1 overflow-y-auto bg-white">
+        <div className="max-w-4xl mx-auto px-8 py-20">
+          {/* Header Section */}
+          <header className="mb-16 pb-12 border-b-2 border-slate-100">
+            <div className="flex items-center gap-3 text-blue-600 font-bold text-xs uppercase tracking-widest mb-6">
+              <span className="bg-blue-50 px-3 py-1 rounded-full">
+                Roadmap Path
+              </span>
+              <ArrowRight className="w-3 h-3" />
+              <span className="text-slate-500">
+                Level {roadmap?.levelFrom} — {roadmap?.levelTo}
+              </span>
+            </div>
+            <h1 className="text-5xl font-extrabold tracking-tight text-slate-900 mb-6">
+              {roadmap?.title}
+            </h1>
+            <p className="text-xl text-slate-500 leading-relaxed max-w-2xl">
+              {roadmap?.description}
             </p>
-          </div>
+          </header>
 
-          <h2 className="text-3xl font-semibold mb-6 text-center">
-            Here&lsquo;s what you will learn
-          </h2>
+          {/* Curriculum List */}
+          <div className="space-y-6">
+            <h2 className="text-sm font-black uppercase tracking-[0.3em] text-slate-400 mb-10">
+              Learning Modules
+            </h2>
 
-          <Accordion type="single" collapsible className="space-y-4">
-            {roadmap.learningSections.map((section) => (
-              <AccordionItem
-                key={section.id}
-                value={section.id}
-                className="border-2 rounded-lg px-6 bg-gray-900/50"
-              >
-                <AccordionTrigger className="text-2xl font-bold hover:no-underline">
-                  <div className="flex items-center gap-4">
-                    <span>{section.title}</span>
-                    <span className="text-sm px-3 py-1 bg-blue-600 rounded-full">
-                      {section.level}
-                    </span>
-                  </div>
-                </AccordionTrigger>
-
-                <AccordionContent className="pt-4 space-y-4">
-                  <div className="text-lg mb-6 p-4 bg-gray-800/30 rounded">
-                    {section.content}
-                  </div>
-
-                  {section.resources.length > 0 && (
-                    <div className="mb-6">
-                      <h4 className="text-xl font-semibold mb-3">
-                        📚 Resources
-                      </h4>
-                      <ul className="space-y-2">
-                        {section.resources.map((resource) => (
-                          <li
-                            key={resource.id}
-                            className="flex items-center gap-2"
-                          >
-                            <span className="text-sm px-2 py-1 bg-purple-600/30 rounded">
-                              {resource.type}
-                            </span>
-                            {resource.url ? (
-                              <a
-                                href={resource.url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="hover:underline text-blue-400"
-                              >
-                                {resource.title}
-                              </a>
-                            ) : (
-                              <span>{resource.title}</span>
-                            )}
-                          </li>
-                        ))}
-                      </ul>
+            <Accordion type="single" collapsible className="space-y-6">
+              {roadmap?.learningSections.map((section, index) => (
+                <AccordionItem
+                  key={section.id}
+                  value={section.id}
+                  className="border-2 border-slate-200 rounded-2xl overflow-hidden px-2 transition-all data-[state=open]:border-blue-600 data-[state=open]:shadow-xl data-[state=open]:shadow-blue-500/10"
+                >
+                  <AccordionTrigger className="hover:no-underline py-8 px-6 group">
+                    <div className="flex items-center gap-8 text-left">
+                      <span className="text-4xl font-black text-slate-100 group-data-[state=open]:text-blue-100 transition-colors">
+                        {(index + 1).toString().padStart(2, "0")}
+                      </span>
+                      <div>
+                        <span className="block text-xs font-bold text-blue-600 uppercase mb-1">
+                          {section.level}
+                        </span>
+                        <span className="text-2xl font-bold text-slate-800 group-hover:text-blue-600 transition-colors">
+                          {section.title}
+                        </span>
+                      </div>
                     </div>
-                  )}
+                  </AccordionTrigger>
 
-                  {section.tasks.length > 0 && (
-                    <div>
-                      <h4 className="text-xl font-semibold mb-3">✓ Tasks</h4>
-                      <Accordion
-                        type="single"
-                        collapsible
-                        className="space-y-2"
-                      >
-                        {section.tasks.map((task) => (
-                          <AccordionItem
-                            key={task.id}
-                            value={task.id}
-                            className="border rounded px-4 bg-gray-800/20"
-                          >
-                            <AccordionTrigger className="text-lg hover:no-underline">
-                              <div className="flex items-center gap-3">
-                                <span
-                                  className={
-                                    task.completed
-                                      ? "line-through text-gray-500"
-                                      : ""
-                                  }
+                  <AccordionContent className="pb-10 pt-2 px-6 border-t-2 border-slate-50">
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
+                      {/* Left Side: Content & Resources */}
+                      <div className="lg:col-span-7 space-y-8">
+                        <p className="text-lg text-slate-600 leading-relaxed">
+                          {section.content}
+                        </p>
+
+                        {section.resources.length > 0 && (
+                          <div className="bg-slate-50 p-6 rounded-xl border-2 border-slate-100">
+                            <h4 className="text-sm font-bold uppercase tracking-widest text-slate-900 mb-4 flex items-center gap-2">
+                              <BookOpen className="w-4 h-4 text-blue-600" />{" "}
+                              Essential Resources
+                            </h4>
+                            <div className="grid gap-3">
+                              {section.resources.map((res) => (
+                                <a
+                                  key={res.id}
+                                  href={res.url || "#"}
+                                  className="flex items-center justify-between p-3 bg-white rounded-lg border-2 border-slate-200 hover:border-blue-400 hover:shadow-sm transition-all group/res"
                                 >
-                                  {task.title}
-                                </span>
-                                {task.completed && (
-                                  <span className="text-green-500">✓</span>
-                                )}
+                                  <div className="flex items-center gap-3">
+                                    <LinkIcon className="w-4 h-4 text-slate-400 group-hover/res:text-blue-600" />
+                                    <span className="font-semibold text-slate-700">
+                                      {res.title}
+                                    </span>
+                                  </div>
+                                  <ChevronRight className="w-4 h-4 text-slate-300" />
+                                </a>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Right Side: Tasks */}
+                      <div className="lg:col-span-5">
+                        <h4 className="text-sm font-bold uppercase tracking-widest text-slate-900 mb-4 flex items-center gap-2">
+                          <Check className="w-4 h-4 text-blue-600" /> Action
+                          Items
+                        </h4>
+                        <div className="space-y-3">
+                          {section.tasks.map((task) => (
+                            <div
+                              key={task.id}
+                              className={`p-4 rounded-xl border-2 transition-all ${
+                                task.completed
+                                  ? "bg-blue-50 border-blue-100 shadow-inner"
+                                  : "bg-white border-slate-200"
+                              }`}
+                            >
+                              <div className="flex items-start gap-3">
+                                <div
+                                  className={`mt-0.5 p-1 rounded-md ${task.completed ? "bg-blue-600 text-white" : "bg-slate-100 text-slate-400"}`}
+                                >
+                                  <Check className="w-3 h-3" />
+                                </div>
+                                <div>
+                                  <p
+                                    className={`font-bold text-sm ${task.completed ? "text-blue-900 line-through opacity-60" : "text-slate-800"}`}
+                                  >
+                                    {task.title}
+                                  </p>
+                                  {!task.completed && (
+                                    <p className="text-xs text-slate-500 mt-1">
+                                      {task.content}
+                                    </p>
+                                  )}
+                                </div>
                               </div>
-                            </AccordionTrigger>
-
-                            <AccordionContent className="pt-3 space-y-3">
-                              <p className="text-gray-300">{task.content}</p>
-
-                              {task.resources.length > 0 && (
-                                <div>
-                                  <h5 className="font-semibold mb-2">
-                                    Resources:
-                                  </h5>
-                                  <ul className="space-y-1 ml-4">
-                                    {task.resources.map((resource) => (
-                                      <li key={resource.id}>
-                                        {resource.url ? (
-                                          <a
-                                            href={resource.url}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="hover:underline text-blue-400"
-                                          >
-                                            {resource.title}
-                                          </a>
-                                        ) : (
-                                          <span>{resource.title}</span>
-                                        )}
-                                      </li>
-                                    ))}
-                                  </ul>
-                                </div>
-                              )}
-
-                              {task.taskQuestions.length > 0 && (
-                                <div>
-                                  <h5 className="font-semibold mb-2">
-                                    Questions:
-                                  </h5>
-                                  <ul className="space-y-2 ml-4">
-                                    {task.taskQuestions.map((question, idx) => (
-                                      <li key={question.id} className="text-sm">
-                                        <span className="font-medium">
-                                          {idx + 1}. {question.text}
-                                        </span>
-                                      </li>
-                                    ))}
-                                  </ul>
-                                </div>
-                              )}
-                            </AccordionContent>
-                          </AccordionItem>
-                        ))}
-                      </Accordion>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
                     </div>
-                  )}
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 }

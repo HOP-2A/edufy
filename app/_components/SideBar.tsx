@@ -115,16 +115,18 @@ export default function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="relative flex h-screen w-72 flex-col overflow-hidden border-r border-[#87C4FF]/30 bg-white">
+    <aside className="relative flex min-h-screen w-72 flex-col border-r border-[#87C4FF]/30 bg-white">
+      {/* HEADER */}
       <div className="sticky top-0 z-50 backdrop-blur-xl bg-white/90 border-b border-[#87C4FF]/30 shadow-sm">
-        <div className="flex items-center gap-3 px-6 py-4 h-24">
+        <div className="flex h-24 items-center gap-3 px-6 py-4">
           <div className="text-4xl font-black bg-gradient-to-r from-[#213448] to-[#87C4FF] bg-clip-text text-transparent">
             Edufy
           </div>
         </div>
       </div>
 
-      <nav className="relative z-10 flex-1 space-y-1.5 overflow-y-auto px-4 py-6">
+      {/* SCROLLABLE NAV */}
+      <nav className="flex-1 overflow-y-auto space-y-1.5 px-4 py-6">
         <p className="px-6 py-2 text-[12px] font-bold uppercase tracking-widest text-[#547792]/60">
           Main Menu
         </p>
@@ -138,7 +140,7 @@ export default function Sidebar() {
             <DropdownMenuItem
               key={item.label}
               onClick={() => router.push(item.url)}
-              className="group flex cursor-pointer items-center gap-3 rounded-2xl px-4 py-2.5 font-semibold text-[#213448] transition-all duration-200 hover:bg-[#87C4FF]/20 focus:bg-[#87C4FF]/20"
+              className="flex cursor-pointer items-center gap-3 rounded-2xl px-4 py-2.5 font-semibold text-[#213448] transition-all hover:bg-[#87C4FF]/20"
             >
               <item.icon className="h-4 w-4" />
               <span>{item.label}</span>
@@ -155,7 +157,7 @@ export default function Sidebar() {
             <DropdownMenuItem
               key={item.label}
               onClick={() => router.push(item.url)}
-              className="group flex cursor-pointer items-center gap-3 rounded-2xl px-4 py-2.5 font-semibold text-[#213448] transition-all duration-200 hover:bg-[#87C4FF]/20 focus:bg-[#87C4FF]/20"
+              className="flex cursor-pointer items-center gap-3 rounded-2xl px-4 py-2.5 font-semibold text-[#213448] transition-all hover:bg-[#87C4FF]/20"
             >
               <item.icon className="h-4 w-4" />
               <span>{item.label}</span>
@@ -163,6 +165,7 @@ export default function Sidebar() {
           ))}
         </DropdownButton>
 
+        {/* DIVIDER */}
         <div className="relative mx-2 my-4">
           <div className="absolute inset-0 flex items-center">
             <div className="w-full border-t border-[#87C4FF]/30" />
@@ -172,6 +175,7 @@ export default function Sidebar() {
           </div>
         </div>
 
+        {/* NAV ITEMS */}
         {navItems.map((item) => (
           <NavButton
             key={item.label}
