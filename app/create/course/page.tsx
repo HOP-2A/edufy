@@ -11,21 +11,16 @@ import {
 import Sidebar from "../../_components/SideBar";
 import {
   ArrowRight,
-  Badge,
   BookOpen,
   Check,
-  CheckCircle2,
   ChevronRight,
-  Circle,
-  ExternalLink,
-  FileText,
-  HelpCircle,
-  Layers,
   LinkIcon,
-  Trophy,
 } from "lucide-react";
+<<<<<<< HEAD
 
 // Type definitions
+=======
+>>>>>>> 3fe7995 (P)
 interface Resource {
   id: string;
   type: string;
