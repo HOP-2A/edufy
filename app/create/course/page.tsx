@@ -11,21 +11,12 @@ import {
 import Sidebar from "../../_components/SideBar";
 import {
   ArrowRight,
-  Badge,
   BookOpen,
   Check,
-  CheckCircle2,
   ChevronRight,
-  Circle,
-  ExternalLink,
-  FileText,
-  HelpCircle,
-  Layers,
   LinkIcon,
-  Trophy,
 } from "lucide-react";
 
-// Type definitions
 interface Resource {
   id: string;
   type: string;
@@ -85,7 +76,6 @@ export default function RoadmapPage() {
   useEffect(() => {
     if (!id) return;
 
-    // Fetch function
     const fetchRoadmap = async () => {
       try {
         const res = await fetch(`/api/getroadmapinfo/${id}`);
@@ -142,7 +132,6 @@ export default function RoadmapPage() {
 
       <main className="flex-1 overflow-y-auto bg-white">
         <div className="max-w-4xl mx-auto px-8 py-20">
-          {/* Header Section */}
           <header className="mb-16 pb-12 border-b-2 border-slate-100">
             <div className="flex items-center gap-3 text-blue-600 font-bold text-xs uppercase tracking-widest mb-6">
               <span className="bg-blue-50 px-3 py-1 rounded-full">
@@ -161,7 +150,6 @@ export default function RoadmapPage() {
             </p>
           </header>
 
-          {/* Curriculum List */}
           <div className="space-y-6">
             <h2 className="text-sm font-black uppercase tracking-[0.3em] text-slate-400 mb-10">
               Learning Modules
@@ -192,7 +180,6 @@ export default function RoadmapPage() {
 
                   <AccordionContent className="pb-10 pt-2 px-6 border-t-2 border-slate-50">
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
-                      {/* Left Side: Content & Resources */}
                       <div className="lg:col-span-7 space-y-8">
                         <p className="text-lg text-slate-600 leading-relaxed">
                           {section.content}
@@ -225,7 +212,6 @@ export default function RoadmapPage() {
                         )}
                       </div>
 
-                      {/* Right Side: Tasks */}
                       <div className="lg:col-span-5">
                         <h4 className="text-sm font-bold uppercase tracking-widest text-slate-900 mb-4 flex items-center gap-2">
                           <Check className="w-4 h-4 text-blue-600" /> Action

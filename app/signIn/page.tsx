@@ -1,26 +1,24 @@
+"use client";
+
 import {
-  SignInButton,
-  SignUpButton,
   SignedIn,
   SignedOut,
   UserButton,
+  RedirectToSignUp,
 } from "@clerk/nextjs";
 
 const Page = () => {
   return (
     <div>
       <SignedOut>
-        <SignInButton>
-          <button>Sign In</button>
-        </SignInButton>
-
-        <SignUpButton>
-          <button>Sign Up</button>
-        </SignUpButton>
+        <RedirectToSignUp />
       </SignedOut>
 
       <SignedIn>
-        <UserButton />
+        <div className="p-10">
+          <h1 className="text-2xl font-bold">Та нэвтэрсэн байна!</h1>
+          <UserButton />
+        </div>
       </SignedIn>
     </div>
   );
