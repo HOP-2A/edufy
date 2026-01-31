@@ -1,54 +1,137 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { BookOpen, Sparkles } from "lucide-react";
+"use client";
+import { Calendar } from "@/components/ui/calendar";
+import { Goal, LayersPlus, ArrowRight } from "lucide-react";
 import { useState } from "react";
 
 export default function CreateRoadmap() {
-  const [topic, setTopic] = useState("");
+  const [step, setStep] = useState(1);
+  const [title, setTitle] = useState("");
+  const [purpose, setPurpose] = useState("");
+  const [fade, setFade] = useState(true);
+  const [questions, setQuestions] = useState([]);
+  const [startDate, setStartDate] = useState<Date | undefined>();
+  const [endDate, setEndDate] = useState<Date | undefined>();
+  console.log(startDate, "asdfadsf", endDate);
+  const nextStep = () => {
+    setFade(false);
+    setTimeout(() => {
+      setStep((prev) => prev + 1);
+      setFade(true);
+    }, 200);
+  };
+  const getAiQs = async () => {
+    const res = await fetch("/api/projectQuestion", {
+      method: "POST",
+      body: JSON.stringify({
+        roadmapId: "123",
+        roadmapTitle: title,
+        startDate,
+        endDate,
+        purpose,
+      }),
+    });
+    const questions = await res.json();
+    setQuestions(questions);
+  };
   return (
-    <section className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden">
-      <div className="absolute inset-0 -z-10">
-        <div className="absolute top-[-20%] left-[-10%] w-175 h-175 bg-blue-400/10 rounded-full blur-[120px]" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-150 h-150 bg-indigo-400/10 rounded-full blur-[120px]" />
-      </div>
-
-      <div className="w-full max-w-2xl">
-        <div className="relative bg-white/80 backdrop-blur-2xl border border-white shadow-[0_32px_64px_-15px_rgba(15,23,42,0.1)] rounded-[2.5rem] p-8 md:p-16 space-y-10">
-          <div className="absolute -top-6 left-1/2 -translate-x-1/2 bg-linear-to-tr from-blue-600 to-indigo-500 p-4 rounded-2xl shadow-xl shadow-blue-200">
-            <BookOpen className="w-8 h-8 text-white" />
-          </div>
-
-          <div className="text-center space-y-4">
-            <h1 className="text-4xl md:text-5xl font-black tracking-tight text-slate-900 leading-tight">
-              What can I help <br />
-              <span className="text-transparent bg-clip-text bg-linear-to-r from-blue-600 to-indigo-500">
-                you learn today?
-              </span>
-            </h1>
-            <p className="text-slate-500 text-lg max-w-md mx-auto">
-              Type any subject and our AI will craft a custom curriculum just
-              for you.
-            </p>
-          </div>
-
-          <div className="space-y-4">
-            <div className="group relative">
-              <div className="absolute -inset-0.5 bg-linear-to-r from-blue-300 to-indigo-300 rounded-xl blur opacity-20 group-focus-within:opacity-40 transition duration-300"></div>
-              <Input
-                placeholder="e.g. Master React in 30 days"
-                value={topic}
-                onChange={(e) => setTopic(e.target.value)}
-                className="relative h-16 text-lg px-6 border-slate-200 bg-white rounded-xl focus-visible:ring-blue-500"
-              />
+    <div className="w-[600px] mx-auto w-[700px] border-6 p-[100px] border-black ">
+      <div
+        className={`transition-opacity duration-200 ${
+          fade ? "opacity-100" : "opacity-0"
+        }`}
+      >
+        {step === 1 && (
+          <div className="space-y-8">
+            <div className="space-y-3">
+              <h1 className="text-5xl font-medium tracking-tight">
+                Төслөө нэрлэнэ үү?
+              </h1>
             </div>
 
-            <Button className="w-full h-16 text-lg font-bold rounded-xl bg-linear-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 shadow-lg shadow-blue-200/50 transition-all active:scale-[0.98]">
-              <Sparkles className="mr-2 h-5 w-5" />
-              Generate My Course
-            </Button>
+            <input
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="e.g. Learn Web Development"
+              className="w-full border-2 border-black p-4 text-xl focus:outline-none focus:ring-2 focus:ring-black transition-all"
+              autoFocus
+            />
+
+            <button
+              disabled={!title}
+              onClick={nextStep}
+              className="group flex items-center gap-2 px-6 py-3 bg-black text-white disabled:bg-gray-300 disabled:cursor-not-allowed transition-all hover:gap-3"
+            >
+              <span>Next</span>
+              <ArrowRight className="w-5 h-5" />
+            </button>
           </div>
-        </div>
+        )}
+
+        {step === 2 && (
+          <div className="space-y-8">
+            <div className="space-y-3">
+              <h2 className="text-5xl font-medium tracking-tight">
+                Энэ төсөлд та ямар зорилготой байна вэ?
+              </h2>
+            </div>
+
+            <textarea
+              value={purpose}
+              onChange={(e) => setPurpose(e.target.value)}
+              placeholder="Why do you want to learn this?"
+              className="w-full border-2 border-black p-4 text-xl min-h-[160px] focus:outline-none focus:ring-2 focus:ring-black resize-none transition-all"
+              autoFocus
+            />
+
+            <button
+              disabled={!purpose}
+              onClick={nextStep}
+              className="group flex items-center gap-2 px-6 py-3 bg-black text-white disabled:bg-gray-300 disabled:cursor-not-allowed transition-all hover:gap-3"
+            >
+              <span>Generate Questions</span>
+              <ArrowRight className="w-5 h-5" />
+            </button>
+          </div>
+        )}
+
+        {step === 3 && (
+          <div className="flex flex-col gap-[60px] ">
+            <div className="space-y-3">
+              <h2 className="text-5xl font-medium tracking-tight">
+                Ямар хугацаанд вэ?
+              </h2>
+            </div>
+            <div className="flex gap-[30px]">
+              <div>
+                <Calendar
+                  mode="single"
+                  selected={startDate}
+                  onSelect={setStartDate}
+                  className="rounded-lg border"
+                  captionLayout="dropdown"
+                />
+              </div>
+              <div>
+                <Calendar
+                  mode="single"
+                  selected={endDate}
+                  onSelect={setEndDate}
+                  className="rounded-lg border"
+                  captionLayout="dropdown"
+                />
+              </div>
+              <button
+                disabled={false}
+                onClick={getAiQs}
+                className="group flex items-center gap-2 px-6 py-3 bg-black text-white disabled:bg-gray-300 disabled:cursor-not-allowed transition-all hover:gap-3"
+              >
+                <span>Generate Questions</span>
+                <ArrowRight className="w-5 h-5" />
+              </button>
+            </div>
+          </div>
+        )}
       </div>
-    </section>
+    </div>
   );
 }
