@@ -126,8 +126,9 @@ export default function Main() {
               )}
               {roadmap.map((course) => (
                 <div
-                  key={course.id} // ✅ use stable ID
+                  key={course.id}
                   className="group relative bg-white border border-slate-200 p-8 rounded-[2rem] shadow-sm hover:shadow-xl hover:shadow-blue-900/5 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between min-h-55"
+                  onClick={() => router.push(`create/course?id=${course.id}`)}
                 >
                   <div className="space-y-4">
                     <div className="flex justify-between items-start">
