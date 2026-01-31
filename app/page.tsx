@@ -95,7 +95,6 @@ export default function Home() {
                 </p>
 
                 <button className="px-14 py-5 bg-[#87C4FF] rounded-full text-white font-bold text-xl shadow-[0_10px_25px_rgba(135,196,255,0.5)] hover:shadow-[0_20px_50px_rgba(135,196,255,0.8)] hover:-translate-y-2 hover:scale-[1.05] transition-all duration-500 relative overflow-hidden group/btn flex items-center justify-center gap-3 mx-auto mt-6">
-<<<<<<< HEAD
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover/btn:translate-x-full transition-transform duration-1000 ease-in-out"></div>
                   <span>
                     <Link href="/signIn">
@@ -103,12 +102,6 @@ export default function Home() {
                         Start Learning Today
                       </span>
                     </Link>
-=======
-                  <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover/btn:translate-x-full transition-transform duration-1000 ease-in-out"></div>
-
-                  <span className="relative z-10 tracking-tight">
-                    Start Learning Today
->>>>>>> ab6d7f5 (P)
                   </span>
 
                   <div className="relative z-10 group-hover/btn:translate-x-2 transition-transform duration-300">
