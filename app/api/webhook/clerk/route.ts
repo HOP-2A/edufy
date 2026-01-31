@@ -12,7 +12,6 @@ export async function POST(req: Request) {
   }
 
   const payload = await req.text();
-
   const headerList = await headers();
 
   const svixHeaders = {
@@ -32,7 +31,6 @@ export async function POST(req: Request) {
   }
 
   if (evt.type !== "user.created") {
-    console.log("Event ignored:", evt.type);
     return NextResponse.json({ ignored: true });
   }
 
@@ -43,20 +41,27 @@ export async function POST(req: Request) {
       ?.email_address ?? `${user.id}@placeholder.com`;
 
   try {
-    const dbUser = await prisma.user.upsert({
+    const baseUsername = user.first_name ?? "user";
+    let username = baseUsername;
+    let suffix = 1;
+
+    while (await prisma.user.findUnique({ where: { username } })) {
+      username = `${baseUsername}${suffix}`;
+      suffix++;
+    }
+
+    await prisma.user.upsert({
       where: { clerkId: user.id },
       update: {
         email: primaryEmail,
-        username: user.first_name ?? "user",
+        username,
       },
       create: {
         clerkId: user.id,
         email: primaryEmail,
-        username: user.first_name ?? "user",
+        username,
       },
     });
-
-    console.log("User upserted:", dbUser);
   } catch (err) {
     console.error("Prisma upsert failed:", err);
     return new NextResponse("Database error", { status: 500 });
