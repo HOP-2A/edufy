@@ -35,7 +35,7 @@ export default function Main() {
   const router = useRouter();
 
   const [roadmap, setRoadmap] = useState<Roadmap[]>([]); // ✅ default to []
-  const [roadmapId, setRoadmapId] = useState<Roadmap>(); // ✅ default to []
+  const [roadmapId, setRoadmapId] = useState<Roadmap[]>(); // ✅ default to []
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -81,13 +81,13 @@ export default function Main() {
   }, [user?.id]);
 
   useEffect(() => {
-    if (!roadmapId?.id) return;
+    if (!roadmapId) return;
 
     const fetchRoadmap = async () => {
       try {
         setLoading(true);
-        const res = await fetch(`/api/getroadmapinfo/${roadmapId.id}`);
-        if (!res.ok) throw new Error("Failed to fetch roadmap");
+        const res = await fetch(`/api/getroadmapinfo/${roadmapId?.[0]?.id}`);
+        if (!res.ok) throw new Error("Failed to fetch");
         const data = await res.json();
 
         setRoadmap(data ? [data] : []);
@@ -100,7 +100,7 @@ export default function Main() {
     };
 
     fetchRoadmap();
-  }, [roadmapId?.id]);
+  }, [roadmapId]);
   if (!isLoaded || loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
