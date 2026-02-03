@@ -56,7 +56,7 @@ export default function UserTests() {
 
             <Button
               className="h-18 rounded-2xl bg-slate-900 px-14 text-xl font-bold text-white shadow-xl transition-all hover:bg-blue-600 active:scale-95"
-              onClick={() => router.push("create/test")}
+              onClick={() => router.push("/create/test")}
             >
               Create your first test
             </Button>
