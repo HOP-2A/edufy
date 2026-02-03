@@ -40,6 +40,7 @@ const dropdownCreateAiItems: NavItem[] = [
 const dropdownMyLearningItems: NavItem[] = [
   { label: "Roadmap", icon: Map, url: "/user/roadmaps" },
   { label: "Test", icon: Clipboard, url: "/user/tests" },
+  { label: "Course", icon: School, url: "/user/course" },
 ];
 
 function NavButton({

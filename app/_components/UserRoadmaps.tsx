@@ -52,7 +52,7 @@ export default function UserRoadmaps() {
 
             <Button
               className="h-18 rounded-2xl bg-slate-900 px-14 text-xl font-bold text-white shadow-xl transition-all hover:bg-blue-600 active:scale-95"
-              onClick={() => router.push("create/roadmap")}
+              onClick={() => router.push("/create/roadmap")}
             >
               Create your first roadmap
             </Button>
