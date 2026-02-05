@@ -3,85 +3,97 @@ import Footer from "./_components/Footer";
 
 export default function Home() {
   return (
-    <div className=" flex flex-col gap-[40px] bg-white">
-      {/* Header */}
-      <div className="sticky top-0 z-50 backdrop-blur-md bg-white/90 border-b border-black/10">
-        <div className="max-w-7xl mx-auto px-6 py-6 flex justify-between items-center">
-          <div className="text-4xl font-black text-black tracking-tight">
-            Edufy
+    <div className="min-h-screen bg-[#fafafa] text-black font-sans selection:bg-black selection:text-white overflow-x-hidden flex flex-col">
+      <header className="sticky top-0 z-50 bg-[#fafafa]/80 backdrop-blur-xl border-b border-black/[0.04] shrink-0">
+        <div className="max-w-7xl mx-auto px-8 py-5 flex justify-between items-center">
+          <div className="text-2xl font-black tracking-tighter uppercase italic hover:opacity-70 transition-opacity cursor-pointer">
+            Edufy.
           </div>
-          <nav className="hidden md:flex gap-10 items-center">
-            <Link
-              href="/Courses"
-              className="text-black/70 font-semibold hover:text-black transition-colors"
-            >
-              Courses
-            </Link>
-            <Link
-              href="/Resources"
-              className="text-black/70 font-semibold hover:text-black transition-colors"
-            >
-              Resources
-            </Link>
-            <Link
-              href="/Community"
-              className="text-black/70 font-semibold hover:text-black transition-colors"
-            >
-              Community
-            </Link>
+          <nav className="hidden md:flex gap-12 items-center text-sm font-medium tracking-tight">
+            {["Courses", "Resources", "Community"].map((item) => (
+              <Link
+                key={item}
+                href={`/${item}`}
+                className="text-black/40 hover:text-black transition-all duration-500"
+              >
+                {item}
+              </Link>
+            ))}
             <Link href="/signIn">
-              <button className="px-8 py-3 bg-black text-white font-bold rounded-full hover:bg-black/90 transition-all hover:shadow-lg">
+              <button className="bg-black text-white px-7 py-2.5 rounded-full text-sm font-bold hover:shadow-[0_20px_40px_rgba(0,0,0,0.1)] hover:-translate-y-0.5 transition-all duration-500 active:scale-95">
                 Get Started
               </button>
             </Link>
           </nav>
         </div>
-      </div>
+      </header>
 
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col items-center justify-center gap-20 px-6">
-        {/* Hero Text */}
-        <div className="text-center">
-          <div className="text-7xl md:text-8xl font-black text-black leading-[1.1] mb-2">
-            Learn Anything
-          </div>
-          <div className="text-7xl md:text-8xl font-black text-black/60 leading-[1.1]">
-            Master Everything
-          </div>
+      <main className="flex-grow flex flex-col justify-center items-center max-w-7xl mx-auto px-8 py-20 min-h-[90vh]">
+        <div className="text-center mb-24 md:mb-32">
+          <h1 className="text-7xl md:text-[130px] font-black tracking-[-0.06em] leading-[0.85] mb-8">
+            LEARN
+            <span className="text-black/5 block md:inline transition-colors duration-1000">
+              ANYTHING
+            </span>
+          </h1>
+          <p className="text-lg md:text-2xl font-medium text-black/30 max-w-2xl mx-auto leading-relaxed tracking-tight">
+            A minimalist approach to high-level education. Master any skill with
+            structured paths and a focused environment.
+          </p>
         </div>
 
-        {/* Feature Cards */}
-        <div className="flex gap-8 flex-wrap justify-center max-w-6xl">
-          <Link href="/create-course">
-            <div className="group h-[300px] w-[380px] border-2 border-black/20 hover:border-black transition-all rounded-2xl p-8 flex flex-col justify-between cursor-pointer hover:shadow-xl">
-              <div className="text-4xl font-bold text-black/90">
-                Create Course
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full mb-12">
+          <Link href="/create-course" className="group">
+            <div className="h-[460px] bg-white border border-black/[0.05] p-12 flex flex-col justify-between rounded-[3rem] transition-all duration-[0.8s] ease-[cubic-bezier(0.23,1,0.32,1)] group-hover:shadow-[0_40px_80px_rgba(0,0,0,0.04)] group-hover:-translate-y-3 group-hover:border-black/10">
+              <div className="h-14 w-14 bg-black rounded-2xl flex items-center justify-center transition-transform duration-700 group-hover:rotate-90">
+                <div className="w-6 h-[2px] bg-white rotate-90 absolute rounded-full" />
+                <div className="w-6 h-[2px] bg-white absolute rounded-full" />
               </div>
-              <div className="text-black/50 text-lg font-medium">
-                Build and share your knowledge with others →
-              </div>
-            </div>
-          </Link>
-
-          <Link href="/tasks">
-            <div className="group h-[300px] w-[380px] border-2 border-black/20 hover:border-black transition-all rounded-2xl p-8 flex flex-col justify-between cursor-pointer hover:shadow-xl">
-              <div className="text-4xl font-bold text-black/90">Tasks</div>
-              <div className="text-black/50 text-lg font-medium">
-                Track your progress and stay organized →
+              <div>
+                <h3 className="text-3xl font-bold mb-3 tracking-tight">
+                  Create Course
+                </h3>
+                <p className="text-black/40 font-medium leading-snug">
+                  Architect your own knowledge ecosystem and share it.
+                </p>
               </div>
             </div>
           </Link>
 
-          <Link href="/start-learning">
-            <div className="group h-[300px] w-[380px] border-2 border-black/20 hover:border-black transition-all rounded-2xl p-8 flex flex-col justify-between cursor-pointer hover:shadow-xl bg-black text-white hover:bg-black/90">
-              <div className="text-4xl font-bold">Start Learning</div>
-              <div className="text-white/70 text-lg font-medium">
-                Begin your journey to mastery today →
+          <Link href="/tasks" className="group">
+            <div className="h-[460px] bg-white border border-black/[0.05] p-12 flex flex-col justify-between rounded-[3rem] transition-all duration-[0.8s] ease-[cubic-bezier(0.23,1,0.32,1)] group-hover:shadow-[0_40px_80px_rgba(0,0,0,0.04)] group-hover:-translate-y-3 group-hover:border-black/10 shadow-sm">
+              <div className="h-14 w-14 border-2 border-black rounded-2xl flex items-center justify-center">
+                <div className="w-7 h-1.5 bg-black/10 rounded-full group-hover:bg-black transition-colors duration-500" />
+              </div>
+              <div>
+                <h3 className="text-3xl font-bold mb-3 tracking-tight">
+                  Workflow
+                </h3>
+                <p className="text-black/40 font-medium leading-snug">
+                  The interface for your daily cognitive progress.
+                </p>
+              </div>
+            </div>
+          </Link>
+
+          <Link href="/start-learning" className="group">
+            <div className="h-[460px] bg-black p-12 flex flex-col justify-between rounded-[3rem] transition-all duration-[0.8s] ease-[cubic-bezier(0.23,1,0.32,1)] shadow-[0_30px_60px_rgba(0,0,0,0.15)] group-hover:shadow-[0_50px_100px_rgba(0,0,0,0.3)] group-hover:-translate-y-3 group-hover:bg-[#111]">
+              <div className="text-white/10 text-8xl font-black tracking-tighter">
+                01
+              </div>
+              <div>
+                <h3 className="text-3xl font-bold text-white mb-3 italic tracking-tight">
+                  Start Learning
+                </h3>
+                <p className="text-white/50 font-medium leading-snug">
+                  Enter the zone of deep focus and mastery.
+                </p>
               </div>
             </div>
           </Link>
         </div>
-      </div>
+      </main>
+
       <Footer />
     </div>
   );
