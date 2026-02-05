@@ -107,6 +107,10 @@ export default function Main() {
     fetchAllRoadmaps();
   }, [roadmapId]);
 
+  const filteredRoadmaps = roadmap.filter((course) =>
+    course.title.toLowerCase().includes(searchQuery.toLowerCase()),
+  );
+
   if (!isLoaded || loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -132,7 +136,7 @@ export default function Main() {
                 <h1 className="text-4xl font-black tracking-tight text-slate-900">
                   Library
                 </h1>
-                <p className="text-lg text-slate-500">Explore your roadmaps.</p>
+                <p className="text-lg text-slate-500">Explore your courses.</p>
               </div>
 
               <Button
@@ -148,7 +152,7 @@ export default function Main() {
               <Search className="absolute left-5 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400 transition-colors group-focus-within:text-blue-500" />
               <Input
                 className="h-16 rounded-2xl border-slate-200 bg-white pl-14 text-lg shadow-sm transition-all focus-visible:ring-blue-500"
-                placeholder="search a roadmap"
+                placeholder="search for a course"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
@@ -158,7 +162,7 @@ export default function Main() {
           <div className="flex-1 mt-8 max-w-6xl mx-auto w-full">
             {loading ? (
               <p className="text-center text-slate-500 mt-20">
-                Loading roadmaps...
+                Loading courses...
               </p>
             ) : roadmap.length === 0 ? (
               <div className="flex min-h-[70vh] w-full flex-col items-center justify-center rounded-[3rem] border-2 border-dashed border-slate-200 bg-white/60 p-20 text-center backdrop-blur-sm">
@@ -177,12 +181,12 @@ export default function Main() {
                   className="h-18 rounded-2xl bg-slate-900 px-14 text-xl font-bold text-white shadow-xl transition-all hover:bg-blue-600 active:scale-95"
                   onClick={() => router.push("/create/roadmap")}
                 >
-                  Create your first roadmap
+                  Create your first course
                 </Button>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {roadmap.map((course) => (
+                {filteredRoadmaps.map((course) => (
                   <div
                     key={course.id}
                     className="group relative bg-white border border-slate-200 p-8 rounded-[2rem] shadow-sm hover:shadow-xl hover:shadow-blue-900/5 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between min-h-55 cursor-pointer"

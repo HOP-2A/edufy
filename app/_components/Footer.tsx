@@ -1,6 +1,9 @@
+"use client";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function Footer() {
+  const router = useRouter();
   return (
     <footer className="relative z-10 px-8 py-20 bg-white border-t border-black/[0.04]">
       <div className="max-w-7xl mx-auto">
@@ -78,7 +81,10 @@ export default function Footer() {
               <p className="text-black/30 text-[11px] font-medium hover:text-black transition-colors cursor-pointer">
                 Privacy Policy
               </p>
-              <p className="text-black/30 text-[11px] font-medium hover:text-black transition-colors cursor-pointer">
+              <p
+                className="text-black/30 text-[11px] font-medium hover:text-black transition-colors cursor-pointer"
+                onClick={() => router.push("/termsOfService")}
+              >
                 Terms of Service
               </p>
             </div>
