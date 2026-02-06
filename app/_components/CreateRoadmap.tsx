@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ChevronLeft, Rocket } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Input } from "@/components/ui/input";
 
 export default function CreateRoadmap() {
   const [step, setStep] = useState(1);
@@ -14,6 +15,9 @@ export default function CreateRoadmap() {
 
   const [questions, setQuestions] = useState<any[]>([]);
   const [startDate, setStartDate] = useState<Date | undefined>();
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [answer, setAnswer] = useState("");
+
   const [endDate, setEndDate] = useState<Date | undefined>();
 
   const progressPercentage = (step / 3) * 100;
@@ -27,7 +31,19 @@ export default function CreateRoadmap() {
       setFade(true);
     }, 200);
   };
-
+  const giveAnswer = async (id: string) => {
+    const res = await fetch("/api/giveAnswer-project", {
+      method: "PUT",
+      body: JSON.stringify({
+        id,
+        answer,
+      }),
+    });
+    if (res.ok) {
+      setCurrentIndex((prev) => prev + 1);
+      setAnswer("");
+    }
+  };
   const getAiQs = async () => {
     const res = await fetch("/api/projectQuestion", {
       method: "POST",
@@ -45,8 +61,10 @@ export default function CreateRoadmap() {
 
     const data = await res.json();
     setQuestions(data);
+    setCurrentIndex(0);
+    nextStep();
   };
-
+  console.log(questions);
   return (
     <div className="mx-auto w-[700px] p-[100px] border border-black">
       <div
@@ -176,6 +194,29 @@ export default function CreateRoadmap() {
                   className="h-16 px-14 bg-black text-white rounded-full"
                 >
                   Generate Roadmap
+                </Button>
+              </div>
+            )}
+            {step === 4 && (
+              <div className="space-y-10">
+                <h1 className="text-6xl font-black">
+                  {questions[currentIndex].text}
+                </h1>
+
+                <div className="grid grid-cols-2 gap-8">
+                  <div className="p-6 border rounded-2xl">
+                    <Input
+                      onChange={(e) => setAnswer(e.target.value)}
+                      value={answer}
+                    />
+                  </div>
+                </div>
+
+                <Button
+                  onClick={() => giveAnswer(questions[currentIndex].id)}
+                  className="h-16 px-14 bg-black text-white rounded-full"
+                >
+                  Next
                 </Button>
               </div>
             )}
