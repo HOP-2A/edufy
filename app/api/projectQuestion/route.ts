@@ -63,6 +63,7 @@ FINAL CHECK:
 - No trailing commas
 - No extra fields
 - No text outside JSON
+-try to give less response dont give too much things
 `;
   const result = await model.generateContent(prompt);
   const ress = result.response.text();
@@ -72,7 +73,7 @@ FINAL CHECK:
   }
 
   const aiQs = JSON.parse(jsonMatch[0]);
-  await Promise.all(
+  const createdQs = await Promise.all(
     aiQs.questions.map((qt: { id: string; question: string }) =>
       prisma.projectQuestion.create({
         data: {
@@ -82,5 +83,19 @@ FINAL CHECK:
       }),
     ),
   );
-  return NextResponse.json({ message: "Successful" });
+  return NextResponse.json(createdQs);
+};
+export const PUT = async (req: NextRequest) => {
+  const body = await req.json();
+  const res = await prisma.projectQuestion.update({
+    where: {
+      id: body.id,
+    },
+    data: {
+      answer: body.answer,
+    },
+  });
+  if (res) {
+    return NextResponse.json({ message: "Succesful" });
+  }
 };

@@ -1,58 +1,88 @@
 "use client";
 
 import { Calendar } from "@/components/ui/calendar";
+import { Button } from "@/components/ui/button";
 import { ChevronLeft, Rocket } from "lucide-react";
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function CreateRoadmap() {
   const [step, setStep] = useState(1);
   const [title, setTitle] = useState("");
   const [purpose, setPurpose] = useState("");
-  const [startDate, setStartDate] = useState();
-  const [endDate, setEndDate] = useState();
+  const [fade, setFade] = useState(true);
 
-  const nextStep = () => setStep((prev) => prev + 1);
-  const prevStep = () => setStep((prev) => prev - 1);
+  const [questions, setQuestions] = useState<any[]>([]);
+  const [startDate, setStartDate] = useState<Date | undefined>();
+  const [endDate, setEndDate] = useState<Date | undefined>();
 
   const progressPercentage = (step / 3) * 100;
 
-  return (
-    <div className="min-h-screen bg-[#fafafa] text-black">
-      <div className="absolute top-0 right-0 -z-10 h-125 w-125 rounded-full bg-black/[0.02] blur-[120px]" />
-      <div className="absolute bottom-0 left-0 -z-10 h-100 w-100 rounded-full bg-black/[0.01] blur-[100px]" />
+  const prevStep = () => setStep((prev) => Math.max(1, prev - 1));
 
-      <div className="relative max-w-5xl mx-auto px-6 py-12 md:py-20">
+  const nextStep = () => {
+    setFade(false);
+    setTimeout(() => {
+      setStep((prev) => prev + 1);
+      setFade(true);
+    }, 200);
+  };
+
+  const getAiQs = async () => {
+    const res = await fetch("/api/projectQuestion", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        roadmapId: "123",
+        roadmapTitle: title,
+        purpose,
+        startDate,
+        endDate,
+      }),
+    });
+
+    const data = await res.json();
+    setQuestions(data);
+  };
+
+  return (
+    <div className="mx-auto w-[700px] p-[100px] border border-black">
+      <div
+        className={`transition-opacity duration-200 ${
+          fade ? "opacity-100" : "opacity-0"
+        }`}
+      >
+        {/* HEADER */}
         <div className="flex items-center justify-between mb-16">
           {step > 1 ? (
             <Button
               onClick={prevStep}
               variant="ghost"
-              className="group flex items-center gap-2 text-black/40 hover:text-black hover:bg-black/[0.03] rounded-full px-6 h-12 font-bold transition-all"
+              className="flex items-center gap-2 text-black/40 hover:text-black"
             >
-              <ChevronLeft className="w-5 h-5 transition-transform group-hover:-translate-x-1" />
+              <ChevronLeft className="w-5 h-5" />
               Back
             </Button>
           ) : (
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-black/[0.06] text-[10px] font-black uppercase tracking-[0.2em] text-black/40 shadow-sm">
-              <Rocket size={11} /> New Journey
+            <div className="flex items-center gap-2 text-xs font-bold text-black/40">
+              <Rocket size={12} /> New Journey
             </div>
           )}
 
-          <div className="flex items-center gap-4">
-            <span className="text-[11px] font-black uppercase tracking-[0.2em] text-black/20">
-              Step {step} / 3
-            </span>
-          </div>
+          <span className="text-xs font-bold text-black/30">
+            Step {step} / 3
+          </span>
         </div>
 
-        <div className="mb-20 bg-black/[0.03] rounded-full h-[3px] overflow-hidden">
+        {/* PROGRESS */}
+        <div className="mb-16 bg-black/10 rounded-full h-[3px] overflow-hidden">
           <motion.div
             className="h-full bg-black"
-            initial={{ width: "0%" }}
+            initial={{ width: 0 }}
             animate={{ width: `${progressPercentage}%` }}
-            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.5 }}
           />
         </div>
 
@@ -62,127 +92,91 @@ export default function CreateRoadmap() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.4, ease: "easeOut" }}
+            transition={{ duration: 0.3 }}
             className="space-y-12"
           >
+            {/* STEP 1 */}
             {step === 1 && (
-              <div className="space-y-12">
-                <div className="space-y-6">
-                  <h1 className="text-5xl md:text-7xl font-[1000] tracking-[-0.05em] text-black">
-                    Project <br /> Identity
-                  </h1>
-                  <p className="text-xl font-bold text-black/40 tracking-tight max-w-lg">
-                    Define the core name of your next big achievement.
-                  </p>
-                </div>
+              <div className="space-y-8">
+                <h1 className="text-6xl font-black">Project Identity</h1>
 
-                <div className="relative group max-w-3xl">
-                  <input
-                    type="text"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    placeholder="e.g. Master Backend Development"
-                    className="w-full bg-transparent border-b-2 border-black/[0.08] focus:border-black py-6 text-3xl md:text-5xl font-[1000] tracking-tighter outline-none transition-all placeholder:text-black/[0.05]"
-                    autoFocus
-                  />
-                </div>
+                <input
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  placeholder="e.g. Master Backend Development"
+                  className="w-full border-b-2 border-black/20 py-4 text-3xl outline-none"
+                  autoFocus
+                />
 
-                <motion.div
-                  whileHover={{ y: -2 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="inline-block"
+                <Button
+                  disabled={!title.trim()}
+                  onClick={nextStep}
+                  className="h-14 px-10 bg-black text-white rounded-full"
                 >
-                  <Button
-                    disabled={!title.trim()}
-                    onClick={nextStep}
-                    className="h-16 px-12 bg-black text-white rounded-[2rem] text-[11px] font-black uppercase tracking-[0.2em] hover:bg-black/80 transition-all"
-                  >
-                    Continue
-                  </Button>
-                </motion.div>
+                  Continue
+                </Button>
               </div>
             )}
 
+            {/* STEP 2 */}
             {step === 2 && (
-              <div className="space-y-12">
-                <div className="space-y-6">
-                  <h1 className="text-5xl md:text-7xl font-[1000] tracking-[-0.05em] text-black">
-                    The <br /> Mission
-                  </h1>
-                  <p className="text-xl font-bold text-black/40 tracking-tight max-w-lg">
-                    What is the ultimate purpose of this roadmap?
-                  </p>
-                </div>
+              <div className="space-y-8">
+                <h1 className="text-6xl font-black">The Mission</h1>
 
-                <div className="max-w-3xl">
-                  <textarea
-                    value={purpose}
-                    onChange={(e) => setPurpose(e.target.value)}
-                    placeholder="Describe your vision..."
-                    className="w-full bg-white border border-black/[0.06] rounded-[2rem] p-8 text-xl font-bold min-h-[250px] outline-none shadow-[0_30px_60px_rgba(0,0,0,0.02)] focus:border-black/20 transition-all placeholder:text-black/10 resize-none"
-                    autoFocus
-                  />
-                </div>
+                <textarea
+                  value={purpose}
+                  onChange={(e) => setPurpose(e.target.value)}
+                  placeholder="Describe your vision..."
+                  className="w-full min-h-[220px] p-6 border rounded-2xl text-lg outline-none"
+                  autoFocus
+                />
 
-                <div className="flex gap-4">
-                  <Button
-                    disabled={!purpose.trim()}
-                    onClick={nextStep}
-                    className="h-16 px-12 bg-black text-white rounded-[2rem] text-[11px] font-black uppercase tracking-[0.2em] hover:bg-black/80 transition-all"
-                  >
-                    Set Timeline
-                  </Button>
-                </div>
+                <Button
+                  disabled={!purpose.trim()}
+                  onClick={nextStep}
+                  className="h-14 px-10 bg-black text-white rounded-full"
+                >
+                  Set Timeline
+                </Button>
               </div>
             )}
 
+            {/* STEP 3 */}
             {step === 3 && (
-              <div className="space-y-12">
-                <div className="space-y-6">
-                  <h1 className="text-5xl md:text-7xl font-[1000] tracking-[-0.05em] text-black">
-                    Time <br /> Frame
-                  </h1>
-                  <p className="text-xl font-bold text-black/40 tracking-tight max-w-lg">
-                    When do we start and finish?
-                  </p>
-                </div>
+              <div className="space-y-10">
+                <h1 className="text-6xl font-black">Time Frame</h1>
 
-                <div className="grid md:grid-cols-2 gap-8 max-w-4xl">
-                  <div className="bg-white border border-black/[0.06] p-8 rounded-[2.5rem] shadow-sm">
-                    <span className="text-[10px] font-black uppercase tracking-widest text-black/30 block mb-6">
+                <div className="grid grid-cols-2 gap-8">
+                  <div className="p-6 border rounded-2xl">
+                    <p className="mb-4 text-xs font-bold text-black/40">
                       Launch Date
-                    </span>
+                    </p>
                     <Calendar
                       mode="single"
                       selected={startDate}
                       onSelect={setStartDate}
-                      captionLayout="dropdown"
-                      className="mx-auto"
                     />
                   </div>
 
-                  <div className="bg-white border border-black/[0.06] p-8 rounded-[2.5rem] shadow-sm">
-                    <span className="text-[10px] font-black uppercase tracking-widest text-black/30 block mb-6">
+                  <div className="p-6 border rounded-2xl">
+                    <p className="mb-4 text-xs font-bold text-black/40">
                       Target Date
-                    </span>
+                    </p>
                     <Calendar
                       mode="single"
                       selected={endDate}
                       onSelect={setEndDate}
-                      captionLayout="dropdown"
-                      className="mx-auto"
                     />
                   </div>
                 </div>
 
-                <motion.div whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }}>
-                  <Button
-                    disabled={!startDate || !endDate}
-                    className="h-20 px-16 bg-black text-white rounded-[2.5rem] text-[12px] font-black uppercase tracking-[0.3em] hover:bg-black/80 transition-all shadow-xl shadow-black/10"
-                  >
-                    Generate Roadmap
-                  </Button>
-                </motion.div>
+                <Button
+                  disabled={!startDate || !endDate}
+                  onClick={getAiQs}
+                  className="h-16 px-14 bg-black text-white rounded-full"
+                >
+                  Generate Roadmap
+                </Button>
               </div>
             )}
           </motion.div>
