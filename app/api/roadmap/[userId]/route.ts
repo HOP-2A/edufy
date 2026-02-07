@@ -16,3 +16,15 @@ export const POST = async (
   });
   return NextResponse.json(createdRoadmap);
 };
+export const GET = async (
+  req: NextRequest,
+  context: { params: Promise<{ userId: string }> },
+) => {
+  const { userId } = await context.params;
+  const roadmaps = await prisma.roadmap.findMany({
+    where: {
+      userId,
+    },
+  });
+  return NextResponse.json(roadmaps);
+};

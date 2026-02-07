@@ -6,14 +6,17 @@ import { ChevronLeft, Rocket } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Input } from "@/components/ui/input";
-
+type questions = {
+  id: string;
+  text: string;
+};
 export default function CreateRoadmap() {
   const [step, setStep] = useState(1);
   const [title, setTitle] = useState("");
   const [purpose, setPurpose] = useState("");
   const [fade, setFade] = useState(true);
 
-  const [questions, setQuestions] = useState<any[]>([]);
+  const [questions, setQuestions] = useState<questions[]>([]);
   const [startDate, setStartDate] = useState<Date | undefined>();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answer, setAnswer] = useState("");
@@ -23,7 +26,19 @@ export default function CreateRoadmap() {
   const progressPercentage = (step / 3) * 100;
 
   const prevStep = () => setStep((prev) => Math.max(1, prev - 1));
-
+  const createLearningSection = async () => {
+    const res = await fetch("/api/roadmap-details", {
+      method: "POST",
+      body: JSON.stringify({
+        roadmapId: "123",
+        purpose,
+        title,
+      }),
+    });
+    if (!res) {
+      return <div>Loading</div>;
+    }
+  };
   const nextStep = () => {
     setFade(false);
     setTimeout(() => {
@@ -198,26 +213,37 @@ export default function CreateRoadmap() {
               </div>
             )}
             {step === 4 && (
-              <div className="space-y-10">
-                <h1 className="text-6xl font-black">
-                  {questions[currentIndex].text}
-                </h1>
+              <div>
+                {currentIndex < questions.length ? (
+                  <div className="space-y-10">
+                    <h1 className="text-6xl font-black">
+                      {questions[currentIndex].text}
+                    </h1>
 
-                <div className="grid grid-cols-2 gap-8">
-                  <div className="p-6 border rounded-2xl">
-                    <Input
-                      onChange={(e) => setAnswer(e.target.value)}
-                      value={answer}
-                    />
+                    <div className="grid grid-cols-2 gap-8">
+                      <div className="p-6 border rounded-2xl">
+                        <Input
+                          onChange={(e) => setAnswer(e.target.value)}
+                          value={answer}
+                        />
+                      </div>
+                    </div>
+
+                    <Button
+                      onClick={() => giveAnswer(questions[currentIndex].id)}
+                      className="h-16 px-14 bg-black text-white rounded-full"
+                    >
+                      Next
+                    </Button>
                   </div>
-                </div>
-
-                <Button
-                  onClick={() => giveAnswer(questions[currentIndex].id)}
-                  className="h-16 px-14 bg-black text-white rounded-full"
-                >
-                  Next
-                </Button>
+                ) : (
+                  <div>
+                    <div>You are done click to create your roadmap</div>
+                    <div>
+                      <Button onClick={createLearningSection}>Genrate</Button>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </motion.div>
