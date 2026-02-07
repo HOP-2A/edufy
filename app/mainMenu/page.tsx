@@ -1,8 +1,19 @@
+"use client";
+import { Button } from "@/components/ui/button";
 import Footer from "../_components/Footer";
 import Sidebar from "../_components/SideBar";
+<<<<<<< HEAD
 import Questions from "../_components/mainPageQuestions";
 import CallYourRM from "../_components/CallYourRM";
+=======
+import { useProvider } from "../providers/AuthProviders";
+import { useRouter } from "next/navigation";
+
+>>>>>>> f6ceae3 (P)
 export default function Home() {
+  const { user } = useProvider();
+  const router = useRouter();
+
   return (
     <div className="flex min-h-screen bg-[#fafafa] text-[#1a1a1a] selection:bg-black selection:text-white">
       <aside className="w-64 fixed inset-y-0 z-50 border-r border-gray-200 bg-white">
@@ -18,41 +29,83 @@ export default function Home() {
                 Dashboard
               </div>
               <h1 className="text-5xl font-light tracking-tight text-black">
-                Сайн байна уу, <span className="font-medium"></span>
+                Сайн байна уу, {user?.username}{" "}
+                <span className="font-medium"></span>
               </h1>
               <p className="text-gray-500 text-lg font-light tracking-wide">
                 Өнөөдрийн хичээл болон асуултууддаа төвлөрөх цаг.
               </p>
             </header>
-
-            <section className="relative">
-              <div className="group transition-all duration-500">
-                <div className="bg-white border border-gray-100 shadow-[0_1px_3px_rgba(0,0,0,0.02),0_20px_40px_rgba(0,0,0,0.02)] rounded-2xl p-10 hover:shadow-[0_1px_3px_rgba(0,0,0,0.02),0_30px_60px_rgba(0,0,0,0.04)] transition-shadow duration-700">
-                  <div className="flex items-center justify-between mb-10">
-                    <div>
-                      <h2 className="text-sm font-bold tracking-widest uppercase text-black">
-                        Асуултын сан
-                      </h2>
-                      <div className="h-0.5 w-6 bg-black mt-1"></div>
-                    </div>
-                    <span className="text-xs font-medium text-gray-400 border border-gray-200 px-3 py-1 rounded-full">
-                      Module 01
-                    </span>
-                  </div>
-
-                  <div className="prose prose-slate max-w-none">
-                    <Questions />
-                  </div>
+            <div className="relative overflow-hidden rounded-2xl bg-linear-to-r from-slate-900 via-slate-800 to-slate-900 p-6 lg:p-8">
+              <div className="relative z-10 flex items-center justify-between">
+                <div>
+                  <h1 className="text-2xl lg:text-3xl font-semibold text-white mb-2 text-balance">
+                    Өөрийн карьерийн замыг төлөвлө
+                  </h1>
+                  <p className="text-slate-300 text-base max-w-lg mb-4">
+                    AI-тай хамтран хувийн roadmap үүсгэж, зорилгодоо хүрэх
+                    алхмуудыг тодорхойл.
+                  </p>
+                  <Button
+                    className="bg-white text-slate-900 hover:bg-slate-100"
+                    onClick={() => router.push("/create/roadmap")}
+                  >
+                    <svg
+                      className="w-4 h-4 mr-2"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M12 4.5v15m7.5-7.5h-15"
+                      />
+                    </svg>
+                    Шинэ Roadmap үүсгэх
+                  </Button>
                 </div>
               </div>
+            </div>
 
+<<<<<<< HEAD
+=======
+            <div>
+              {" "}
+              <div className="absolute top-0 right-0 w-64 h-64 bg-linear-to-bl from-white/5 to-transparent rounded-full blur-2xl" />
+              <div className="absolute -bottom-8 -right-8 w-32 h-32 bg-linear-to-tl from-blue-500/20 to-transparent rounded-full blur-xl" />
+              <svg
+                className="absolute right-8 top-1/2 -translate-y-1/2 w-32 h-32 text-white/5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={0.5}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"
+                />
+              </svg>
+            </div>
+
+            <section className="relative">
+              <div className="text-5xl">
+                <div>Төлөвлөгөний ахиц </div>
+              </div>
+              <div className="rounded-xl border outline">hello</div>
+>>>>>>> f6ceae3 (P)
               <div className="absolute -top-6 -right-6 w-24 h-24 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] bg-size-[16px_16px] -z-10 opacity-50"></div>
             </section>
           </div>
         </div>
+<<<<<<< HEAD
         <div className="flex justify-center mb-30">
           <CallYourRM />
         </div>
+=======
+>>>>>>> f6ceae3 (P)
         <footer className="px-12 py-8 border-t border-gray-100 bg-white/50">
           <Footer />
         </footer>
