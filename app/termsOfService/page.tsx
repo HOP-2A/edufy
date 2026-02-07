@@ -38,7 +38,6 @@ export default function TermsOfService() {
 
           <Separator />
 
-          {/* AI Disclaimer Alert */}
           <Alert className="bg-blue-50/50 dark:bg-blue-950/20 border-blue-200 dark:border-blue-900">
             <Info className="h-4 w-4 text-blue-600 dark:text-blue-400" />
             <AlertTitle className="text-blue-800 dark:text-blue-300">
@@ -51,7 +50,6 @@ export default function TermsOfService() {
             </AlertDescription>
           </Alert>
 
-          {/* Content Body */}
           <div className="grid gap-12 text-base leading-7 text-foreground/90">
             <section id="eligibility" className="scroll-mt-20">
               <h2 className="flex items-center gap-2 text-2xl font-bold tracking-tight text-foreground">
@@ -285,7 +283,6 @@ export default function TermsOfService() {
             </section>
           </div>
 
-          {/* Footer */}
           <footer className="mt-12 text-center text-sm text-muted-foreground border-t pt-8 pb-12">
             <p>
               By using the Service, you acknowledge that you have read,
