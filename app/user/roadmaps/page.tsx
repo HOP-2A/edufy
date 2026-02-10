@@ -7,12 +7,17 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Plus, Search, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
-import CreateRoadmap from "@/app/_components/CreateRoadmap";
 import { useEffect, useState } from "react";
-
+type roadmap = {
+  title: string;
+  levelFrom: string;
+  levelTo: string;
+  purpose: string;
+  description: string;
+};
 export default function Home() {
   const router = useRouter();
-  const [roadmaps, setRoadmaps] = useState([]);
+  const [roadmaps, setRoadmaps] = useState<roadmap[]>([]);
   useEffect(() => {
     const getMaps = async () => {
       const res = await fetch("/api/roadmap/IQbAHAzBQwRim2o2L0tyH");
@@ -25,7 +30,6 @@ export default function Home() {
   return (
     <div className="flex min-h-screen bg-[#F8FAFC] ">
       <Sidebar />
-
       <main className="flex-1 flex flex-col justify-around">
         <div className="mt-40 ">
           {roadmaps.length === 0 ? (
@@ -204,6 +208,7 @@ export default function Home() {
           <Footer />
         </div>
       </main>
+      3{" "}
     </div>
   );
 }
