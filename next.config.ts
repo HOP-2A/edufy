@@ -7,6 +7,7 @@ const nextConfig: NextConfig = {
     NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY:
       process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
     CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY,
+    TaskGEMINI_KEY: process.env.TaskGEMINI_KEY,
   },
 };
 

@@ -79,7 +79,7 @@ export default function CreateRoadmap() {
     setCurrentIndex(0);
     nextStep();
   };
-  console.log(questions);
+
   return (
     <div className="mx-auto w-[700px] p-[100px] border border-black">
       <div
@@ -87,7 +87,6 @@ export default function CreateRoadmap() {
           fade ? "opacity-100" : "opacity-0"
         }`}
       >
-        {/* HEADER */}
         <div className="flex items-center justify-between mb-16">
           {step > 1 ? (
             <Button
@@ -109,7 +108,6 @@ export default function CreateRoadmap() {
           </span>
         </div>
 
-        {/* PROGRESS */}
         <div className="mb-16 bg-black/10 rounded-full h-[3px] overflow-hidden">
           <motion.div
             className="h-full bg-black"
@@ -128,7 +126,6 @@ export default function CreateRoadmap() {
             transition={{ duration: 0.3 }}
             className="space-y-12"
           >
-            {/* STEP 1 */}
             {step === 1 && (
               <div className="space-y-8">
                 <h1 className="text-6xl font-black">Project Identity</h1>
@@ -151,7 +148,6 @@ export default function CreateRoadmap() {
               </div>
             )}
 
-            {/* STEP 2 */}
             {step === 2 && (
               <div className="space-y-8">
                 <h1 className="text-6xl font-black">The Mission</h1>
@@ -174,7 +170,6 @@ export default function CreateRoadmap() {
               </div>
             )}
 
-            {/* STEP 3 */}
             {step === 3 && (
               <div className="space-y-10">
                 <h1 className="text-6xl font-black">Time Frame</h1>

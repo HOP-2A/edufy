@@ -21,7 +21,7 @@ export default function Home() {
     };
     getMaps();
   }, []);
-  console.log(roadmaps, "asdfasfd");
+
   return (
     <div className="flex min-h-screen bg-[#F8FAFC] ">
       <Sidebar />
@@ -166,9 +166,6 @@ export default function Home() {
                               key={index}
                               className="group relative overflow-hidden rounded-3xl border-2 border-black bg-white p-12 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl "
                             >
-                              {/* Accent line */}
-
-                              {/* Header */}
                               <div className="flex items-start justify-between gap-6 mb-8">
                                 <h2 className="text-3xl font-bold leading-tight group-hover:underline underline-offset-4">
                                   {map.title}
@@ -179,12 +176,10 @@ export default function Home() {
                                 </span>
                               </div>
 
-                              {/* Description */}
                               <p className="text-lg text-black/70 leading-relaxed mb-10">
                                 {map.description}
                               </p>
 
-                              {/* Footer */}
                               <div className="flex items-center justify-between">
                                 <p className="text-sm font-semibold uppercase tracking-widest text-black/50">
                                   {map.purpose}
