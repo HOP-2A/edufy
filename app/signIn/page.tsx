@@ -1,13 +1,19 @@
 "use client";
-
 import {
   SignedIn,
   SignedOut,
   UserButton,
   RedirectToSignUp,
 } from "@clerk/nextjs";
+import { useProvider } from "../providers/AuthProviders";
+import { useRouter } from "next/navigation";
 
 const Page = () => {
+  const router = useRouter();
+  const { user } = useProvider();
+  if (user) {
+    router.push("/");
+  }
   return (
     <div>
       <SignedOut>

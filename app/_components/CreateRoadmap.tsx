@@ -2,10 +2,15 @@
 
 import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, Rocket } from "lucide-react";
+import {
+  CheckCircle,
+  CheckCircle2,
+  ChevronLeft,
+  Rocket,
+  Sparkles,
+} from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Input } from "@/components/ui/input";
 type questions = {
   id: string;
   text: string;
@@ -30,7 +35,7 @@ export default function CreateRoadmap() {
     const res = await fetch("/api/roadmap-details", {
       method: "POST",
       body: JSON.stringify({
-        roadmapId: "123",
+        roadmapId: "33",
         purpose,
         title,
       }),
@@ -66,7 +71,7 @@ export default function CreateRoadmap() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        roadmapId: "123",
+        roadmapId: "33",
         roadmapTitle: title,
         purpose,
         startDate,
@@ -81,7 +86,7 @@ export default function CreateRoadmap() {
   };
 
   return (
-    <div className="mx-auto w-[700px] p-[100px] border border-black">
+    <div className="mx-auto w-[800px]  p-[50px] border-4  border-black shadow-2xl">
       <div
         className={`transition-opacity duration-200 ${
           fade ? "opacity-100" : "opacity-0"
@@ -99,12 +104,12 @@ export default function CreateRoadmap() {
             </Button>
           ) : (
             <div className="flex items-center gap-2 text-xs font-bold text-black/40">
-              <Rocket size={12} /> New Journey
+              <Rocket size={12} /> New journey
             </div>
           )}
 
           <span className="text-xs font-bold text-black/30">
-            Step {step} / 3
+            Step {step} / 4
           </span>
         </div>
 
@@ -116,7 +121,6 @@ export default function CreateRoadmap() {
             transition={{ duration: 0.5 }}
           />
         </div>
-
         <AnimatePresence mode="wait">
           <motion.div
             key={step}
@@ -128,7 +132,9 @@ export default function CreateRoadmap() {
           >
             {step === 1 && (
               <div className="space-y-8">
-                <h1 className="text-6xl font-black">Project Identity</h1>
+                <h1 className="text-6xl font-black">
+                  What is your project name?
+                </h1>
 
                 <input
                   value={title}
@@ -150,13 +156,15 @@ export default function CreateRoadmap() {
 
             {step === 2 && (
               <div className="space-y-8">
-                <h1 className="text-6xl font-black">The Mission</h1>
+                <h1 className="text-6xl font-black">
+                  What is your purpose in this project?
+                </h1>
 
                 <textarea
                   value={purpose}
                   onChange={(e) => setPurpose(e.target.value)}
                   placeholder="Describe your vision..."
-                  className="w-full min-h-[220px] p-6 border rounded-2xl text-lg outline-none"
+                  className="w-full min-h-[150px] p-6 border rounded-2xl text-lg outline-none"
                   autoFocus
                 />
 
@@ -165,19 +173,18 @@ export default function CreateRoadmap() {
                   onClick={nextStep}
                   className="h-14 px-10 bg-black text-white rounded-full"
                 >
-                  Set Timeline
+                  Continue
                 </Button>
               </div>
             )}
-
             {step === 3 && (
               <div className="space-y-10">
                 <h1 className="text-6xl font-black">Time Frame</h1>
 
                 <div className="grid grid-cols-2 gap-8">
-                  <div className="p-6 border rounded-2xl">
+                  <div className="p-6 rounded-2xl">
                     <p className="mb-4 text-xs font-bold text-black/40">
-                      Launch Date
+                      Start Date
                     </p>
                     <Calendar
                       mode="single"
@@ -186,9 +193,9 @@ export default function CreateRoadmap() {
                     />
                   </div>
 
-                  <div className="p-6 border rounded-2xl">
+                  <div className="p-6 rounded-2xl">
                     <p className="mb-4 text-xs font-bold text-black/40">
-                      Target Date
+                      End Date
                     </p>
                     <Calendar
                       mode="single"
@@ -211,17 +218,17 @@ export default function CreateRoadmap() {
               <div>
                 {currentIndex < questions.length ? (
                   <div className="space-y-10">
-                    <h1 className="text-6xl font-black">
+                    <h1 className="text-4xl font-black">
                       {questions[currentIndex].text}
                     </h1>
 
                     <div className="grid grid-cols-2 gap-8">
-                      <div className="p-6 border rounded-2xl">
-                        <Input
-                          onChange={(e) => setAnswer(e.target.value)}
-                          value={answer}
-                        />
-                      </div>
+                      <input
+                        value={answer}
+                        onChange={(e) => setAnswer(e.target.value)}
+                        className="w-full border-b-2 border-black/20 py-4 text-3xl outline-none"
+                        autoFocus
+                      />
                     </div>
 
                     <Button
@@ -232,11 +239,18 @@ export default function CreateRoadmap() {
                     </Button>
                   </div>
                 ) : (
-                  <div>
-                    <div>You are done click to create your roadmap</div>
-                    <div>
-                      <Button onClick={createLearningSection}>Genrate</Button>
+                  <div className="flex flex-col items-center gap-8">
+                    <div className="flex items-center gap-3 text-2xl font-medium">
+                      <CheckCircle2 className="w-7 h-7 text-green-500" />
+                      <span>Ready to create your roadmap</span>
                     </div>
+                    <Button
+                      onClick={createLearningSection}
+                      className="h-16 px-14 bg-black text-white rounded-full flex items-center gap-2 hover:bg-gray-800 transition-colors"
+                    >
+                      <Sparkles className="w-5 h-5" />
+                      Generate
+                    </Button>
                   </div>
                 )}
               </div>
