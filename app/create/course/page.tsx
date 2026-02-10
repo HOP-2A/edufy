@@ -11,21 +11,12 @@ import {
 import Sidebar from "../../_components/SideBar";
 import {
   ArrowRight,
-  Badge,
   BookOpen,
   Check,
-  CheckCircle2,
   ChevronRight,
-  Circle,
-  ExternalLink,
-  FileText,
-  HelpCircle,
-  Layers,
   LinkIcon,
-  Trophy,
 } from "lucide-react";
 
-// Type definitions
 interface Resource {
   id: string;
   type: string;
@@ -85,7 +76,6 @@ export default function RoadmapPage() {
   useEffect(() => {
     if (!id) return;
 
-    // Fetch function
     const fetchRoadmap = async () => {
       try {
         const res = await fetch(`/api/getroadmapinfo/${id}`);
@@ -140,14 +130,16 @@ export default function RoadmapPage() {
     <div className="flex min-h-screen bg-white text-slate-900 font-sans antialiased">
       <Sidebar />
 
-      <main className="flex-1 overflow-y-auto">
-        <div className="max-w-3xl mx-auto px-8 py-24">
-          {/* Header */}
-          <header className="mb-20 pl-16">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-8 h-[1px] bg-slate-200" />
-              <span className="font-mono text-[10px] tracking-[0.3em] text-slate-400 uppercase">
-                {roadmap?.levelFrom} — {roadmap?.levelTo}
+      <main className="flex-1 overflow-y-auto bg-white">
+        <div className="max-w-4xl mx-auto px-8 py-20">
+          <header className="mb-16 pb-12 border-b-2 border-slate-100">
+            <div className="flex items-center gap-3 text-blue-600 font-bold text-xs uppercase tracking-widest mb-6">
+              <span className="bg-blue-50 px-3 py-1 rounded-full">
+                Roadmap Path
+              </span>
+              <ArrowRight className="w-3 h-3" />
+              <span className="text-slate-500">
+                Level {roadmap?.levelFrom} — {roadmap?.levelTo}
               </span>
             </div>
 
@@ -160,39 +152,64 @@ export default function RoadmapPage() {
             </p>
           </header>
 
-          {/* SINGLE ACCORDION CONTROLLER */}
-          <Accordion type="single" collapsible className="space-y-6">
-            {roadmap?.learningSections.map((section, index) => {
-              const hasTasks = section.tasks && section.tasks.length > 0;
+          <div className="space-y-6">
+            <h2 className="text-sm font-black uppercase tracking-[0.3em] text-slate-400 mb-10">
+              Learning Modules
+            </h2>
 
-              return (
-                <div key={section.id} className="relative group">
-                  {/* Vertical timeline line */}
-                  {index !== roadmap.learningSections.length - 1 && (
-                    <div className="absolute left-[23px] top-[48px] bottom-[-50px] w-[1px] bg-slate-200 z-0" />
-                  )}
-
-                  <div className="flex gap-8 relative z-10">
-                    {/* Square node */}
-                    <div className="pt-6">
-                      <div className="w-[48px] h-[48px] border border-slate-300 bg-white flex items-center justify-center transition-all data-[state=open]:border-slate-900">
-                        <span className="font-mono text-xs text-slate-400 data-[state=open]:text-slate-900">
-                          {(index + 1).toString().padStart(2, "0")}
+            <Accordion type="single" collapsible className="space-y-6">
+              {roadmap?.learningSections.map((section, index) => (
+                <AccordionItem
+                  key={section.id}
+                  value={section.id}
+                  className="border-2 border-slate-200 rounded-2xl overflow-hidden px-2 transition-all data-[state=open]:border-blue-600 data-[state=open]:shadow-xl data-[state=open]:shadow-blue-500/10"
+                >
+                  <AccordionTrigger className="hover:no-underline py-8 px-6 group">
+                    <div className="flex items-center gap-8 text-left">
+                      <span className="text-4xl font-black text-slate-100 group-data-[state=open]:text-blue-100 transition-colors">
+                        {(index + 1).toString().padStart(2, "0")}
+                      </span>
+                      <div>
+                        <span className="block text-xs font-bold text-blue-600 uppercase mb-1">
+                          {section.level}
+                        </span>
+                        <span className="text-2xl font-bold text-slate-800 group-hover:text-blue-600 transition-colors">
+                          {section.title}
                         </span>
                       </div>
                     </div>
+                  </AccordionTrigger>
 
-                    {/* Section container */}
-                    <div className="flex-1 border border-slate-400 bg-white p-1 rounded-2xl transition-all data-[state=open]:border-slate-300">
-                      <AccordionItem value={section.id} className="border-none">
-                        <AccordionTrigger className="hover:no-underline p-6 group/trigger">
-                          <div className="flex flex-col items-start text-left">
-                            <span className="font-mono text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1">
-                              Section {index + 1}
-                            </span>
-                            <span className="text-xl font-semibold text-slate-900 group-hover/trigger:text-blue-600 transition-colors">
-                              {section.title}
-                            </span>
+                  <AccordionContent className="pb-10 pt-2 px-6 border-t-2 border-slate-50">
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
+                      <div className="lg:col-span-7 space-y-8">
+                        <p className="text-lg text-slate-600 leading-relaxed">
+                          {section.content}
+                        </p>
+
+                        {section.resources.length > 0 && (
+                          <div className="bg-slate-50 p-6 rounded-xl border-2 border-slate-100">
+                            <h4 className="text-sm font-bold uppercase tracking-widest text-slate-900 mb-4 flex items-center gap-2">
+                              <BookOpen className="w-4 h-4 text-blue-600" />{" "}
+                              Essential Resources
+                            </h4>
+                            <div className="grid gap-3">
+                              {section.resources.map((res) => (
+                                <a
+                                  key={res.id}
+                                  href={res.url || "#"}
+                                  className="flex items-center justify-between p-3 bg-white rounded-lg border-2 border-slate-200 hover:border-blue-400 hover:shadow-sm transition-all group/res"
+                                >
+                                  <div className="flex items-center gap-3">
+                                    <LinkIcon className="w-4 h-4 text-slate-400 group-hover/res:text-blue-600" />
+                                    <span className="font-semibold text-slate-700">
+                                      {res.title}
+                                    </span>
+                                  </div>
+                                  <ChevronRight className="w-4 h-4 text-slate-300" />
+                                </a>
+                              ))}
+                            </div>
                           </div>
                         </AccordionTrigger>
 
@@ -204,6 +221,13 @@ export default function RoadmapPage() {
 
                             <div className="h-[2px] w-124 -mt-1 bg-slate-200" />
 
+                      <div className="lg:col-span-5">
+                        <h4 className="text-sm font-bold uppercase tracking-widest text-slate-900 mb-4 flex items-center gap-2">
+                          <Check className="w-4 h-4 text-blue-600" /> Action
+                          Items
+                        </h4>
+                        <div className="space-y-3">
+                          {section.tasks.map((task) => (
                             <div
                               className={`grid grid-cols-1 ${
                                 hasTasks ? "lg:grid-cols-2" : ""

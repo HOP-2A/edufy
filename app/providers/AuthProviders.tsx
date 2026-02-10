@@ -52,6 +52,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
       }
       if (!clerkUser) {
         setLoading(false);
+        router.replace("/");
         return;
       }
 
