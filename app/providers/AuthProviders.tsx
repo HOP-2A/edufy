@@ -60,7 +60,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
       });
       const userData = await res.json();
 
-      router.push("/mainMenu");
+      // router.push("/mainMenu");
 
       setUser(userData);
       setLoading(false);
