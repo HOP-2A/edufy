@@ -127,7 +127,7 @@ export default function RoadmapPage() {
   }
 
   return (
-    <div className="flex min-h-screen bg-[#F8FAFC] text-slate-900 font-sans">
+    <div className="flex min-h-screen bg-white text-slate-900 font-sans antialiased">
       <Sidebar />
 
       <main className="flex-1 overflow-y-auto bg-white">
@@ -142,10 +142,12 @@ export default function RoadmapPage() {
                 Level {roadmap?.levelFrom} — {roadmap?.levelTo}
               </span>
             </div>
-            <h1 className="text-5xl font-extrabold tracking-tight text-slate-900 mb-6">
+
+            <h1 className="text-4xl font-bold tracking-tight text-black mb-6">
               {roadmap?.title}
             </h1>
-            <p className="text-xl text-slate-500 leading-relaxed max-w-2xl">
+
+            <p className="text-lg text-slate-500 leading-relaxed max-w-xl font-light">
               {roadmap?.description}
             </p>
           </header>
@@ -209,8 +211,15 @@ export default function RoadmapPage() {
                               ))}
                             </div>
                           </div>
-                        )}
-                      </div>
+                        </AccordionTrigger>
+
+                        <AccordionContent className="px-6 pb-12 pt-2 border-t border-slate-50">
+                          <div className="space-y-12">
+                            <p className="text-base text-slate-600 leading-relaxed max-w-2xl font-light">
+                              {section.content}
+                            </p>
+
+                            <div className="h-[2px] w-124 -mt-1 bg-slate-200" />
 
                       <div className="lg:col-span-5">
                         <h4 className="text-sm font-bold uppercase tracking-widest text-slate-900 mb-4 flex items-center gap-2">
@@ -220,42 +229,81 @@ export default function RoadmapPage() {
                         <div className="space-y-3">
                           {section.tasks.map((task) => (
                             <div
-                              key={task.id}
-                              className={`p-4 rounded-xl border-2 transition-all ${
-                                task.completed
-                                  ? "bg-blue-50 border-blue-100 shadow-inner"
-                                  : "bg-white border-slate-200"
-                              }`}
+                              className={`grid grid-cols-1 ${
+                                hasTasks ? "lg:grid-cols-2" : ""
+                              } gap-12`}
                             >
-                              <div className="flex items-start gap-3">
-                                <div
-                                  className={`mt-0.5 p-1 rounded-md ${task.completed ? "bg-blue-600 text-white" : "bg-slate-100 text-slate-400"}`}
-                                >
-                                  <Check className="w-3 h-3" />
-                                </div>
-                                <div>
-                                  <p
-                                    className={`font-bold text-sm ${task.completed ? "text-blue-900 line-through opacity-60" : "text-slate-800"}`}
-                                  >
-                                    {task.title}
-                                  </p>
-                                  {!task.completed && (
-                                    <p className="text-xs text-slate-500 mt-1">
-                                      {task.content}
-                                    </p>
-                                  )}
+                              {/* Resources */}
+                              <div className="space-y-6">
+                                <h4 className="font-mono text-[10px] uppercase tracking-widest text-slate-400">
+                                  Resources
+                                </h4>
+
+                                <div className="space-y-2">
+                                  {section.resources.map((res) => (
+                                    <a
+                                      key={res.id}
+                                      href={res.url || "#"}
+                                      className="flex items-center gap-3 py-1 text-sm text-slate-500 hover:text-blue-600 transition-colors group/link"
+                                    >
+                                      <LinkIcon className="w-3 h-3 opacity-30 group-hover/link:opacity-100" />
+                                      <span className="border-b border-transparent group-hover/link:border-blue-100">
+                                        {res.title}
+                                      </span>
+                                    </a>
+                                  ))}
                                 </div>
                               </div>
+
+                              {/* Objectives */}
+                              {hasTasks && (
+                                <div className="space-y-6">
+                                  <h4 className="font-mono text-[10px] uppercase tracking-widest text-slate-400">
+                                    Objectives
+                                  </h4>
+
+                                  <div className="space-y-4">
+                                    {section.tasks.map((task) => (
+                                      <div
+                                        key={task.id}
+                                        className="flex gap-4 items-start"
+                                      >
+                                        <div
+                                          className={`mt-1 w-4 h-4 border flex-shrink-0 flex items-center justify-center transition-all ${
+                                            task.completed
+                                              ? "bg-slate-900 border-slate-900"
+                                              : "border-slate-200"
+                                          }`}
+                                        >
+                                          {task.completed && (
+                                            <Check className="w-3 h-3 text-white stroke-[3px]" />
+                                          )}
+                                        </div>
+
+                                        <p
+                                          className={`text-xs font-bold leading-tight ${
+                                            task.completed
+                                              ? "text-slate-400 line-through"
+                                              : "text-slate-800"
+                                          }`}
+                                        >
+                                          {task.title}
+                                        </p>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                              )}
                             </div>
-                          ))}
-                        </div>
-                      </div>
+                          </div>
+                        </AccordionContent>
+                      </AccordionItem>
                     </div>
-                  </AccordionContent>
-                </AccordionItem>
-              ))}
-            </Accordion>
-          </div>
+                  </div>
+                </div>
+              );
+            })}
+          </Accordion>
         </div>
       </main>
     </div>
