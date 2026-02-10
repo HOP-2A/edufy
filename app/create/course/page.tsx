@@ -72,7 +72,7 @@ export default function RoadmapPage() {
   const [roadmap, setRoadmap] = useState<Roadmap | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
+  console.log(roadmap);
   useEffect(() => {
     if (!id) return;
 
@@ -198,6 +198,7 @@ export default function RoadmapPage() {
                                 <a
                                   key={res.id}
                                   href={res.url || "#"}
+                                  target="_blank"
                                   className="flex items-center justify-between p-3 bg-white rounded-lg border-2 border-slate-200 hover:border-blue-400 hover:shadow-sm transition-all group/res"
                                 >
                                   <div className="flex items-center gap-3">

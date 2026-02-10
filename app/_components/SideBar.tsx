@@ -28,15 +28,12 @@ const navItems = [
 ];
 
 const dropdownCreateAiItems = [
-  { label: "Roadmap", icon: Map, url: "/create/roadmap" },
-  { label: "Test", icon: Clipboard, url: "/create/test" },
-  { label: "Course", icon: School, url: "/create/course" },
+  { label: "Roadmap", icon: Map, url: "/create/Roadmap" },
 ];
 
 const dropdownMyLearningItems = [
-  { label: "Roadmap", icon: Map, url: "/user/roadmaps" },
+  { label: "Roadmap", icon: Map, url: "/user/course" },
   { label: "Test", icon: Clipboard, url: "/user/tests" },
-  { label: "Course", icon: School, url: "/user/course" },
 ];
 
 export default function Sidebar() {
@@ -70,7 +67,7 @@ export default function Sidebar() {
                   <Sparkles size={18} />
                 </div>
                 <span className="relative z-10 text-sm font-bold tracking-tight">
-                  Create With AI
+                  Create
                 </span>
                 <ChevronDown
                   size={14}
