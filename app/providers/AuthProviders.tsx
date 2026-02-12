@@ -59,7 +59,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
       const res = await fetch(`/api/find-user/${clerkUser.id}`, {
         method: "GET",
       });
-      
+
       const userData = await res.json();
 
       setUser(userData);
