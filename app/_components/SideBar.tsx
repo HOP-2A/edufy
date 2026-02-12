@@ -10,7 +10,6 @@ import {
   Users,
   Clipboard,
   ChevronDown,
-  School,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -32,7 +31,7 @@ const dropdownCreateAiItems = [
 ];
 
 const dropdownMyLearningItems = [
-  { label: "Roadmap", icon: Map, url: "/user/course" },
+  { label: "Roadmap", icon: Map, url: "/user/roadmaps" },
   { label: "Test", icon: Clipboard, url: "/user/tests" },
 ];
 

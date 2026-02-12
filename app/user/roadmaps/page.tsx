@@ -2,213 +2,209 @@
 
 import Footer from "@/app/_components/Footer";
 import Sidebar from "@/app/_components/SideBar";
-import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Plus, Search, Sparkles } from "lucide-react";
-import { motion } from "framer-motion";
+import {
+  TrendingUp,
+  Plus,
+  Search,
+  BookOpen,
+  ArrowUpRight,
+  Sparkles,
+} from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-type roadmap = {
+import { useAuth } from "@clerk/nextjs";
+
+interface Roadmap {
+  id: string;
   title: string;
-  levelFrom: string;
-  levelTo: string;
-  purpose: string;
   description: string;
-};
-export default function Home() {
+}
+
+interface User {
+  id: string;
+  username: string;
+  email: string;
+  clerkId: string;
+}
+
+export default function Main() {
   const router = useRouter();
-  const [roadmaps, setRoadmaps] = useState<roadmap[]>([]);
+  const { userId, isLoaded } = useAuth();
+
+  const [searchQuery, setSearchQuery] = useState("");
+  const [roadmap, setRoadmap] = useState<Roadmap[]>([]);
+  const [roadmapId, setRoadmapId] = useState<Roadmap[]>([]);
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
   useEffect(() => {
-    const getMaps = async () => {
-      const res = await fetch("/api/roadmap/IQbAHAzBQwRim2o2L0tyH");
-      const maps = await res.json();
-      setRoadmaps(maps);
+    if (!isLoaded || !userId) return;
+
+    const fetchUser = async () => {
+      try {
+        const res = await fetch(`/api/find-user/${userId}`);
+        if (!res.ok) throw new Error("Failed to fetch user");
+        const data = await res.json();
+        setUser(data);
+      } catch (err) {
+        console.error(err);
+        setError(err instanceof Error ? err.message : "An error occurred");
+      }
     };
-    getMaps();
-  }, []);
+
+    fetchUser();
+  }, [isLoaded, userId]);
+
+  useEffect(() => {
+    if (!user?.id) return;
+
+    const fetchRoadmapIds = async () => {
+      try {
+        setLoading(true);
+        const res = await fetch(`/api/getroadmapbyuserId/${user.id}`);
+        if (!res.ok) throw new Error("Failed to fetch roadmaps");
+        setRoadmapId(await res.json());
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "An error occurred");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRoadmapIds();
+  }, [user?.id]);
+
+  useEffect(() => {
+    if (roadmapId.length === 0) {
+      setRoadmap([]);
+      return;
+    }
+
+    const fetchAllRoadmaps = async () => {
+      try {
+        setLoading(true);
+
+        const results = await Promise.all(
+          roadmapId.map((r) =>
+            fetch(`/api/getroadmapinfo/${r.id}`).then((res) => {
+              if (!res.ok) throw new Error("Failed roadmap fetch");
+              return res.json();
+            }),
+          ),
+        );
+
+        setRoadmap(results);
+      } catch (err) {
+        setError("Failed to load roadmaps");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAllRoadmaps();
+  }, [roadmapId]);
+
+  const filteredRoadmaps = roadmap.filter((course) =>
+    course.title.toLowerCase().includes(searchQuery.toLowerCase()),
+  );
+
+  if (!isLoaded || loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <p className="text-slate-500 text-lg">Loading...</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="flex min-h-screen bg-[#F8FAFC] ">
-      <Sidebar />
-      <main className="flex-1 flex flex-col justify-around">
-        <div className="mt-40 ">
-          {roadmaps.length === 0 ? (
-            <div className="min-h-screen bg-[#fafafa]">
-              <div className="relative flex flex-1 flex-col p-6 md:p-12 overflow-hidden">
-                <div className="absolute top-0 right-0 -z-10 h-125 w-125 rounded-full bg-black/[0.01] blur-[120px]" />
-                <div className="absolute bottom-0 left-0 -z-10 h-100 w-100 rounded-full bg-black/[0.01] blur-[100px]" />
+    <div className="min-h-screen flex flex-col bg-slate-50">
+      <div className="flex flex-1">
+        <Sidebar />
 
-                <div className="mx-auto w-full max-w-6xl space-y-12">
-                  <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
-                    <div className="space-y-4">
-                      <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-black/[0.06] text-[10px] font-black uppercase tracking-[0.2em] text-black/40 shadow-sm">
-                        <Sparkles size={11} /> Personal Space
-                      </div>
-                      <h1 className="text-5xl md:text-6xl font-[1000] tracking-[-0.05em] text-black leading-tight">
-                        Library
-                      </h1>
-                      <p className="text-lg font-bold text-black/30 tracking-tight">
-                        Explore and manage your roadmaps.
-                      </p>
-                    </div>
+        <div className="flex-1 flex flex-col min-h-screen p-6 md:p-12 relative overflow-hidden">
+          <div className="absolute top-0 right-0 -z-10 w-full h-full">
+            <div className="absolute top-[-10%] right-[-5%] w-150 h-150 bg-blue-100/30 rounded-full blur-[120px]" />
+            <div className="absolute bottom-[20%] left-[-5%] w-100 h-100 bg-indigo-100/20 rounded-full blur-[100px]" />
+          </div>
 
-                    <motion.div
-                      whileHover={{ y: -2 }}
-                      whileTap={{ scale: 0.98 }}
-                    >
-                      <Button
-                        onClick={() => router.push("create/roadmap")}
-                        className="group relative h-16 px-10 bg-black text-white rounded-[2rem] border border-black/5 transition-all duration-500 ease-out hover:bg-black/80 hover:shadow-[0_30px_60px_rgba(0,0,0,0.12)]"
-                      >
-                        <div className="flex items-center gap-4">
-                          <div className="transition-transform duration-500 group-hover:scale-110">
-                            <Plus className="w-5 h-5 stroke-[2.5px]" />
-                          </div>
-                          <span className="text-[11px] font-black uppercase tracking-[0.2em]">
-                            Create New
-                          </span>
-                        </div>
-                      </Button>
-                    </motion.div>
-                  </div>
-
-                  <div className="group relative w-full max-w-2xl">
-                    <Search className="absolute left-6 top-1/2 h-5 w-5 -translate-y-1/2 text-black/20 transition-colors group-focus-within:text-black" />
-                    <Input
-                      className="h-16 rounded-[2rem] border-black/[0.08] bg-white pl-16 text-lg font-bold shadow-[0_15px_40px_rgba(0,0,0,0.03)] focus-within:shadow-[0_20px_50px_rgba(0,0,0,0.06)] transition-all duration-500 focus-visible:ring-0 placeholder:text-black/10 tracking-tight"
-                      placeholder="search a roadmap"
-                    />
-                  </div>
-                </div>
+          <div className="max-w-6xl mx-auto w-full space-y-8">
+            <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+              <div className="space-y-2">
+                <h1 className="text-4xl font-black tracking-tight text-slate-900">
+                  Library
+                </h1>
+                <p className="text-lg text-slate-500">Explore your courses.</p>
               </div>
 
-              <div className="flex flex-1 flex-col px-6 pb-12">
-                <div className="mx-auto w-full max-w-6xl">
-                  <div className="flex min-h-[55vh] w-full flex-col items-center justify-center rounded-[3rem] border border-black/[0.04] bg-white p-20 text-center shadow-[0_40px_80px_rgba(0,0,0,0.02)]">
-                    <div className="relative mb-8">
-                      <div className="relative flex h-28 w-28 items-center justify-center rounded-[2.5rem] bg-black/[0.02] border border-black/[0.05] text-black/15">
-                        <Sparkles className="h-12 w-12" />
-                      </div>
-                    </div>
-
-                    <h2 className="mb-4 text-4xl font-[1000] text-black tracking-[-0.04em]">
-                      No roadmaps found
-                    </h2>
-                    <p className="mb-10 text-black/30 font-bold max-w-xs mx-auto text-lg leading-tight">
-                      Your library is quiet. Start building your first knowledge
-                      path.
-                    </p>
-
-                    <Button
-                      className="h-16 rounded-full bg-black/[0.05] hover:bg-black hover:text-white px-12 text-[11px] font-black uppercase tracking-[0.2em] text-black transition-all duration-500"
-                      onClick={() => router.push("create/roadmap")}
-                    >
-                      Create your first roadmap
-                    </Button>
-                  </div>
-                </div>
-              </div>
+              <Button
+                className="h-14 px-8 rounded-2xl bg-slate-900 text-white font-bold shadow-xl transition-all hover:bg-blue-600 active:scale-95"
+                onClick={() => router.push("/create/roadmap")}
+              >
+                <Plus className="mr-2 h-5 w-5 stroke-[3px]" />
+                Create New
+              </Button>
             </div>
-          ) : (
-            <div className="min-h-screen bg-[#fafafa]">
-              <div className="relative flex flex-1 flex-col p-6 md:p-12 overflow-hidden">
-                <div className="absolute top-0 right-0 -z-10 h-125 w-125 rounded-full bg-black/[0.01] blur-[120px]" />
-                <div className="absolute bottom-0 left-0 -z-10 h-100 w-100 rounded-full bg-black/[0.01] blur-[100px]" />
 
-                <div className="mx-auto w-full max-w-6xl space-y-12">
-                  <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
-                    <div className="space-y-4">
-                      <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-black/[0.06] text-[10px] font-black uppercase tracking-[0.2em] text-black/40 shadow-sm">
-                        <Sparkles size={11} /> Personal Space
-                      </div>
-                      <h1 className="text-5xl md:text-6xl font-[1000] tracking-[-0.05em] text-black leading-tight">
-                        Library
-                      </h1>
-                      <p className="text-lg font-bold text-black/30 tracking-tight">
-                        Explore and manage your roadmaps.
-                      </p>
-                    </div>
-
-                    <motion.div
-                      whileHover={{ y: -2 }}
-                      whileTap={{ scale: 0.98 }}
-                    >
-                      <Button
-                        onClick={() => router.push("create/roadmap")}
-                        className="group relative h-16 px-10 bg-black text-white rounded-[2rem] border border-black/5 transition-all duration-500 ease-out hover:bg-black/80 hover:shadow-[0_30px_60px_rgba(0,0,0,0.12)]"
-                      >
-                        <div className="flex items-center gap-4">
-                          <div className="transition-transform duration-500 group-hover:scale-110">
-                            <Plus className="w-5 h-5 stroke-[2.5px]" />
-                          </div>
-                          <span className="text-[11px] font-black uppercase tracking-[0.2em]">
-                            Create New
-                          </span>
-                        </div>
-                      </Button>
-                    </motion.div>
-                  </div>
-
-                  <div className="group relative w-full max-w-2xl">
-                    <Search className="absolute left-6 top-1/2 h-5 w-5 -translate-y-1/2 text-black/20 transition-colors group-focus-within:text-black" />
-                    <Input
-                      className="h-16 rounded-[2rem] border-black/[0.08] bg-white pl-16 text-lg font-bold shadow-[0_15px_40px_rgba(0,0,0,0.03)] focus-within:shadow-[0_20px_50px_rgba(0,0,0,0.06)] transition-all duration-500 focus-visible:ring-0 placeholder:text-black/10 tracking-tight"
-                      placeholder="search a roadmap"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex flex-1 flex-col px-6 pb-12">
-                <div className="mx-auto w-full max-w-6xl">
-                  <div className="flex min-h-[55vh] w-full flex-col items-center justify-center rounded-[3rem] border border-black/[0.04] bg-white p-20 text-center shadow-[0_40px_80px_rgba(0,0,0,0.02)]">
-                    <div className="relative mb-8">
-                      <div className="h-full w-full flex flex-col items-center py-16 px-4 bg-white overflow-scroll">
-                        <div className="w-full max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12">
-                          {roadmaps.map((map, index) => (
-                            <div
-                              key={index}
-                              className="group relative overflow-hidden rounded-3xl border-2 border-black bg-white p-12 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl "
-                            >
-                              <div className="flex items-start justify-between gap-6 mb-8">
-                                <h2 className="text-3xl font-bold leading-tight group-hover:underline underline-offset-4">
-                                  {map.title}
-                                </h2>
-
-                                <span className="shrink-0 rounded-full text-sm font-mono px-4 py-1.5 border border-black/20 bg-black/5">
-                                  {map.levelFrom} → {map.levelTo}
-                                </span>
-                              </div>
-
-                              <p className="text-lg text-black/70 leading-relaxed mb-10">
-                                {map.description}
-                              </p>
-
-                              <div className="flex items-center justify-between">
-                                <p className="text-sm font-semibold uppercase tracking-widest text-black/50">
-                                  {map.purpose}
-                                </p>
-
-                                <span className="text-sm font-medium opacity-0 translate-x-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0">
-                                  View roadmap →
-                                </span>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+            <div className="group relative w-full">
+              <Search className="absolute left-5 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400 transition-colors group-focus-within:text-blue-500" />
+              <Input
+                className="h-16 rounded-2xl border-slate-200 bg-white pl-14 text-lg shadow-sm transition-all focus-visible:ring-blue-500"
+                placeholder="search for a course"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
             </div>
-          )}
+          </div>
+
+          <div className="flex-1 mt-8 max-w-6xl mx-auto w-full">
+            {loading ? (
+              <p className="text-center text-slate-500 mt-20">
+                Loading courses...
+              </p>
+            ) : roadmap.length === 0 ? (
+              <div className="flex min-h-[70vh] w-full flex-col items-center justify-center rounded-[3rem] border-2 border-dashed border-slate-200 bg-white/60 p-20 text-center backdrop-blur-sm">
+                <div className="relative mb-10">
+                  <div className="absolute inset-0 bg-blue-400 opacity-20 blur-3xl" />
+                  <div className="relative flex h-32 w-32 rotate-3 items-center justify-center rounded-[2.5rem] border border-blue-100 bg-blue-50 text-blue-500">
+                    <Sparkles className="h-14 w-14" />
+                  </div>
+                </div>
+
+                <h2 className="mb-6 text-4xl font-extrabold text-slate-900">
+                  No roadmaps found
+                </h2>
+
+                <Button
+                  className="h-18 rounded-2xl bg-slate-900 px-14 text-xl font-bold text-white shadow-xl transition-all hover:bg-blue-600 active:scale-95"
+                  onClick={() => router.push("/create/roadmap")}
+                >
+                  Create your first course
+                </Button>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredRoadmaps.map((course) => (
+                  <div
+                    key={course.id}
+                    className="group relative bg-white border border-slate-200 p-8 rounded-[2rem] shadow-sm hover:shadow-xl hover:shadow-blue-900/5 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between min-h-55 cursor-pointer"
+                    onClick={() => router.push(`/user/course?id=${course.id}`)}
+                  >
+                    <h3 className="text-xl font-bold text-slate-900 leading-snug group-hover:text-blue-600 transition-colors">
+                      {course.title}
+                    </h3>
+                    <p className="text-slate-500 mt-2">{course.description}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
-        <div className="h-[5vh]">
-          <Footer />
-        </div>
-      </main>
-      3{" "}
+      </div>
+
+      <Footer />
     </div>
   );
 }
