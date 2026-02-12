@@ -261,7 +261,6 @@ export default function RoadmapPage() {
 
               return (
                 <div key={q.id} className="flex gap-6">
-                  {/* Number */}
                   <div className="pt-2">
                     <div
                       className={clsx(
