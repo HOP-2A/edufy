@@ -113,8 +113,13 @@ export default function Main() {
 
   if (!isLoaded || loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <p className="text-slate-500 text-lg">Loading...</p>
+      <div className="w-full h-full flex">
+        <div className="left-0">
+          <Sidebar />
+        </div>
+        <div className="h-[100vh] w-full flex justify-center items-center ">
+          <p className="text-slate-500 text-lg">Loading...</p>
+        </div>
       </div>
     );
   }

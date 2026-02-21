@@ -44,68 +44,41 @@ export const POST = async (req: NextRequest) => {
     where: { roadmapId: body.roadmapId },
   });
 
-  const prompt = `You are an expert AI Learning Section Creator.
+  const prompt = `You are an expert AI Learning Section Creator. Your goal is to generate **all necessary learning sections** based on the following user questions and answers. Each section should **teach or explain the concept clearly**, including practical rules, steps, examples, or mini exercises, not just vague explanations like “this is important.”
 
-Your task is to generate **learning sections only** for a roadmap based on the following user questions and answers. Focus only on beginner-level topics ("Түвшин 1").
+**Output rules:**
+- Output ONLY valid JSON. No markdown, explanations, or extra text.
+- JSON must strictly follow this format:
 
-INPUT DATA:
-${JSON.stringify(
-  {
-    roadmapTitle: body.title,
-    purpose: body.purpose,
-    questionsAndAnswers: questions.map((q) => ({
-      question: q.text,
-      answer: q.answer,
-    })),
-  },
-  null,
-  2,
-)}
-
-RULES:
-- Output ONLY valid JSON. No markdown, no extra text.
-- Language: Mongolian.
-- Focus exclusively on **beginner-level learning sections (Түвшин 1)**.
-- Each section must include:
-  - id (e.g., "section1")
-  - title (specific beginner topic)
-  - level ("Түвшин 1")
-  - content (4–6 sentences explaining the concept, why it matters, and what the learner will achieve)
-  - resources (2–4 high-quality, actionable resources with real URLs)
-    - Resource types: VIDEO | ARTICLE | BOOK | EXERCISE | OTHER
-    - Each resource must include instructions on **how to use it**:
-      * Example: "Go to this page, scroll to chapter X, complete exercises 1–5"
-    - Include only free or widely accessible resources if possible.
-- Learning sections should **cover all beginner concepts needed to understand the topic** based on the user’s questions.
-- Create 5–10 sections.
-- Resources must directly match what the learning section teaches.
-- Do not create tasks or taskQuestions.
-
-OUTPUT FORMAT:
 {
   "learningSections": [
     {
       "id": "section1",
-      "title": "Суурь ойлголт",
-      "level": "Түвшин 1",
-      "content": "Энэ хэсэгт сурагч нь суурь ойлголтуудыг сурна. ...",
+      "title": "Specific topic title",
+      "level": "Beginner | Intermediate | Advanced",
+      "content": "4–6 sentences that clearly teach or explain the concept, include practical rules, examples, or mini exercises.",
       "resources": [
         {
-          "type": "BOOK",
-          "title": "English Grammar in Use - Elementary",
-          "url": "https://www.cambridge.org/grammar",
-        },
-        {
-          "type": "EXERCISE",
-          "title": "Relative Clauses Exercises",
-          "url": "https://www.perfect-english-grammar.com/relative-clauses-exercise-1.html",
+          "type": "BOOK | VIDEO | ARTICLE | EXERCISE | OTHER",
+          "title": "Resource title",
+          "url": "Working URL",
+          "instructions": "Step-by-step instructions for using the resource."
         }
       ]
     }
   ]
 }
 
-Only output valid JSON. Do not include anything outside JSON.`;
+**User inputs from the roadmap body:**
+Title: ${body.title}
+Purpose: ${body.purpose}
+Start Date: ${body.startDate}
+End Date: ${body.endDate}
+**User questions and answers:**
+${JSON.stringify(
+  questions.map((q) => ({ question: q.text, answer: q.answer })),
+)}
+`;
 
   const response = await model.generateContent(prompt);
   const aiRes = response.response.text();
