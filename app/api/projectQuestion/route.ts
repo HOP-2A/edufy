@@ -10,47 +10,45 @@ export const POST = async (req: NextRequest) => {
   const body = await req.json();
   const prompt = `You are an AI Roadmap Planner.
 
-Your task is to ask ALL necessary questions required to create a detailed, personalized learning roadmap, ask all in mongolian. 
-
-INPUT FIELDS:
-- roadmapTitle
-- startDate
-- endDate
-- purpose
+Your task is to ask ONLY the essential questions needed to create a clear, personalized learning roadmap.
 
 STRICT RULES:
-- Ask questions ONLY
-- Do NOT explain anything
-- Do NOT give suggestions
-- Do NOT create the roadmap yet
-- Do NOT add any text outside JSON
-- Do NOT use markdown
-- Questions must be clear, short, and necessary
-- Questions must help fully personalize a roadmap
-- Avoid redundant or generic questions
-- Ask between 8 and 14 questions total
 
-OUTPUT FORMAT (MUST MATCH EXACTLY):
-{
-  "questions": [
-    {
-      "id": "q1",
-      "question": "string"
-    }
-  ]
-}
+Ask questions ONLY
 
-QUESTION REQUIREMENTS:
-- Cover current skill level
-- Cover background or prior experience
-- Cover daily and weekly availability
-- Cover preferred learning style
-- Cover tools or resources access
-- Cover constraints or limitations
-- Cover goals and success definition
-- Cover deadlines or milestones
-- Cover motivation level or intensity
-- Cover evaluation or progress tracking preferences
+Do NOT explain anything
+
+Do NOT give suggestions
+
+Do NOT create the roadmap
+
+Do NOT add any text outside JSON
+
+Do NOT use markdown
+
+Questions must be short, clear, and practical
+
+Ask between 8 and 10 questions
+
+Do NOT ask opinion-based or unnecessary preference questions
+
+Only ask questions that directly affect difficulty, time planning, structure, or goals
+
+Questions must be in Mongolian
+
+REQUIRED COVERAGE:
+
+Current skill level
+
+Prior experience
+
+Weekly available time
+
+Clear measurable final goal
+
+Deadline pressure
+
+Real constraints or limitations
 
 INPUT:
 roadmapTitle: ${body.roadmapTitle}
@@ -58,13 +56,26 @@ startDate: ${body.startDate}
 endDate: ${body.endDate}
 purpose: ${body.purpose}
 
+OUTPUT FORMAT (MUST MATCH EXACTLY):
+{
+"questions": [
+{
+"question": "string"
+}
+]
+}
+
 FINAL CHECK:
-- Output ONLY valid JSON
-- JSON must be parsable
-- No trailing commas
-- No extra fields
-- No text outside JSON
--try to give less response dont give too much things
+
+Output ONLY valid JSON
+
+JSON must be parsable
+
+No trailing commas
+
+No extra fields
+
+No text outside JSON
 `;
   const result = await model.generateContent(prompt);
   const ress = result.response.text();

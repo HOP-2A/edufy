@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useProvider } from "../providers/AuthProviders";
 type questions = {
   id: string;
   text: string;
@@ -20,22 +21,21 @@ export default function CreateRoadmap() {
   const [title, setTitle] = useState("");
   const [purpose, setPurpose] = useState("");
   const [fade, setFade] = useState(true);
-
   const [questions, setQuestions] = useState<questions[]>([]);
   const [startDate, setStartDate] = useState<Date | undefined>();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answer, setAnswer] = useState("");
-
+  const [currentRoadmapId, setCurrentRoadmapId] = useState();
   const [endDate, setEndDate] = useState<Date | undefined>();
 
   const progressPercentage = (step / 3) * 100;
-
+  const { user } = useProvider();
   const prevStep = () => setStep((prev) => Math.max(1, prev - 1));
   const createLearningSection = async () => {
     const res = await fetch("/api/roadmap-details", {
       method: "POST",
       body: JSON.stringify({
-        roadmapId: "33",
+        roadmapId: currentRoadmapId,
         purpose,
         title,
       }),
@@ -65,13 +65,25 @@ export default function CreateRoadmap() {
     }
   };
   const getAiQs = async () => {
+    if (!user) {
+      return;
+    }
+    const response = await fetch(`/api/roadmap/${user.id}`, {
+      method: "POST",
+      body: JSON.stringify({
+        purpose,
+        title,
+      }),
+    });
+    const { id } = await response.json();
+    setCurrentRoadmapId(id);
     const res = await fetch("/api/projectQuestion", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        roadmapId: "33",
+        roadmapId: id,
         roadmapTitle: title,
         purpose,
         startDate,
@@ -210,7 +222,7 @@ export default function CreateRoadmap() {
                   onClick={getAiQs}
                   className="h-16 px-14 bg-black text-white rounded-full"
                 >
-                  Generate Roadmap
+                  Answer questions
                 </Button>
               </div>
             )}
@@ -246,7 +258,7 @@ export default function CreateRoadmap() {
                     </div>
                     <Button
                       onClick={createLearningSection}
-                      className="h-16 px-14 bg-black text-white rounded-full flex items-center gap-2 hover:bg-gray-800 transition-colors"
+                      className="h-16 w-[200px] px-14 bg-black text-white rounded-full flex items-center gap-2 hover:bg-gray-800 transition-colors"
                     >
                       <Sparkles className="w-5 h-5" />
                       Generate

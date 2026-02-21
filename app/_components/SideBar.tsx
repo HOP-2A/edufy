@@ -7,9 +7,9 @@ import {
   BookOpen,
   MessageSquare,
   Map,
-  Users,
   Clipboard,
   ChevronDown,
+  BookHeart,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -23,11 +23,15 @@ import { SignedIn, UserButton } from "@clerk/nextjs";
 
 const navItems = [
   { label: "Ask AI Tutor", icon: MessageSquare, url: "/ai_tutor" },
-  { label: "Community", icon: Users, url: "/community" },
+];
+// { label: "Community", icon: Users, url: "/community" },
+const community = [
+  { label: "Posts", icon: BookHeart, url: "/community/posts" },
+  { label: "Roadmaps", icon: Map, url: "/community/roadmaps" },
 ];
 
 const dropdownCreateAiItems = [
-  { label: "Roadmap", icon: Map, url: "/create/Roadmap" },
+  { label: "Roadmap", icon: Map, url: "/create/roadmap" },
 ];
 
 const dropdownMyLearningItems = [
@@ -40,7 +44,7 @@ export default function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="relative flex min-h-screen w-72 flex-col bg-white border-r border-black/[0.03] shadow-[4px_0_24px_rgba(0,0,0,0.01)]">
+    <aside className="relative flex min-h-screen w-72 flex-col bg-white border-r border-black/[0.03] shadow-[4px_0_24px_rgba(0,0,0,0.01)] left-0">
       <div className="px-8 pt-12 pb-10">
         <Link href="/mainMenu">
           <motion.div
@@ -128,6 +132,39 @@ export default function Sidebar() {
           </p>
           <div className="space-y-1">
             {navItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = pathname === item.url;
+              return (
+                <motion.button
+                  key={item.label}
+                  onClick={() => router.push(item.url)}
+                  whileHover={{ x: 4 }}
+                  className={cn(
+                    "relative flex w-full items-center gap-4 px-5 py-3.5 rounded-2xl text-sm font-bold transition-all duration-500",
+                    isActive
+                      ? "bg-black/[0.03] text-black"
+                      : "text-black/40 hover:text-black hover:bg-black/[0.01]",
+                  )}
+                >
+                  <Icon size={18} />
+                  <span className="tracking-tight">{item.label}</span>
+                  {isActive && (
+                    <motion.div
+                      layoutId="startupIndicator"
+                      className="absolute left-0 w-1.5 h-6 bg-black rounded-r-full"
+                      transition={{
+                        type: "spring",
+                        stiffness: 300,
+                        damping: 30,
+                      }}
+                    />
+                  )}
+                </motion.button>
+              );
+            })}
+          </div>
+          <div className="space-y-1">
+            {community.map((item) => {
               const Icon = item.icon;
               const isActive = pathname === item.url;
               return (
