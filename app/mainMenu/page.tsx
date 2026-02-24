@@ -1,7 +1,7 @@
 import Footer from "../_components/Footer";
 import Sidebar from "../_components/SideBar";
 import Questions from "../_components/mainPageQuestions";
-
+import CallYourRM from "../_components/CallYourRM";
 export default function Home() {
   return (
     <div className="flex min-h-screen bg-[#fafafa] text-[#1a1a1a] selection:bg-black selection:text-white">
@@ -10,11 +10,11 @@ export default function Home() {
       </aside>
 
       <main className="flex-1 ml-64 flex flex-col">
-        <div className="p-12 lg:p-16 flex-grow">
+        <div className="p-12 lg:p-16 grow">
           <div className="max-w-4xl mx-auto">
             <header className="mb-16 space-y-2">
               <div className="flex items-center gap-2 text-[10px] font-bold tracking-[0.2em] uppercase text-gray-400">
-                <span className="w-8 h-[1px] bg-gray-300"></span>
+                <span className="w-8 h-px bg-gray-300"></span>
                 Dashboard
               </div>
               <h1 className="text-5xl font-light tracking-tight text-black">
@@ -46,11 +46,13 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="absolute -top-6 -right-6 w-24 h-24 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] -z-10 opacity-50"></div>
+              <div className="absolute -top-6 -right-6 w-24 h-24 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] bg-size-[16px_16px] -z-10 opacity-50"></div>
             </section>
           </div>
         </div>
-
+        <div className="flex justify-center mb-30">
+          <CallYourRM />
+        </div>
         <footer className="px-12 py-8 border-t border-gray-100 bg-white/50">
           <Footer />
         </footer>
