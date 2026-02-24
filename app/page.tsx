@@ -1,7 +1,11 @@
+"use client";
+
 import Link from "next/link";
 import Footer from "./_components/Footer";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const router = useRouter();
   return (
     <div className="min-h-screen bg-white text-black font-sans flex flex-col">
       <header className="border-b border-black/5">
@@ -19,11 +23,13 @@ export default function Home() {
                 {item}
               </Link>
             ))}
-            <Link href="/signIn">
-              <button className="bg-black text-white px-5 py-2 rounded-full text-sm hover:bg-black/90 transition-all">
-                Get Started
-              </button>
-            </Link>
+
+            <button
+              className="bg-black text-white px-5 py-2 rounded-full text-sm hover:bg-black/90 transition-all"
+              onClick={() => router.push("/signIn")}
+            >
+              Get Started
+            </button>
           </nav>
         </div>
       </header>
