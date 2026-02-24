@@ -2,7 +2,6 @@
 
 import Footer from "@/app/_components/Footer";
 import Sidebar from "@/app/_components/SideBar";
-
 import AiTutor from "../_components/AiTutor";
 
 export default function Home() {

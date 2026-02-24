@@ -7,13 +7,65 @@ import Questions from "../_components/mainPageQuestions";
 import CallYourRM from "../_components/CallYourRM";
 =======
 import { useProvider } from "../providers/AuthProviders";
+<<<<<<< HEAD
 import { useRouter } from "next/navigation";
 
 >>>>>>> f6ceae3 (P)
+=======
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { LearningSection } from "@prisma/client";
+interface Roadmap {
+  id: string;
+  title: string;
+  description: string;
+  levelFrom: string;
+  levelTo: string;
+  purpose: string;
+  learningSections: LearningSection[];
+}
+const getLevelNumber = (level: string) => {
+  return Number(level.match(/\d+/)?.[0] ?? 0);
+};
+>>>>>>> 88b84d9 (P)
 export default function Home() {
   const { user } = useProvider();
   const router = useRouter();
+  const [data, setData] = useState();
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
+  useEffect(() => {
+    if (!id) return;
+
+    const fetchRoadmap = async () => {
+      try {
+        const res = await fetch(`/api/getroadmapinfo/${id}`);
+        if (!res.ok) throw new Error("Failed to fetch roadmap");
+        const idk = await res.json();
+
+        const sortedData = {
+          ...idk,
+          learningSections: [...idk.learningSections].sort(
+            (a: LearningSection, b: LearningSection) =>
+              getLevelNumber(a.level) - getLevelNumber(b.level),
+          ),
+        };
+
+        setData(sortedData);
+      } catch (err) {
+        console.error("Error:", err);
+        setError(err instanceof Error ? err.message : "An error occurred");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRoadmap();
+  }, [id]);
+  console.log(data);
   return (
     <div className="flex min-h-screen bg-[#fafafa] text-[#1a1a1a] selection:bg-black selection:text-white">
       <aside className="w-64 fixed inset-y-0 z-50 border-r border-gray-200 bg-white">
@@ -94,8 +146,12 @@ export default function Home() {
               <div className="text-5xl">
                 <div>Төлөвлөгөний ахиц </div>
               </div>
+<<<<<<< HEAD
               <div className="rounded-xl border outline">hello</div>
 >>>>>>> f6ceae3 (P)
+=======
+              <div className="rounded-xl border outline h-[30vh] "></div>
+>>>>>>> 88b84d9 (P)
               <div className="absolute -top-6 -right-6 w-24 h-24 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] bg-size-[16px_16px] -z-10 opacity-50"></div>
             </section>
           </div>
@@ -110,6 +166,9 @@ export default function Home() {
           <Footer />
         </footer>
       </main>
+      <style>
+        <div className="rounded-xl border outline border-indigo-500 bg-indigo-500"></div>
+      </style>
     </div>
   );
 }
