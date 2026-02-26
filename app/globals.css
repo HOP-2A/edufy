@@ -123,3 +123,27 @@
     @apply bg-background text-foreground;
   }
 }
+.button {
+  background-image: linear-gradient(
+    -225deg,
+    #69eacb 0%,
+    #eaccf8 48%,
+    #6654f1 100%
+  );
+}
+.cancel {
+  background-image: linear-gradient(
+    -225deg,
+    #a445b2 0%,
+    #d41872 52%,
+    #ff0066 100%
+  );
+}
+.bar {
+  background-image: linear-gradient(
+    -225deg,
+    #77ffd2 0%,
+    #6297db 48%,
+    #1eecff 100%
+  );
+}

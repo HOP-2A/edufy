@@ -10,8 +10,9 @@ export const POST = async (
   await prisma.post.create({
     data: {
       userId,
-      images: body.images,
-      caption: body.images,
+      images: body.image,
+      caption: body.caption,
+      category: body.caption,
     },
   });
   return NextResponse.json({ message: "succesful" });
