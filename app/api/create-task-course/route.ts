@@ -123,7 +123,6 @@ RULES:
           );
         }
 
-        // Return task with DB-generated ID and questions
         const questions = await prisma.taskQuestion.findMany({
           where: { taskId: createdTask.id },
         });

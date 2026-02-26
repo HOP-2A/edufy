@@ -86,7 +86,6 @@ export default function RoadmapPage() {
     fetchTask();
   }, [taskid]);
 
-  // Calculate stats
   const stats = useMemo(() => {
     if (!task) return { total: 0, correct: 0, percent: 0 };
 
