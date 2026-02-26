@@ -28,7 +28,6 @@ export const POST = async (req: NextRequest) => {
       );
     }
 
-    // AI prompt
     const prompt = `
 You are an AI learning task generator.
 
@@ -71,11 +70,9 @@ RULES:
 - Do not add extra fields
 `;
 
-    // Generate AI content
     const result = await model.generateContent(prompt);
     const text = result.response.text();
 
-    // Parse JSON safely
     const jsonMatch = text.match(/\{[\s\S]*\}/);
     let aiTasks: Task[] = [];
 
@@ -90,7 +87,6 @@ RULES:
       }
     }
 
-    // Fallback if AI failed
     if (aiTasks.length === 0) {
       aiTasks = [
         {
@@ -102,7 +98,6 @@ RULES:
       ];
     }
 
-    // Insert tasks & questions into DB
     const createdTasks = await Promise.all(
       aiTasks.map(async (task, index) => {
         const createdTask = await prisma.task.create({
