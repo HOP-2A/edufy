@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   Accordion,
   AccordionContent,
@@ -16,23 +16,24 @@ import {
   ChevronRight,
   LinkIcon,
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
-interface Resource {
+type Resource = {
   id: string;
   type: string;
   title: string;
   url: string | null;
-}
+};
 
-interface TaskQuestion {
+type TaskQuestion = {
   id: string;
   text: string;
   answer: string;
   userAnswer: string | null;
   isCorrect: boolean | null;
-}
+};
 
-interface Task {
+type Task = {
   id: string;
   title: string;
   content: string;
@@ -40,18 +41,18 @@ interface Task {
   order: number;
   resources: Resource[];
   taskQuestions: TaskQuestion[];
-}
+};
 
-interface LearningSection {
+type LearningSection = {
   id: string;
   title: string;
   level: string;
   content: string;
   resources: Resource[];
   tasks: Task[];
-}
+};
 
-interface Roadmap {
+type Roadmap = {
   id: string;
   title: string;
   description: string;
@@ -59,20 +60,79 @@ interface Roadmap {
   levelTo: string;
   purpose: string;
   learningSections: LearningSection[];
-}
+};
 
 const getLevelNumber = (level: string) => {
   return Number(level.match(/\d+/)?.[0] ?? 0);
 };
 
 export default function RoadmapPage() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
+
+  const [creatingSectionId, setCreatingSectionId] = useState<string | null>(
+    null,
+  );
+
+  const [temp, setTemp] = useState<string | null>(null);
+
+  const MakeActionItem = async (section: LearningSection) => {
+    try {
+      setCreatingSectionId(section.id);
+
+      const res = await fetch("/api/create-task-course", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: section.title,
+          content: section.title,
+          learningSectionId: section.id,
+        }),
+      });
+
+      if (!res.ok) throw new Error("Failed to create task");
+
+      const newTask = await res.json();
+      setTemp(newTask);
+
+      console.log("TEMP:", temp);
+      router.push(`/user/test/${newTask?.[0]?.id}`);
+    } catch (err) {
+      console.error(err);
+      alert("Failed to create task, try again");
+    } finally {
+      setCreatingSectionId(null);
+    }
+  };
+
+  const toggleTaskCompletion = async (taskId: string) => {
+    if (!roadmap) return;
+
+    setRoadmap((prev) => {
+      if (!prev) return prev;
+
+      return {
+        ...prev,
+        learningSections: prev.learningSections.map((section) => ({
+          ...section,
+          tasks: section.tasks.map((task) =>
+            task.id === taskId ? { ...task, completed: !task.completed } : task,
+          ),
+        })),
+      };
+    });
+
+    await fetch("/api/toggle-task", {
+      method: "POST",
+      body: JSON.stringify({ taskId }),
+    });
+  };
 
   const [roadmap, setRoadmap] = useState<Roadmap | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  console.log(roadmap);
+
   useEffect(() => {
     if (!id) return;
 
@@ -159,8 +219,6 @@ export default function RoadmapPage() {
 
             <Accordion type="single" collapsible className="space-y-6">
               {roadmap.learningSections.map((section, index) => {
-                const hasTasks = section.tasks.length > 0;
-
                 return (
                   <AccordionItem
                     key={section.id}
@@ -213,24 +271,41 @@ export default function RoadmapPage() {
                           )}
                         </div>
 
-                        {/* RIGHT SIDE */}
-                        {hasTasks && (
-                          <div className="space-y-6">
-                            <h4 className="text-sm font-bold uppercase tracking-widest text-slate-900 flex items-center gap-2">
-                              <Check className="w-4 h-4 text-blue-600" />
-                              Action Items
-                            </h4>
+                        <div className="space-y-6">
+                          <h4 className="text-sm font-bold uppercase tracking-widest text-slate-900 flex items-center gap-2">
+                            <Check className="w-4 h-4 text-blue-600" />
+                            Action Items
+                            <Button
+                              size="sm"
+                              disabled={creatingSectionId === section.id}
+                              onClick={() => MakeActionItem(section)}
+                            >
+                              {creatingSectionId === section.id ? (
+                                <span className="animate-pulse">
+                                  Creating...
+                                </span>
+                              ) : (
+                                "Create"
+                              )}
+                            </Button>
+                          </h4>
 
-                            {section.tasks.map((task) => (
+                          {section.tasks.length === 0 ? (
+                            <p className="text-sm text-slate-400 italic">
+                              No action items yet…
+                            </p>
+                          ) : (
+                            section.tasks.map((task) => (
                               <div
                                 key={task.id}
                                 className="flex gap-4 items-start"
                               >
                                 <div
-                                  className={`mt-1 w-4 h-4 border flex items-center justify-center ${
+                                  onClick={() => toggleTaskCompletion(task.id)}
+                                  className={`mt-1 w-4 h-4 border flex items-center justify-center cursor-pointer transition-all ${
                                     task.completed
                                       ? "bg-slate-900 border-slate-900"
-                                      : "border-slate-300"
+                                      : "border-slate-300 hover:border-slate-500"
                                   }`}
                                 >
                                   {task.completed && (
@@ -239,18 +314,21 @@ export default function RoadmapPage() {
                                 </div>
 
                                 <p
-                                  className={`text-sm ${
+                                  className={`text-sm cursor-pointer transition-colors duration-150 ${
                                     task.completed
-                                      ? "text-slate-400 line-through"
-                                      : "text-slate-800"
+                                      ? "text-slate-400 line-through hover:text-slate-500"
+                                      : "text-slate-800 hover:text-blue-600 hover:underline"
                                   }`}
+                                  onClick={() =>
+                                    router.push(`/user/test/${task.id}`)
+                                  }
                                 >
                                   {task.title}
                                 </p>
                               </div>
-                            ))}
-                          </div>
-                        )}
+                            ))
+                          )}
+                        </div>
                       </div>
                     </AccordionContent>
                   </AccordionItem>

@@ -16,27 +16,27 @@ import {
   ChevronRight,
   Info,
   X,
-} from "lucide-react"; // Added Trophy
+} from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import clsx from "clsx";
 
-interface Resource {
+type Resource = {
   id: string;
   type: string;
   title: string;
   url: string | null;
-}
+};
 
-interface TaskQuestion {
+type TaskQuestion = {
   id: string;
   text: string;
   answer: string;
   userAnswer: string | null;
   isCorrect: boolean | null;
-}
+};
 
-interface Task {
+type Task = {
   id: string;
   title: string;
   content: string;
@@ -44,11 +44,6 @@ interface Task {
   order: number;
   resources: Resource[];
   taskQuestions: TaskQuestion[];
-}
-
-type Option = {
-  label: string;
-  value: string;
 };
 
 export default function RoadmapPage() {
@@ -91,10 +86,9 @@ export default function RoadmapPage() {
     fetchTask();
   }, [taskid]);
 
+  // Calculate stats
   const stats = useMemo(() => {
-    if (!task) {
-      return { total: 0, correct: 0, percent: 0 };
-    }
+    if (!task) return { total: 0, correct: 0, percent: 0 };
 
     const total = task.taskQuestions.length;
     let correct = 0;
@@ -105,10 +99,7 @@ export default function RoadmapPage() {
       }
     }
 
-    let percent = 0;
-    if (total > 0) {
-      percent = Math.round((correct / total) * 100);
-    }
+    const percent = total > 0 ? Math.round((correct / total) * 100) : 0;
 
     return { total, correct, percent };
   }, [task]);
@@ -118,12 +109,12 @@ export default function RoadmapPage() {
   };
 
   const handleAnswerSelect = (questionId: string, value: string) => {
-    if (!task) return;
-    if (submitted) return;
+    if (!task || submitted) return;
 
     const updatedQuestions = task.taskQuestions.map((q) => {
       if (q.id === questionId) {
-        const correct = normalize(value) === normalize(q.answer);
+        const correctAnswer = q.answer.replace(/^[a-zA-Z]\)\s*/, "");
+        const correct = normalize(value) === normalize(correctAnswer);
 
         return {
           ...q,
@@ -131,7 +122,6 @@ export default function RoadmapPage() {
           isCorrect: correct,
         };
       }
-
       return q;
     });
 
@@ -142,31 +132,24 @@ export default function RoadmapPage() {
   };
 
   const splitQuestion = (text: string) => {
-    const index = text.indexOf("(");
-
-    if (index === -1) {
-      return {
-        mainText: text,
-        choicesText: "",
-      };
+    const optionStart = text.search(/([a-zA-Z])\)|\([a-zA-Z]\)/);
+    if (optionStart === -1) {
+      return { mainText: text.trim(), choicesText: "" };
     }
-
     return {
-      mainText: text.substring(0, index).trim(),
-      choicesText: text.substring(index).trim(),
+      mainText: text.substring(0, optionStart).trim(),
+      choicesText: text.substring(optionStart).trim(),
     };
   };
 
   const getTrueFalseOptions = (text: string) => {
     const lower = text.toLowerCase();
-
     if (lower.includes("true") && lower.includes("false")) {
       return [
         { label: "True", value: "true" },
         { label: "False", value: "false" },
       ];
     }
-
     return null;
   };
 
@@ -176,12 +159,14 @@ export default function RoadmapPage() {
         Loading…
       </div>
     );
+
   if (error)
     return (
       <div className="flex h-screen items-center justify-center text-red-500 font-medium">
         {error}
       </div>
     );
+
   if (!task)
     return (
       <div className="flex h-screen items-center justify-center font-medium">
@@ -192,10 +177,8 @@ export default function RoadmapPage() {
   return (
     <div className="flex min-h-screen bg-white text-slate-900 font-sans antialiased">
       <Sidebar />
-
       <main className="flex-1 overflow-y-auto">
         <div className="max-w-4xl mx-auto px-12 py-16">
-          {/* HEADER - Sharper lines, minimal blue accent */}
           <header className="mb-12">
             <div className="flex items-center gap-3 mb-3">
               <div className="w-1.5 h-8 bg-blue-500 rounded-full" />
@@ -213,7 +196,6 @@ export default function RoadmapPage() {
             </div>
           </header>
 
-          {/* SCORE DISPLAY - Grid-style layout, less rounded */}
           {submitted && (
             <div className="mb-12 p-8 bg-white border border-slate-200 rounded-2xl flex items-center justify-between shadow-sm">
               <div className="flex items-center gap-8">
@@ -256,28 +238,30 @@ export default function RoadmapPage() {
 
           <div className="space-y-6">
             {task.taskQuestions.map((q: TaskQuestion, index: number) => {
-              const { mainText } = splitQuestion(q.text);
+              const { mainText, choicesText } = splitQuestion(q.text);
               const tfOptions = getTrueFalseOptions(q.text);
 
-              // Original Regex Parsing Logic
               const getLetterOptions = (text: string) => {
-                const matches = text.match(/\([a-zA-Z]\)[^()]+/g);
-                if (!matches) return null;
-                return matches.map((item) => {
-                  const letterMatch = item.match(/\(([a-zA-Z])\)/);
-                  const value = item.trim();
-                  return {
-                    label: letterMatch ? letterMatch[1] : "",
-                    value: value,
-                  };
-                });
+                const regex =
+                  /(?:\(?([a-zA-Z])\)?\))\s*([^a-zA-Z()]+.*?)(?=\s*[a-zA-Z]\)|\s*\([a-zA-Z]\)|$)/g;
+                const options: { label: string; value: string }[] = [];
+                let match: RegExpExecArray | null;
+
+                while ((match = regex.exec(text)) !== null) {
+                  options.push({
+                    label: match[1],
+                    value: match[2].trim(),
+                  });
+                }
+
+                return options.length > 0 ? options : null;
               };
 
-              const options = tfOptions ?? getLetterOptions(q.text);
+              const options = tfOptions ?? getLetterOptions(choicesText);
 
               return (
                 <div key={q.id} className="flex gap-6">
-                  {/* Numbering - Square with slight rounding */}
+                  {/* Number */}
                   <div className="pt-2">
                     <div
                       className={clsx(

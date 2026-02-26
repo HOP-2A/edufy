@@ -74,7 +74,7 @@ export default function UserTests() {
             </div>
 
             <h2 className="mb-4 text-3xl font-[1000] text-black tracking-tighter">
-              No roadmaps found
+              No tests found
             </h2>
             <p className="mb-8 text-black/40 font-bold max-w-xs mx-auto">
               Your library is currently empty. Start by creating your first
