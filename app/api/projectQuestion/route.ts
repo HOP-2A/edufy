@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import prisma from "@/lib/prisma";
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_KEY || "");
+const genAI = new GoogleGenerativeAI(process.env.TaskGEMINI_KEY || "");
 const model = genAI.getGenerativeModel({
   model: "gemini-2.5-flash",
 });

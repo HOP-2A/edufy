@@ -9,13 +9,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import Sidebar from "../../_components/SideBar";
-import {
-  ArrowRight,
-  BookOpen,
-  Check,
-  ChevronRight,
-  LinkIcon,
-} from "lucide-react";
+import { BookOpen, Check, LinkIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 type Resource = {
@@ -59,6 +53,7 @@ type Roadmap = {
   levelFrom: string;
   levelTo: string;
   purpose: string;
+  isPublished: boolean;
   learningSections: LearningSection[];
 };
 
@@ -71,11 +66,46 @@ export default function RoadmapPage() {
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
 
+  const [roadmap, setRoadmap] = useState<Roadmap | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
   const [creatingSectionId, setCreatingSectionId] = useState<string | null>(
     null,
   );
+  const [isPublishing, setIsPublishing] = useState(false);
+  const [isPublished, setIsPublished] = useState(false);
 
-  const [temp, setTemp] = useState<string | null>(null);
+  useEffect(() => {
+    if (!id) return;
+
+    const fetchRoadmap = async () => {
+      try {
+        const res = await fetch(`/api/getroadmapinfo/${id}`);
+        if (!res.ok) throw new Error("Failed to fetch roadmap");
+
+        const data = await res.json();
+
+        const sortedData = {
+          ...data,
+          learningSections: [...data.learningSections].sort(
+            (a: LearningSection, b: LearningSection) =>
+              getLevelNumber(a.level) - getLevelNumber(b.level),
+          ),
+        };
+
+        setRoadmap(sortedData);
+        setIsPublished(data.isPublished ?? false);
+      } catch (err) {
+        console.error(err);
+        setError(err instanceof Error ? err.message : "An error occurred");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRoadmap();
+  }, [id]);
 
   const MakeActionItem = async (section: LearningSection) => {
     try {
@@ -94,9 +124,7 @@ export default function RoadmapPage() {
       if (!res.ok) throw new Error("Failed to create task");
 
       const newTask = await res.json();
-      setTemp(newTask);
 
-      console.log("TEMP:", temp);
       router.push(`/user/test/${newTask?.[0]?.id}`);
     } catch (err) {
       console.error(err);
@@ -125,42 +153,33 @@ export default function RoadmapPage() {
 
     await fetch("/api/toggle-task", {
       method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ taskId }),
     });
   };
 
-  const [roadmap, setRoadmap] = useState<Roadmap | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const handlePublish = async () => {
+    if (!roadmap?.id || isPublishing) return;
 
-  useEffect(() => {
-    if (!id) return;
+    setIsPublishing(true);
 
-    const fetchRoadmap = async () => {
-      try {
-        const res = await fetch(`/api/getroadmapinfo/${id}`);
-        if (!res.ok) throw new Error("Failed to fetch roadmap");
-        const data = await res.json();
+    try {
+      const res = await fetch(`/api/publish-roadmap/${roadmap.id}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ isPublished: !isPublished }),
+      });
 
-        const sortedData = {
-          ...data,
-          learningSections: [...data.learningSections].sort(
-            (a: LearningSection, b: LearningSection) =>
-              getLevelNumber(a.level) - getLevelNumber(b.level),
-          ),
-        };
+      if (!res.ok) throw new Error("Failed to update publish status");
 
-        setRoadmap(sortedData);
-      } catch (err) {
-        console.error("Error:", err);
-        setError(err instanceof Error ? err.message : "An error occurred");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchRoadmap();
-  }, [id]);
+      const data = await res.json();
+      setIsPublished(data.isPublished);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsPublishing(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -170,172 +189,157 @@ export default function RoadmapPage() {
     );
   }
 
-  if (error) {
+  if (error || !roadmap) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="text-2xl text-red-500">Error: {error}</div>
-      </div>
-    );
-  }
-
-  if (!roadmap) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="text-2xl">Roadmap not found</div>
+      <div className="flex items-center justify-center h-screen text-red-500">
+        {error || "Roadmap not found"}
       </div>
     );
   }
 
   return (
-    <div className="flex min-h-screen bg-white text-slate-900 font-sans antialiased">
+    <div className="flex min-h-screen bg-white text-slate-900 font-sans">
       <Sidebar />
 
-      <main className="flex-1 overflow-y-auto bg-white">
+      <main className="flex-1 overflow-y-auto">
         <div className="max-w-4xl mx-auto px-8 py-20">
-          <header className="mb-16 pb-12 border-b-2 border-slate-100">
-            <div className="flex items-center gap-3 text-blue-600 font-bold text-xs uppercase tracking-widest mb-6">
-              <span className="bg-blue-50 px-3 py-1 rounded-full">
-                Roadmap Path
-              </span>
-              <ArrowRight className="w-3 h-3" />
-              <span className="text-slate-500">
-                Level {roadmap?.levelFrom} — {roadmap?.levelTo}
-              </span>
+          <header className="mb-16 pb-12 border-b border-slate-200">
+            <div className="flex justify-between items-center mb-6">
+              <div>
+                <span className="text-sm uppercase tracking-widest text-blue-600 font-bold">
+                  Level {roadmap.levelFrom} — {roadmap.levelTo}
+                </span>
+
+                <h1 className="text-5xl font-black mt-4">{roadmap.title}</h1>
+
+                <p className="text-lg text-slate-500 mt-4 max-w-2xl">
+                  {roadmap.description}
+                </p>
+              </div>
+
+              <Button
+                onClick={handlePublish}
+                disabled={isPublishing}
+                className="px-6 py-3 font-bold"
+              >
+                {isPublishing
+                  ? "Updating..."
+                  : isPublished
+                    ? "Unpublish"
+                    : "Publish"}
+              </Button>
             </div>
-
-            <h1 className="text-4xl font-bold tracking-tight text-black mb-6">
-              {roadmap?.title}
-            </h1>
-
-            <p className="text-lg text-slate-500 leading-relaxed max-w-xl font-light">
-              {roadmap?.description}
-            </p>
           </header>
 
-          <div className="space-y-6">
-            <h2 className="text-sm font-black uppercase tracking-[0.3em] text-slate-400 mb-10">
-              Learning Modules
-            </h2>
-
-            <Accordion type="single" collapsible className="space-y-6">
-              {roadmap.learningSections.map((section, index) => {
-                return (
-                  <AccordionItem
-                    key={section.id}
-                    value={section.id}
-                    className="border-2 border-slate-200 rounded-2xl overflow-hidden px-2 transition-all data-[state=open]:border-blue-600 data-[state=open]:shadow-xl data-[state=open]:shadow-blue-500/10"
-                  >
-                    <AccordionTrigger className="hover:no-underline py-8 px-6 group">
-                      <div className="flex items-center gap-8 text-left">
-                        <span className="text-4xl font-black text-slate-100 group-data-[state=open]:text-blue-100 transition-colors">
-                          {(index + 1).toString().padStart(2, "0")}
-                        </span>
-                        <div>
-                          <span className="block text-xs font-bold text-blue-600 uppercase mb-1">
-                            {section.level}
-                          </span>
-                          <span className="text-2xl font-bold text-slate-800 group-hover:text-blue-600 transition-colors">
-                            {section.title}
-                          </span>
-                        </div>
+          <Accordion type="single" collapsible className="space-y-6">
+            {roadmap.learningSections.map((section, index) => (
+              <AccordionItem
+                key={section.id}
+                value={section.id}
+                className="border rounded-2xl px-4"
+              >
+                <AccordionTrigger className="py-6">
+                  <div className="flex gap-6 items-center text-left">
+                    <span className="text-3xl font-black text-slate-300">
+                      {(index + 1).toString().padStart(2, "0")}
+                    </span>
+                    <div>
+                      <div className="text-xs text-blue-600 font-bold uppercase">
+                        {section.level}
                       </div>
-                    </AccordionTrigger>
+                      <div className="text-xl font-bold">{section.title}</div>
+                    </div>
+                  </div>
+                </AccordionTrigger>
 
-                    <AccordionContent className="pb-10 pt-6 px-6 border-t-2 border-slate-50">
-                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-                        {/* LEFT SIDE */}
-                        <div className="space-y-8">
-                          <p className="text-lg text-slate-600 leading-relaxed">
-                            {section.content}
-                          </p>
+                <AccordionContent className="pb-8 pt-4">
+                  <div className="grid md:grid-cols-2 gap-10">
+                    <div className="space-y-6">
+                      <p className="text-slate-600 leading-relaxed">
+                        {section.content}
+                      </p>
 
-                          {section.resources.length > 0 && (
-                            <div className="space-y-3">
-                              <h4 className="text-sm font-bold uppercase tracking-widest text-slate-900 flex items-center gap-2">
-                                <BookOpen className="w-4 h-4 text-blue-600" />
-                                Resources
-                              </h4>
-
-                              {section.resources.map((res) => (
-                                <a
-                                  key={res.id}
-                                  href={res.url || "#"}
-                                  target="_blank"
-                                  className="flex items-center gap-3 text-sm text-slate-600 hover:text-blue-600 transition-colors"
-                                >
-                                  <LinkIcon className="w-4 h-4" />
-                                  {res.title}
-                                </a>
-                              ))}
-                            </div>
-                          )}
-                        </div>
-
-                        <div className="space-y-6">
-                          <h4 className="text-sm font-bold uppercase tracking-widest text-slate-900 flex items-center gap-2">
-                            <Check className="w-4 h-4 text-blue-600" />
-                            Action Items
-                            <Button
-                              size="sm"
-                              disabled={creatingSectionId === section.id}
-                              onClick={() => MakeActionItem(section)}
-                            >
-                              {creatingSectionId === section.id ? (
-                                <span className="animate-pulse">
-                                  Creating...
-                                </span>
-                              ) : (
-                                "Create"
-                              )}
-                            </Button>
+                      {section.resources.length > 0 && (
+                        <div>
+                          <h4 className="text-sm font-bold mb-3 flex items-center gap-2">
+                            <BookOpen className="w-4 h-4 text-blue-600" />
+                            Resources
                           </h4>
 
-                          {section.tasks.length === 0 ? (
-                            <p className="text-sm text-slate-400 italic">
-                              No action items yet…
-                            </p>
-                          ) : (
-                            section.tasks.map((task) => (
-                              <div
-                                key={task.id}
-                                className="flex gap-4 items-start"
-                              >
-                                <div
-                                  onClick={() => toggleTaskCompletion(task.id)}
-                                  className={`mt-1 w-4 h-4 border flex items-center justify-center cursor-pointer transition-all ${
-                                    task.completed
-                                      ? "bg-slate-900 border-slate-900"
-                                      : "border-slate-300 hover:border-slate-500"
-                                  }`}
-                                >
-                                  {task.completed && (
-                                    <Check className="w-3 h-3 text-white stroke-[3px]" />
-                                  )}
-                                </div>
-
-                                <p
-                                  className={`text-sm cursor-pointer transition-colors duration-150 ${
-                                    task.completed
-                                      ? "text-slate-400 line-through hover:text-slate-500"
-                                      : "text-slate-800 hover:text-blue-600 hover:underline"
-                                  }`}
-                                  onClick={() =>
-                                    router.push(`/user/test/${task.id}`)
-                                  }
-                                >
-                                  {task.title}
-                                </p>
-                              </div>
-                            ))
-                          )}
+                          {section.resources.map((res) => (
+                            <a
+                              key={res.id}
+                              href={res.url || "#"}
+                              target="_blank"
+                              className="flex items-center gap-2 text-sm text-slate-600 hover:text-blue-600"
+                            >
+                              <LinkIcon className="w-4 h-4" />
+                              {res.title}
+                            </a>
+                          ))}
                         </div>
+                      )}
+                    </div>
+
+                    <div className="space-y-4">
+                      <div className="flex justify-between items-center">
+                        <h4 className="text-sm font-bold flex items-center gap-2">
+                          <Check className="w-4 h-4 text-blue-600" />
+                          Action Items
+                        </h4>
+
+                        <Button
+                          size="sm"
+                          disabled={creatingSectionId === section.id}
+                          onClick={() => MakeActionItem(section)}
+                        >
+                          {creatingSectionId === section.id
+                            ? "Creating..."
+                            : "Create"}
+                        </Button>
                       </div>
-                    </AccordionContent>
-                  </AccordionItem>
-                );
-              })}
-            </Accordion>
-          </div>
+
+                      {section.tasks.length === 0 ? (
+                        <p className="text-sm text-slate-400 italic">
+                          No action items yet…
+                        </p>
+                      ) : (
+                        section.tasks.map((task) => (
+                          <div key={task.id} className="flex gap-3 items-start">
+                            <div
+                              onClick={() => toggleTaskCompletion(task.id)}
+                              className={`mt-1 w-4 h-4 border flex items-center justify-center cursor-pointer ${
+                                task.completed
+                                  ? "bg-black border-black"
+                                  : "border-slate-300"
+                              }`}
+                            >
+                              {task.completed && (
+                                <Check className="w-3 h-3 text-white" />
+                              )}
+                            </div>
+
+                            <p
+                              onClick={() =>
+                                router.push(`/user/test/${task.id}`)
+                              }
+                              className={`text-sm cursor-pointer ${
+                                task.completed
+                                  ? "line-through text-slate-400"
+                                  : "hover:text-blue-600"
+                              }`}
+                            >
+                              {task.title}
+                            </p>
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
         </div>
       </main>
     </div>

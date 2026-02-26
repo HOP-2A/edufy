@@ -86,7 +86,6 @@ export default function RoadmapPage() {
     fetchTask();
   }, [taskid]);
 
-  // Calculate stats
   const stats = useMemo(() => {
     if (!task) return { total: 0, correct: 0, percent: 0 };
 
@@ -261,7 +260,6 @@ export default function RoadmapPage() {
 
               return (
                 <div key={q.id} className="flex gap-6">
-                  {/* Number */}
                   <div className="pt-2">
                     <div
                       className={clsx(
