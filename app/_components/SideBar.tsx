@@ -44,7 +44,7 @@ export default function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="relative flex min-h-screen w-72 flex-col bg-white border-r border-black/[0.03] shadow-[4px_0_24px_rgba(0,0,0,0.01)] left-0">
+    <aside className="relative flex min-h-screen w-72 flex-col bg-white border-r border-black/[0.03] shadow-[4px_0_24px_rgba(0,0,0,0.01)] left-0 bar">
       <div className="px-8 pt-12 pb-10">
         <Link href="/mainMenu">
           <motion.div
