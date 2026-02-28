@@ -10,10 +10,6 @@ interface Message {
   role: "user" | "assistant";
   content: string;
 }
-<<<<<<< HEAD
-
-=======
->>>>>>> 88b84d9 (P)
 export default function AiTutor() {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
@@ -25,27 +21,17 @@ export default function AiTutor() {
     "Give me a really difficult challenge",
     "Recommend me a topic I can learn in an hour",
   ];
-<<<<<<< HEAD
 
   const handleSendMessage = async () => {
     if (!message.trim()) return;
 
-=======
-  const handleSendMessage = async () => {
-    if (!message.trim()) return;
->>>>>>> 88b84d9 (P)
     const userMessage = message;
     setMessage("");
     setMessages((prev) => [...prev, { role: "user", content: userMessage }]);
     setIsLoading(true);
-<<<<<<< HEAD
 
     try {
       const response = await fetch("/api/chat", {
-=======
-    try {
-      const response = await fetch("/api/ai-chat", {
->>>>>>> 88b84d9 (P)
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -55,16 +41,11 @@ export default function AiTutor() {
           history: messages,
         }),
       });
-<<<<<<< HEAD
 
       if (!response.ok) throw new Error("Failed to get response");
 
       const data = await response.json();
 
-=======
-      if (!response.ok) throw new Error("Failed to get response");
-      const data = await response.json();
->>>>>>> 88b84d9 (P)
       setMessages((prev) => [
         ...prev,
         { role: "assistant", content: data.response },
@@ -82,7 +63,6 @@ export default function AiTutor() {
       setIsLoading(false);
     }
   };
-<<<<<<< HEAD
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -91,8 +71,6 @@ export default function AiTutor() {
     }
   };
 
-=======
->>>>>>> 88b84d9 (P)
   return (
     <div className="relative min-h-screen flex flex-col items-center justify-center px-6 bg-[#fafafa]">
       <div className="absolute inset-0 -z-10 overflow-hidden">
@@ -101,20 +79,12 @@ export default function AiTutor() {
       <div className="w-full max-w-2xl flex flex-col items-center space-y-12">
         <div className="space-y-4 text-center">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-black/6 text-[10px] font-black uppercase tracking-[0.2em] text-black/40 shadow-sm">
-<<<<<<< HEAD
             <Sparkles size={11} /> One time AI
-=======
-            <Sparkles size={11} /> one time Intelligent Tutor
->>>>>>> 88b84d9 (P)
           </div>
           <h1 className="text-5xl md:text-6xl font-[1000] text-black tracking-[-0.05em]">
             Би танд яаж туслах вэ?
           </h1>
         </div>
-<<<<<<< HEAD
-
-=======
->>>>>>> 88b84d9 (P)
         {messages.length > 0 && (
           <div className="w-full space-y-4 max-h-100 overflow-y-auto">
             {messages.map((msg, idx) => (
@@ -137,10 +107,6 @@ export default function AiTutor() {
             )}
           </div>
         )}
-<<<<<<< HEAD
-
-=======
->>>>>>> 88b84d9 (P)
         {messages.length === 0 && (
           <div className="w-full space-y-2.5">
             {suggestions.map((text) => (
@@ -155,10 +121,6 @@ export default function AiTutor() {
             ))}
           </div>
         )}
-<<<<<<< HEAD
-
-=======
->>>>>>> 88b84d9 (P)
         <div className="w-full space-y-5 pt-4">
           <div className="flex justify-start px-1">
             <Button
@@ -168,20 +130,13 @@ export default function AiTutor() {
               <UserCircle className="mr-2 h-4 w-4" /> Personalize AI Experience
             </Button>
           </div>
-<<<<<<< HEAD
-
-=======
->>>>>>> 88b84d9 (P)
           <div className="relative bg-white border border-black/8 rounded-[2rem] p-3.5 shadow-[0_15px_40px_rgba(0,0,0,0.03)] focus-within:shadow-[0_20px_50px_rgba(0,0,0,0.06)] transition-all duration-500">
             <Textarea
               placeholder="Ask me anything..."
               className="border-none focus-visible:ring-0 min-h-30 text-[1.15rem] font-bold tracking-tight resize-none p-4 placeholder:text-black/40 text-black leading-snug"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-<<<<<<< HEAD
               onKeyDown={handleKeyDown}
-=======
->>>>>>> 88b84d9 (P)
               disabled={isLoading}
             />
             <div className="flex justify-end p-2">

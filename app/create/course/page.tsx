@@ -16,11 +16,8 @@ import {
   ChevronRight,
   LinkIcon,
 } from "lucide-react";
-<<<<<<< HEAD
 
 // Type definitions
-=======
->>>>>>> 3fe7995 (P)
 interface Resource {
   id: string;
   type: string;
