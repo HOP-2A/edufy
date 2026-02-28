@@ -17,7 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useProvider } from "@/app/providers/AuthProviders";
 import { upload } from "@vercel/blob/client";
-import { Bookmark } from "lucide-react";
+import { Bookmark, Search } from "lucide-react";
 type post = {
   id: string;
   caption: string;
@@ -83,11 +83,17 @@ export default function Home() {
       </div>
       <div className=" w-[90%] flex items-center flex-col h-[100vh] overflow-scroll gap-[60px] p-[30px]">
         <div className="flex gap-[70px]">
-          <input
-            type="text"
-            className="w-[500px] border-2 border-black rounded-2xl h-[60px] text-[20px] p-[10px]"
-            placeholder="Search here..."
-          />
+          <div className="relative w-[440px]">
+            <Search
+              size={20}
+              className="absolute left-4 top-7.5 -translate-y-1/2 text-gray-400"
+            />
+            <input
+              type="text"
+              placeholder="Search..."
+              className="w-full pl-10 h-[60px]  pr-4 py-3 bg-gray-100 rounded-xl text-[20px] text-gray-800 placeholder-gray-400 outline-none focus:bg-white focus:ring-1 focus:ring-gray-300 transition-all"
+            />
+          </div>
 
           <Dialog>
             <form>
@@ -139,13 +145,13 @@ export default function Home() {
                 </FieldGroup>
                 <DialogFooter className="flex gap-[20px]">
                   <DialogClose asChild>
-                    <Button className="cancel  w-[100px] hover:scale-105">
+                    <Button className="cancel bg-[#cb0000] w-[100px] hover:scale-105">
                       Cancel
                     </Button>
                   </DialogClose>
                   <Button
                     type="submit"
-                    className="button text-black hover:scale-105 duration-75  font-medium"
+                    className=" hover:scale-105 duration-75 bg-[#008300]  font-medium"
                     onClick={() => createPost()}
                   >
                     Save changes
@@ -155,7 +161,7 @@ export default function Home() {
             </form>
           </Dialog>
         </div>
-        <div className="flex flex-col w-[90%] items-center">
+        <div className="flex flex-col w-[90%] gap-[80px] items-center">
           {posts.map((post) => {
             return (
               <div
@@ -182,11 +188,11 @@ export default function Home() {
                   />
                 </div>
                 <div className="flex w-[100%] justify-between">
-                  <div className="flex w-[80%] flex-wrap items-center">
+                  <div className="flex w-[80%]  flex-wrap items-center">
                     <span className="text-2xl font-medium">{post.caption}</span>
                   </div>
-                  <div>
-                    <Bookmark size={40} />
+                  <div className="mt-[20px]">
+                    <Bookmark size={30} />
                   </div>
                 </div>
               </div>
