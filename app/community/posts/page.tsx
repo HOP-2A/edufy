@@ -17,11 +17,16 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useProvider } from "@/app/providers/AuthProviders";
 import { upload } from "@vercel/blob/client";
+import { Bookmark } from "lucide-react";
 type post = {
   id: string;
   caption: string;
   category: string;
   images: string[];
+  user: {
+    id: string;
+    username: string;
+  };
 };
 export default function Home() {
   const [postInput, setPostInput] = useState({
@@ -76,7 +81,7 @@ export default function Home() {
       <div>
         <Sidebar />
       </div>
-      <div className=" w-[90%] flex items-center flex-col gap-[60px] p-[30px]">
+      <div className=" w-[90%] flex items-center flex-col h-[100vh] overflow-scroll gap-[60px] p-[30px]">
         <div className="flex gap-[70px]">
           <input
             type="text"
@@ -153,7 +158,10 @@ export default function Home() {
         <div className="flex flex-col w-[90%] items-center">
           {posts.map((post) => {
             return (
-              <div key={post.id} className="w-[600px] flex flex-col gap-[10px]">
+              <div
+                key={post.id}
+                className="w-[600px] flex flex-col gap-[10px] "
+              >
                 <div className="flex gap-[30px]">
                   <div>
                     <img
@@ -167,9 +175,20 @@ export default function Home() {
                   </div>
                 </div>
                 <div>
-                  <img src={post.images[0]} alt="" className="rounded-2xl" />
+                  <img
+                    src={post.images[0]}
+                    alt=""
+                    className="rounded-2xl w-[100%]"
+                  />
                 </div>
-                <div></div>
+                <div className="flex w-[100%] justify-between">
+                  <div className="flex w-[80%] flex-wrap items-center">
+                    <span className="text-2xl font-medium">{post.caption}</span>
+                  </div>
+                  <div>
+                    <Bookmark size={40} />
+                  </div>
+                </div>
               </div>
             );
           })}
