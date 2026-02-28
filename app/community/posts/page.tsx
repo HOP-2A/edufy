@@ -15,7 +15,7 @@ import {
 import { Field, FieldGroup } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useProvider } from "@/app/providers/AuthProviders";
+import { useProvider } from "../../../providers/AuthProviders";
 import { upload } from "@vercel/blob/client";
 import { Bookmark, Search } from "lucide-react";
 type post = {
