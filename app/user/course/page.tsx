@@ -12,6 +12,8 @@ import Sidebar from "../../_components/SideBar";
 import { BookOpen, Check, LinkIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
+import { useProvider } from "../../../providers/AuthProviders";
+
 type Resource = {
   id: string;
   type: string;
@@ -48,6 +50,7 @@ type LearningSection = {
 
 type Roadmap = {
   id: string;
+  userId: string;
   title: string;
   description: string;
   levelFrom: string;
@@ -62,14 +65,13 @@ const getLevelNumber = (level: string) => {
 };
 
 export default function RoadmapPage() {
+  const { user } = useProvider();
   const router = useRouter();
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
-
   const [roadmap, setRoadmap] = useState<Roadmap | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
   const [creatingSectionId, setCreatingSectionId] = useState<string | null>(
     null,
   );
@@ -85,7 +87,7 @@ export default function RoadmapPage() {
         if (!res.ok) throw new Error("Failed to fetch roadmap");
 
         const data = await res.json();
-
+        console.log(data);
         const sortedData = {
           ...data,
           learningSections: [...data.learningSections].sort(
@@ -169,7 +171,7 @@ export default function RoadmapPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ isPublished: !isPublished }),
       });
-
+      console.log(res, "asdaasd");
       if (!res.ok) throw new Error("Failed to update publish status");
 
       const data = await res.json();
@@ -217,17 +219,19 @@ export default function RoadmapPage() {
                 </p>
               </div>
 
-              <Button
-                onClick={handlePublish}
-                disabled={isPublishing}
-                className="px-6 py-3 font-bold"
-              >
-                {isPublishing
-                  ? "Updating..."
-                  : isPublished
-                    ? "Unpublish"
-                    : "Publish"}
-              </Button>
+              {roadmap?.userId === user?.id && (
+                <Button
+                  onClick={handlePublish}
+                  disabled={isPublishing}
+                  className="px-6 py-3 font-bold"
+                >
+                  {isPublishing
+                    ? "Updating..."
+                    : isPublished
+                      ? "Unpublish"
+                      : "Publish"}
+                </Button>
+              )}
             </div>
           </header>
 

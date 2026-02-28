@@ -6,7 +6,7 @@ import {
   UserButton,
   RedirectToSignUp,
 } from "@clerk/nextjs";
-import { useProvider } from "../providers/AuthProviders";
+import { useProvider } from "../../providers/AuthProviders";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { motion } from "framer-motion";
