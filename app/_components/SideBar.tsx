@@ -203,10 +203,7 @@ export default function Sidebar() {
         <SignedIn>
           <div className="group relative overflow-hidden flex items-center gap-3.5 p-3.5 rounded-[2rem] bg-[#fafafa] border border-black/[0.03] hover:border-black/[0.08] hover:bg-white hover:shadow-[0_20px_40px_rgba(0,0,0,0.03)] transition-all duration-700 cursor-pointer">
             <div className="shrink-0 relative z-10 border-2 border-white rounded-full shadow-md transition-transform group-hover:scale-105">
-              <UserButton
-                afterSignOutUrl="/"
-                appearance={{ elements: { avatarBox: "h-10 w-10" } }}
-              />
+              custom user ui
             </div>
             <div className="flex flex-col relative z-10">
               <span className="text-xs font-black tracking-tight flex items-center gap-1">

@@ -16,6 +16,7 @@ model User {
   posts Post[]
   savedPosts String[]
   savedRoadmaps String[]
+  profilePic String?
 }
 
 model Roadmap {
