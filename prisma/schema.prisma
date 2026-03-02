@@ -7,7 +7,7 @@ datasource db {
   provider = "postgresql"
 }
 model User {
-  id        String    @id @default(nanoid())
+  id        String    @id @default(nanoid()) @unique
   username  String    @unique
   email     String    @unique
   clerkId   String    @unique

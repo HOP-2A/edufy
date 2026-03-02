@@ -48,7 +48,7 @@ type LearningSection = {
   tasks: Task[];
 };
 
-type Roadmap = {
+export type Roadmap = {
   id: string;
   userId: string;
   title: string;

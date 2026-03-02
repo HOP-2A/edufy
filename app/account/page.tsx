@@ -2,11 +2,33 @@
 import { useProvider } from "@/providers/AuthProviders";
 import Sidebar from "../_components/SideBar";
 import { Mail, MapPin, Phone } from "lucide-react";
-
+import { useEffect, useState } from "react";
+import { Roadmap } from "../user/course/page";
+type post = {
+  id: string;
+  images: string[];
+  caption: string;
+  category: string;
+};
 export default function Profile() {
   const { user } = useProvider();
+  const [posts, setPosts] = useState<post[]>([]);
+  const [maps, setMaps] = useState<Roadmap[]>([]);
+  useEffect(() => {
+    if (!user?.id) return;
+
+    const getSavedItems = async () => {
+      const res = await fetch(`/api/saved/${user.id}`);
+      const data = await res.json();
+      console.log(data);
+      setPosts(data.savedPosts || []);
+      setMaps(data.savedMaps || []);
+    };
+
+    getSavedItems();
+  }, [user]);
   return (
-    <div className="w-[100vw] h-[100vh] flex ">
+    <div className="w-[100vw] h-[100vh] flex">
       <div className="">
         <Sidebar />
       </div>
@@ -61,10 +83,7 @@ export default function Profile() {
               </div>
             </div>
           </div>
-          <div className="w-[47%] h-[100%] flex flex-col justify-between">
-            <div className="w-[100%] h-[47%] bg-amber-400 rounded-[80px]"></div>
-            <div className="w-[100%] h-[47%] bg-blue-500 rounded-[80px]"></div>
-          </div>
+          <div className="w-1/2 flex flex-col gap-8"></div>
         </div>
       </div>
     </div>
