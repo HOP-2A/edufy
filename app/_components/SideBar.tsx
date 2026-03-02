@@ -44,7 +44,7 @@ export default function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="relative flex min-h-screen w-72 flex-col bg-white border-r border-black/[0.03] shadow-[4px_0_24px_rgba(0,0,0,0.01)] left-0 bar">
+    <aside className="relative flex min-h-screen w-75 flex-col bg-white border-r-2 border-black bar left-0 ">
       <div className="px-8 pt-12 pb-10">
         <Link href="/mainMenu">
           <motion.div
@@ -199,7 +199,7 @@ export default function Sidebar() {
         </div>
       </nav>
 
-      <div className="p-4 mt-auto">
+      <div className="p-4 mt-auto" onClick={() => router.push("/account")}>
         <SignedIn>
           <div className="group relative overflow-hidden flex items-center gap-3.5 p-3.5 rounded-[2rem] bg-[#fafafa] border border-black/[0.03] hover:border-black/[0.08] hover:bg-white hover:shadow-[0_20px_40px_rgba(0,0,0,0.03)] transition-all duration-700 cursor-pointer">
             <div className="shrink-0 relative z-10 border-2 border-white rounded-full shadow-md transition-transform group-hover:scale-105">
