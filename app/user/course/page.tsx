@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import {
   Accordion,
   AccordionContent,
@@ -67,8 +67,13 @@ const getLevelNumber = (level: string) => {
 export default function RoadmapPage() {
   const { user } = useProvider();
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const id = searchParams.get("id");
+  const [id, setId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const sp = new URLSearchParams(window.location.search);
+    setId(sp.get("id"));
+  }, []);
   const [roadmap, setRoadmap] = useState<Roadmap | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

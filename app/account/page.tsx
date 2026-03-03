@@ -2,6 +2,7 @@
 import { useProvider, User } from "@/providers/AuthProviders";
 import Sidebar from "../_components/SideBar";
 import { Mail, MapPin, Phone } from "lucide-react";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Roadmap } from "../user/course/page";
 import {
@@ -36,18 +37,20 @@ export default function Profile() {
     getSavedItems();
   }, [user]);
   return (
-    <div className="w-[100vw] h-[100vh] flex  items-center">
+    <div className="w-screen h-screen flex  items-center">
       <div className="">
         <Sidebar />
       </div>
-      <div className="w-[100%] h-[100%] flex justify-center items-center">
-        <div className="w-[70%] h-[80%] flex justify-around items-center p-[10px]">
+      <div className="w-full h-full flex justify-center items-center">
+        <div className="w-[70%] h-[80%] flex justify-around items-center p-2.5">
           <div className="w-[40%] h-[60%] border-4 rounded-3xl  overflow-hidden flex flex-col">
             <div className="p-8 border-b-4 ">
               <div className="flex items-center gap-6">
-                <img
-                  src={user?.profilePic}
+                <Image
+                  src={user?.profilePic || ""}
                   alt="profile"
+                  width={96}
+                  height={96}
                   className="w-24 h-24 rounded-full object-cover border-2 border-gray-100"
                 />
                 <div>
@@ -97,28 +100,29 @@ export default function Profile() {
             </div>
           </div>
           <div className="w-[45%] h-[80%] flex flex-col justify-between">
-            <div className="w-[100%] h-[47%] ">
-              <Carousel className="w-[100%] h-[100%]">
+            <div className="w-full h-[47%] ">
+              <Carousel className="w-full h-full">
                 <CarouselContent>
                   {posts.map((post) => {
                     return (
-                      <CarouselItem
-                        key={post.id}
-                        className="w-[100%] h-[100%] p-[30px]"
-                      >
+                      <CarouselItem key={post.id} className="w-full h-full p-7">
                         <div className="border-4 rounded-lg overflow-hidden bg-white">
-                          <img
-                            src={post.images[0]}
+                          <Image
+                            src={post.images[0] || ""}
                             alt=""
+                            width={500}
+                            height={192}
                             className="w-full h-48 object-cover"
                           />
 
                           <div className="p-4 space-y-3">
                             {/* User info */}
                             <div className="flex items-center gap-3">
-                              <img
-                                src={user?.profilePic}
+                              <Image
+                                src={user?.profilePic || ""}
                                 alt=""
+                                width={40}
+                                height={40}
                                 className="w-10 h-10 rounded-full object-cover"
                               />
                               <span className="font-medium text-gray-900">
@@ -143,7 +147,7 @@ export default function Profile() {
                 <CarouselNext />
               </Carousel>
             </div>
-            <div className="w-full h-[47%] mt-[100px]">
+            <div className="w-full h-[47%] mt-24">
               <Carousel className="w-full h-full">
                 <CarouselContent>
                   {maps.map((map) => {

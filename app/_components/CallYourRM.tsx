@@ -101,7 +101,7 @@ const WideCarousel: React.FC = () => {
     fetchAllRoadmaps();
   }, [roadmapId]);
   return (
-    <div className="w-[1000px] px-0.5 lg:px-0.5 ">
+    <div className="w-250 px-0.5 lg:px-0.5 ">
       <Carousel opts={{ align: "start" }} className="w-full">
         <CarouselContent className="-ml-0.5">
           {roadmap.map((item) => (
@@ -109,7 +109,7 @@ const WideCarousel: React.FC = () => {
               key={item.id}
               className="pl-0.5 basis-1/1 sm:basis-1/2 lg:basis-1/3"
             >
-              <Card className="h-[180px] rounded-xl border-1 bg-gradient-to-br from-white to-gray-100 shadow-md transition-all duration-300 hover:scale-[1.00002] hover:shadow-lg">
+              <Card className="h-45 rounded-xl border bg-linear-to-br from-white to-gray-100 shadow-md transition-all duration-300 hover:scale-[1.00002] hover:shadow-lg">
                 <CardContent className="flex h-full flex-col items-center justify-center text-center p-0">
                   <div className="text-sm font-bold text-gray-800">
                     {item.title}

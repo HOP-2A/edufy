@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter, usePathname } from "next/navigation";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import {
   Sparkles,
@@ -97,7 +98,7 @@ export default function Sidebar() {
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button className="flex w-full items-center gap-4 px-5 py-4 rounded-2xl bg-[#fafafa] border border-black/[0.03] text-black/60 hover:text-black hover:bg-white hover:shadow-[0_15px_30px_rgba(0,0,0,0.03)] transition-all duration-500 group">
+              <button className="flex w-full items-center gap-4 px-5 py-4 rounded-2xl bg-[#fafafa] border border-black/3 text-black/60 hover:text-black hover:bg-white hover:shadow-[0_15px_30px_rgba(0,0,0,0.03)] transition-all duration-500 group">
                 <div className="p-2 bg-black/5 rounded-xl group-hover:bg-black group-hover:text-white transition-all duration-500">
                   <BookOpen size={18} />
                 </div>
@@ -143,8 +144,8 @@ export default function Sidebar() {
                   className={cn(
                     "relative flex w-full items-center gap-4 px-5 py-3.5 rounded-2xl text-sm font-bold transition-all duration-500",
                     isActive
-                      ? "bg-black/[0.03] text-black"
-                      : "text-black/40 hover:text-black hover:bg-black/[0.01]",
+                      ? "bg-black/3 text-black"
+                      : "text-black/40 hover:text-black hover:bg-black/1",
                   )}
                 >
                   <Icon size={18} />
@@ -176,8 +177,8 @@ export default function Sidebar() {
                   className={cn(
                     "relative flex w-full items-center gap-4 px-5 py-3.5 rounded-2xl text-sm font-bold transition-all duration-500",
                     isActive
-                      ? "bg-black/[0.03] text-black"
-                      : "text-black/40 hover:text-black hover:bg-black/[0.01]",
+                      ? "bg-black/3 text-black"
+                      : "text-black/40 hover:text-black hover:bg-black/1",
                   )}
                 >
                   <Icon size={18} />
@@ -202,11 +203,13 @@ export default function Sidebar() {
 
       <div className="p-4 mt-auto" onClick={() => router.push("/account")}>
         <SignedIn>
-          <div className="group relative overflow-hidden flex items-center gap-3.5 p-3.5 rounded-[2rem] bg-[#fafafa] border border-black/[0.03] hover:border-black/[0.08] hover:bg-white hover:shadow-[0_20px_40px_rgba(0,0,0,0.03)] transition-all duration-700 cursor-pointer">
+          <div className="group relative overflow-hidden flex items-center gap-3.5 p-3.5 rounded-[2rem] bg-[#fafafa] border border-black/3 hover:border-black/8 hover:bg-white hover:shadow-[0_20px_40px_rgba(0,0,0,0.03)] transition-all duration-700 cursor-pointer">
             <div className="shrink-0 relative z-10 border-2 border-white rounded-full shadow-md transition-transform group-hover:scale-105">
-              <img
-                src={user?.profilePic}
-                className="w-[30px] h-[30px] rounded-[100%]"
+              <Image
+                src={user?.profilePic || ""}
+                width={30}
+                height={30}
+                className="w-7.5 h-7.5 rounded-full"
                 alt=""
               />
             </div>
