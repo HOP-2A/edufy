@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
 import { SignedIn, UserButton } from "@clerk/nextjs";
+import { useProvider } from "@/providers/AuthProviders";
 
 const navItems = [
   { label: "Ask AI Tutor", icon: MessageSquare, url: "/ai_tutor" },
@@ -42,9 +43,9 @@ const dropdownMyLearningItems = [
 export default function Sidebar() {
   const router = useRouter();
   const pathname = usePathname();
-
+  const { user } = useProvider();
   return (
-    <aside className="relative flex min-h-screen w-75 flex-col bg-white border-r-2 border-black bar left-0 ">
+    <aside className="relative flex min-h-screen w-75 flex-col border-r-2  border-black bar left-0 ">
       <div className="px-8 pt-12 pb-10">
         <Link href="/mainMenu">
           <motion.div
@@ -203,7 +204,11 @@ export default function Sidebar() {
         <SignedIn>
           <div className="group relative overflow-hidden flex items-center gap-3.5 p-3.5 rounded-[2rem] bg-[#fafafa] border border-black/[0.03] hover:border-black/[0.08] hover:bg-white hover:shadow-[0_20px_40px_rgba(0,0,0,0.03)] transition-all duration-700 cursor-pointer">
             <div className="shrink-0 relative z-10 border-2 border-white rounded-full shadow-md transition-transform group-hover:scale-105">
-              custom user ui
+              <img
+                src={user?.profilePic}
+                className="w-[30px] h-[30px] rounded-[100%]"
+                alt=""
+              />
             </div>
             <div className="flex flex-col relative z-10">
               <span className="text-xs font-black tracking-tight flex items-center gap-1">
