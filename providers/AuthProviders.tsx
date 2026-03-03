@@ -11,7 +11,7 @@ import {
   useState,
 } from "react";
 
-type User = {
+export type User = {
   id: string;
   username: string;
   email: string;
