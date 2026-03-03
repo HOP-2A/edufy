@@ -9,7 +9,7 @@ const model = genAI.getGenerativeModel({
 export const POST = async (req: NextRequest) => {
   const body = await req.json();
 
-  const prompt = `You are a helpful AI tutor. Answer the user's question in a clear and concise way.
+  const prompt = `You are a helpful AI tutor. Answer the user's question in a clear and concise way. answer short not long .
 
 User question: ${body.message}`;
 

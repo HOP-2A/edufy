@@ -17,6 +17,10 @@ type User = {
   email: string;
   clerkId: string;
   createdAt: Date;
+  profilePic: string;
+  bio: string;
+  location: string;
+  phoneNum: string;
 };
 
 type ContextType = {

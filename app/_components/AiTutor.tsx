@@ -31,7 +31,7 @@ export default function AiTutor() {
     setIsLoading(true);
 
     try {
-      const response = await fetch("/api/chat", {
+      const response = await fetch("/api/ai-chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
