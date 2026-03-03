@@ -46,8 +46,8 @@ export default function Profile() {
           <div className="w-[40%] h-[60%] border-4 rounded-3xl  overflow-hidden flex flex-col">
             <div className="p-8 border-b-4 ">
               <div className="flex items-center gap-6">
-                <Image
-                  src={user?.profilePic || ""}
+                <img
+                  src={user?.profilePic}
                   alt="profile"
                   width={96}
                   height={96}
@@ -107,8 +107,8 @@ export default function Profile() {
                     return (
                       <CarouselItem key={post.id} className="w-full h-full p-7">
                         <div className="border-4 rounded-lg overflow-hidden bg-white">
-                          <Image
-                            src={post.images[0] || ""}
+                          <img
+                            src={post.images[0]}
                             alt=""
                             width={500}
                             height={192}
@@ -118,8 +118,8 @@ export default function Profile() {
                           <div className="p-4 space-y-3">
                             {/* User info */}
                             <div className="flex items-center gap-3">
-                              <Image
-                                src={user?.profilePic || ""}
+                              <img
+                                src={user?.profilePic}
                                 alt=""
                                 width={40}
                                 height={40}
