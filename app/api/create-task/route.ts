@@ -5,7 +5,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 type task = {
   title: string;
   content: string;
-  questions: { text: string; answer: string };
+  questions: { text: string; answer: string }[];
 };
 
 type questions = {

@@ -3,10 +3,11 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const POST = async (
   req: NextRequest,
-  { params }: { params: string },
+  context: {
+    params: Promise<{ id: string }>;
+  },
 ) => {
-  const parms = await params;
-  const id = parms.id;
+  const { id } = await context.params;
 
   if (!id) {
     return NextResponse.json({ message: "No ID provided" }, { status: 400 });

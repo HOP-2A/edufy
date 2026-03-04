@@ -39,16 +39,16 @@ export default function Home() {
           </div>
         </nav>
 
-        <div className="p-12 lg:p-16 flex-grow">
+        <div className="p-12 lg:p-16 grow">
           <div className="max-w-5xl mx-auto">
             <header className="mb-12 space-y-4">
               <div className="flex items-center gap-2 text-[10px] font-bold tracking-[0.2em] uppercase text-indigo-500">
-                <span className="w-8 h-[1px] bg-indigo-200"></span>
+                <span className="w-8 h-px bg-indigo-200"></span>
                 Хянах самбар
               </div>
               <div className="flex justify-between items-end">
                 <h1 className="text-6xl font-extralight tracking-tight text-black leading-tight">
-                  Сайн уу, <span className="font-semibold italic">Оюутан</span>.
+                  Сайн sdfasdfsdfуу, <span className="font-semibold italic">Оюутан</span>.
                 </h1>
                 {/* Achievement Badge - Minimalist version */}
                 <div className="flex gap-2">
