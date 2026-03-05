@@ -5,7 +5,7 @@
 // export default function Footer() {
 //   const router = useRouter();
 //   return (
-//     <footer className="relative z-10 px-8 py-20 bg-white border-t border-black/[0.04]">
+//     <footer className="relative z-10 px-8 py-20  border-t border-black/[0.04]">
 //       <div className="max-w-7xl mx-auto">
 //         <div className="grid grid-cols-1 md:grid-cols-3 gap-16 md:gap-8 items-start pb-20">
 //           <div className="space-y-6">

@@ -23,7 +23,7 @@ const Page = () => {
   }, [user, router]);
 
   return (
-    <div className="min-h-screen bg-white flex flex-col items-center justify-center p-6 selection:bg-black selection:text-white">
+    <div className="min-h-screen  flex flex-col items-center justify-center p-6 selection:bg-black selection:text-white">
       <div className="fixed inset-0 -z-10 overflow-hidden">
         <div className="absolute top-[10%] left-[10%] w-[40%] h-[40%] bg-black/[0.01] rounded-full blur-[120px]" />
         <div className="absolute bottom-[10%] right-[10%] w-[30%] h-[30%] bg-black/[0.02] rounded-full blur-[100px]" />

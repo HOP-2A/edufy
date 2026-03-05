@@ -174,7 +174,7 @@ export default function RoadmapPage() {
     );
 
   return (
-    <div className="flex min-h-screen bg-white text-slate-900 font-sans antialiased">
+    <div className="flex min-h-screen  text-slate-900 font-sans antialiased">
       <Sidebar />
       <main className="flex-1 overflow-y-auto">
         <div className="max-w-4xl mx-auto px-12 py-16">

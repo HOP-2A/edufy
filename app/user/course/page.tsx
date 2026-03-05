@@ -92,7 +92,7 @@ export default function RoadmapPage() {
         if (!res.ok) throw new Error("Failed to fetch roadmap");
 
         const data = await res.json();
-        console.log(data);
+
         const sortedData = {
           ...data,
           learningSections: [...data.learningSections].sort(
@@ -176,7 +176,7 @@ export default function RoadmapPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ isPublished: !isPublished }),
       });
-      console.log(res, "asdaasd");
+
       if (!res.ok) throw new Error("Failed to update publish status");
 
       const data = await res.json();
@@ -205,7 +205,7 @@ export default function RoadmapPage() {
   }
 
   return (
-    <div className="flex min-h-screen bg-white text-slate-900 font-sans">
+    <div className="flex min-h-screen  text-slate-900 font-sans">
       <Sidebar />
 
       <main className="flex-1 overflow-y-auto">
