@@ -30,7 +30,7 @@ const createItems = [{ label: "Roadmap", icon: Map, url: "/create/roadmap" }];
 
 const myLearningItems = [
   { label: "Roadmap", icon: Map, url: "/user/roadmaps" },
-  { label: "Test", icon: Clipboard, url: "/user/tests" },
+  { label: "Test", icon: Clipboard, url: "/user/test" },
 ];
 
 const allPages = [
@@ -39,7 +39,7 @@ const allPages = [
   { label: "Roadmaps", url: "/community/roadmaps" },
   { label: "Create Roadmap", url: "/create/roadmap" },
   { label: "My Roadmaps", url: "/user/roadmaps" },
-  { label: "My Tests", url: "/user/tests" },
+  { label: "My Tests", url: "/user/test" },
   { label: "Main Menu", url: "/mainMenu" },
 ];
 
