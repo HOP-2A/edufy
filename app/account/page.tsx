@@ -1,10 +1,18 @@
 "use client";
 import { useProvider, User } from "@/providers/AuthProviders";
 import Sidebar from "../_components/SideBar";
-import { Mail, MapPin, Phone } from "lucide-react";
-import Image from "next/image";
+import {
+  Mail,
+  MapPin,
+  Phone,
+  Sparkles,
+  Bookmark,
+  Map,
+  LayoutGrid,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import { Roadmap } from "../user/course/page";
+import { motion } from "framer-motion";
 import {
   Carousel,
   CarouselContent,
@@ -12,6 +20,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+
 type post = {
   id: string;
   images: string[];
@@ -19,200 +28,246 @@ type post = {
   category: string;
   user: User;
 };
+
 export default function Profile() {
   const { user } = useProvider();
   const [posts, setPosts] = useState<post[]>([]);
   const [maps, setMaps] = useState<Roadmap[]>([]);
+
   useEffect(() => {
     if (!user?.id) return;
 
     const getSavedItems = async () => {
-      const res = await fetch(`/api/saved/${user.id}`);
-      const data = await res.json();
-      console.log(data);
-      setPosts(data.savedPosts || []);
-      setMaps(data.savedMaps || []);
+      try {
+        const res = await fetch(`/api/saved/${user.id}`);
+        const data = await res.json();
+        setPosts(data.savedPosts || []);
+        setMaps(data.savedMaps || []);
+      } catch (err) {
+        console.error("Error fetching saved items:", err);
+      }
     };
 
     getSavedItems();
   }, [user]);
+
   return (
-    <div className="w-screen h-screen flex  items-center">
-      <div className="">
+    <div className="flex min-h-screen  text-white antialiased overflow-hidden">
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Unbounded:wght@400;700;900&display=swap');
+        .mono { font-family: 'Space Mono', monospace; }
+        .unb { font-family: 'Unbounded', sans-serif; }
+        
+  
+
+        .profile-card {
+          background: rgba(255, 255, 255, 0.015);
+          border: 1px solid rgba(255, 255, 255, 0.05);
+          backdrop-filter: blur(20px);
+        }
+
+        .teal-glow-border {
+          border: 1px solid rgba(0, 255, 200, 0.1);
+          box-shadow: 0 0 30px rgba(0, 255, 200, 0.03);
+        }
+
+        .carousel-card {
+          background: rgba(255, 255, 255, 0.02);
+          border: 1px solid rgba(255, 255, 255, 0.05);
+          transition: all 0.3s ease;
+        }
+        .carousel-card:hover {
+          border-color: rgba(0, 255, 200, 0.2);
+          background: rgba(0, 255, 200, 0.02);
+        }
+      `}</style>
+
+      <div />
+
+      <aside className="fixed inset-y-0 z-50 w-[210px]">
         <Sidebar />
-      </div>
-      <div className="w-full h-full flex justify-center items-center">
-        <div className="w-[70%] h-[80%] flex justify-around items-center p-2.5">
-          <div className="w-[40%] h-[60%] border-4 rounded-3xl  overflow-hidden flex flex-col">
-            <div className="p-8 border-b-4 ">
-              <div className="flex items-center gap-6">
+      </aside>
+
+      <main className="flex-1 ml-[210px] p-10 relative z-10 flex items-center justify-center">
+        <div className="w-full max-w-6xl flex flex-col lg:flex-row gap-10 items-center lg:items-stretch">
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="w-full lg:w-[40%] profile-card rounded-[3rem] p-10 flex flex-col teal-glow-border"
+          >
+            <div className="flex flex-col items-center text-center mb-10">
+              <div className="relative mb-6">
+                <div className="absolute inset-0 bg-teal-400 blur-2xl opacity-20" />
                 <img
-                  src={user?.profilePic}
+                  src={user?.profilePic || "/default-avatar.png"}
                   alt="profile"
-                  width={96}
-                  height={96}
-                  className="w-24 h-24 rounded-full object-cover border-2 border-gray-100"
+                  className="w-32 h-32 rounded-[2.5rem] object-cover border-2 border-teal-500/20 relative z-10"
                 />
-                <div>
-                  <h1 className="text-xl font-medium text-gray-900">
-                    {user?.username || "Username"}
-                  </h1>
-                  <p className="text-sm text-gray-400 mt-1">
-                    {user?.bio || "No bio provided"}
-                  </p>
+              </div>
+              <h1 className="unb text-2xl font-black italic uppercase tracking-tighter mb-2">
+                {user?.username || "Learner"}
+              </h1>
+              <p className="mono text-xs text-white/30 max-w-xs leading-relaxed uppercase tracking-widest">
+                {user?.bio || "No bio provided yet."}
+              </p>
+            </div>
+
+            <div className="space-y-8 mt-4 flex-1">
+              <div className="space-y-4">
+                <span className="mono text-[10px] font-bold text-teal-400/50 uppercase tracking-[0.3em]">
+                  Credentials
+                </span>
+                <div className="space-y-3">
+                  <div className="flex items-center gap-4 p-4 rounded-2xl bg-white/[0.02] border border-white/5">
+                    <Mail size={16} className="text-teal-400/40" />
+                    <span className="mono text-[11px] text-white/60 truncate">
+                      {user?.email || "N/A"}
+                    </span>
+                  </div>
+                  {user?.location && (
+                    <div className="flex items-center gap-4 p-4 rounded-2xl bg-white/[0.02] border border-white/5">
+                      <MapPin size={16} className="text-teal-400/40" />
+                      <span className="mono text-[11px] text-white/60">
+                        Location Set
+                      </span>
+                    </div>
+                  )}
+                  <div className="flex items-center gap-4 p-4 rounded-2xl bg-white/[0.02] border border-white/5">
+                    <Phone size={16} className="text-teal-400/40" />
+                    <span className="mono text-[11px] text-white/60">
+                      {user?.phoneNum || "Hidden"}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* Personal Information */}
-            <div className="flex-1 p-8">
-              <h2 className="text-sm font-medium text-gray-400 uppercase tracking-wider mb-6">
-                Personal Information
-              </h2>
-
-              <div className="space-y-5">
-                <div className="flex items-center gap-3 text-gray-600">
-                  <Mail size={16} className="text-gray-400" />
-                  <span className="text-sm">
-                    {user?.email || "No email provided"}
-                  </span>
-                </div>
-
-                {user?.location && (
-                  <a
-                    href={user.location}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-3 text-gray-600 hover:text-gray-900 transition-colors"
-                  >
-                    <MapPin size={16} className="text-gray-400" />
-                    <span className="text-sm">Location</span>
-                  </a>
-                )}
-
-                <div className="flex items-center gap-3 text-gray-600">
-                  <Phone size={16} className="text-gray-400" />
-                  <span className="text-sm">
-                    {user?.phoneNum || "No phone number"}
-                  </span>
-                </div>
+            <div className="mt-10 pt-8 border-t border-white/5 flex justify-between items-center">
+              <div className="flex items-center gap-2">
+                <Sparkles size={14} className="text-teal-400" />
+                <span className="unb text-[9px] font-bold uppercase tracking-widest">
+                  PRO STATUS
+                </span>
               </div>
+              <div className="w-2 h-2 rounded-full bg-teal-400 animate-pulse shadow-[0_0_10px_rgba(0,255,200,0.5)]" />
             </div>
-          </div>
-          <div className="w-[45%] h-[80%] flex flex-col justify-between">
-            <div className="w-full h-[47%] ">
-              <Carousel className="w-full h-full">
-                <CarouselContent>
-                  {posts.map((post) => {
-                    return (
-                      <CarouselItem key={post.id} className="w-full h-full p-7">
-                        <div className="border-4 rounded-lg overflow-hidden bg-white">
+          </motion.div>
+
+          {/* RIGHT: Saved Content Carousels */}
+          <div className="w-full lg:w-[60%] flex flex-col gap-8">
+            {/* Section 1: Saved Posts */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="space-y-4"
+            >
+              <div className="flex items-center gap-3 px-2">
+                <LayoutGrid size={18} className="text-teal-400" />
+                <h3 className="unb text-sm font-bold uppercase tracking-widest italic">
+                  Saved Stories
+                </h3>
+              </div>
+
+              <Carousel className="w-full">
+                <CarouselContent className="-ml-4">
+                  {posts.length > 0 ? (
+                    posts.map((post) => (
+                      <CarouselItem
+                        key={post.id}
+                        className="pl-4 basis-full md:basis-1/2"
+                      >
+                        <div className="carousel-card rounded-[2rem] overflow-hidden flex flex-col h-full p-4">
                           <img
                             src={post.images[0]}
-                            alt=""
-                            width={500}
-                            height={192}
-                            className="w-full h-48 object-cover"
+                            alt="Post"
+                            className="w-full h-40 object-cover rounded-2xl mb-4"
                           />
-
-                          <div className="p-4 space-y-3">
-                            {/* User info */}
-                            <div className="flex items-center gap-3">
-                              <img
-                                src={user?.profilePic}
-                                alt=""
-                                width={40}
-                                height={40}
-                                className="w-10 h-10 rounded-full object-cover"
-                              />
-                              <span className="font-medium text-gray-900">
-                                {post.user.username}
-                              </span>
-                            </div>
-
-                            {/* Post details */}
-                            <div className="space-y-1 text-sm text-gray-600">
-                              <p className="line-clamp-2">{post.caption}</p>
-                              <p className="text-xs text-gray-400">
-                                {post.category}
-                              </p>
-                            </div>
+                          <div className="flex items-center gap-3 mb-3">
+                            <img
+                              src={post.user?.profilePic}
+                              className="w-6 h-6 rounded-full border border-teal-500/30"
+                            />
+                            <span className="unb text-[10px] font-bold uppercase text-white/50">
+                              {post.user.username}
+                            </span>
                           </div>
+                          <p className="mono text-[10px] text-white/30 line-clamp-2 uppercase leading-relaxed">
+                            {post.caption}
+                          </p>
                         </div>
                       </CarouselItem>
-                    );
-                  })}
+                    ))
+                  ) : (
+                    <div className="w-full p-10 text-center mono text-[10px] text-white/10 uppercase tracking-widest">
+                      No saved stories
+                    </div>
+                  )}
                 </CarouselContent>
-                <CarouselPrevious />
-                <CarouselNext />
+                <div className="flex gap-2 mt-4 justify-end">
+                  <CarouselPrevious className="static translate-y-0 bg-white/5 border-white/10 text-white hover:bg-teal-500 hover:text-black transition-all" />
+                  <CarouselNext className="static translate-y-0 bg-white/5 border-white/10 text-white hover:bg-teal-500 hover:text-black transition-all" />
+                </div>
               </Carousel>
-            </div>
-            <div className="w-full h-[47%] mt-24">
-              <Carousel className="w-full h-full">
-                <CarouselContent>
-                  {maps.map((map) => {
-                    const roadmap = map as Roadmap;
-                    return (
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="space-y-4"
+            >
+              <div className="flex items-center gap-3 px-2">
+                <Map size={18} className="text-teal-400" />
+                <h3 className="unb text-sm font-bold uppercase tracking-widest italic">
+                  Saved Roadmaps
+                </h3>
+              </div>
+
+              <Carousel className="w-full">
+                <CarouselContent className="-ml-4">
+                  {maps.length > 0 ? (
+                    maps.map((map) => (
                       <CarouselItem
-                        key={roadmap.id}
-                        className="h-full p-2 md:p-4"
+                        key={map.id}
+                        className="pl-4 basis-full md:basis-1/2"
                       >
-                        <div className="border-4 rounded-lg bg-white p-5 h-full flex flex-col">
-                          {/* Title & Level */}
-                          <div className="mb-3">
-                            <h3 className="font-medium text-lg text-gray-900 line-clamp-1">
-                              {roadmap.title}
-                            </h3>
-                            <div className="flex items-center gap-2 mt-1">
-                              <span className="text-xs bg-gray-100 px-2 py-1 rounded text-gray-600">
-                                {roadmap.levelFrom}
-                              </span>
-                              <span className="text-gray-400 text-xs">→</span>
-                              <span className="text-xs bg-gray-100 px-2 py-1 rounded text-gray-600">
-                                {roadmap.levelTo}
-                              </span>
-                            </div>
+                        <div className="carousel-card rounded-[2rem] p-6 h-full flex flex-col">
+                          <div className="flex justify-between items-start mb-4">
+                            <h4 className="unb text-xs font-bold leading-tight line-clamp-2 group-hover:text-teal-400 transition-colors">
+                              {map.title}
+                            </h4>
+                            <span className="mono text-[8px] bg-teal-500/10 text-teal-400 px-2 py-1 rounded-full uppercase">
+                              {map.levelFrom}
+                            </span>
                           </div>
-
-                          {/* Description */}
-                          <p className="text-sm text-gray-600 line-clamp-2 mb-3">
-                            {roadmap.description}
+                          <p className="mono text-[10px] text-white/30 line-clamp-3 mb-6 flex-1">
+                            {map.description}
                           </p>
-
-                          {/* Purpose */}
-                          <p className="text-xs text-gray-400 mb-3 line-clamp-1">
-                            {roadmap.purpose}
-                          </p>
-
-                          {/* Learning Sections Preview */}
-                          {roadmap.learningSections &&
-                            roadmap.learningSections.length > 0 && (
-                              <div className="mt-auto pt-3 border-t border-gray-100">
-                                <div className="flex items-center gap-1 text-xs text-gray-400">
-                                  <span>
-                                    {roadmap.learningSections.length} sections
-                                  </span>
-                                  <span className="text-gray-300">•</span>
-                                  <span>
-                                    {roadmap.isPublished
-                                      ? "Published"
-                                      : "Draft"}
-                                  </span>
-                                </div>
-                              </div>
-                            )}
+                          <div className="pt-4 border-t border-white/5 flex items-center justify-between">
+                            <span className="mono text-[8px] text-white/20 uppercase tracking-widest">
+                              {map.learningSections?.length || 0} Sections
+                            </span>
+                            <Bookmark size={14} className="text-teal-400/50" />
+                          </div>
                         </div>
                       </CarouselItem>
-                    );
-                  })}
+                    ))
+                  ) : (
+                    <div className="w-full p-10 text-center mono text-[10px] text-white/10 uppercase tracking-widest">
+                      No saved roadmaps
+                    </div>
+                  )}
                 </CarouselContent>
-                <CarouselPrevious />
-                <CarouselNext />
+                <div className="flex gap-2 mt-4 justify-end">
+                  <CarouselPrevious className="static translate-y-0 bg-white/5 border-white/10 text-white hover:bg-teal-500 hover:text-black transition-all" />
+                  <CarouselNext className="static translate-y-0 bg-white/5 border-white/10 text-white hover:bg-teal-500 hover:text-black transition-all" />
+                </div>
               </Carousel>
-            </div>
+            </motion.div>
           </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 }

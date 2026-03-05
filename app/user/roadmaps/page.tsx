@@ -2,8 +2,6 @@
 
 import Footer from "@/app/_components/Footer";
 import Sidebar from "@/app/_components/SideBar";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Plus, Search, Sparkles, ArrowRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -38,8 +36,7 @@ export default function Main() {
     const fetchUser = async () => {
       try {
         const res = await fetch(`/api/find-user/${userId}`);
-        const data = await res.json();
-        setUser(data);
+        setUser(await res.json());
       } catch (err) {
         console.error(err);
       }
@@ -86,131 +83,436 @@ export default function Main() {
     fetchAllRoadmaps();
   }, [roadmapId]);
 
-  const filteredRoadmaps = roadmap.filter((course) =>
-    course.title.toLowerCase().includes(searchQuery.toLowerCase()),
+  const filteredRoadmaps = roadmap.filter((c) =>
+    c.title.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   if (!isLoaded || loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-white">
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-8 h-8 border-2 border-black border-t-transparent rounded-full animate-spin" />
-          <p className="text-[10px] font-black uppercase tracking-[0.3em] text-black/20">
-            Loading Library
-          </p>
-        </div>
+      <div
+        className="flex min-h-screen text-white antialiased"
+        style={{ fontFamily: "'Space Mono', monospace" }}
+      >
+        <aside
+          className="
+"
+          style={{ width: 210 }}
+        >
+          <Sidebar />
+        </aside>
+        <main
+          className="flex-1 flex items-center justify-center"
+          style={{ marginLeft: 210 }}
+        >
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: 16,
+            }}
+          >
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+              style={{
+                width: 24,
+                height: 24,
+                border: "1.5px solid rgba(0,255,200,0.15)",
+                borderTop: "1.5px solid rgba(0,255,200,0.7)",
+                borderRadius: "50%",
+              }}
+            />
+            <span
+              style={{
+                fontFamily: "Space Mono,monospace",
+                fontSize: 9,
+                fontWeight: 700,
+                letterSpacing: "0.3em",
+                textTransform: "uppercase",
+                color: "rgba(0,255,200,0.3)",
+              }}
+            >
+              Loading Library
+            </span>
+          </div>
+        </main>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-white text-black selection:bg-black selection:text-white">
-      <div className="flex flex-1">
-        <aside className="w-72 fixed inset-y-0 z-50">
-          <Sidebar />
-        </aside>
+    <div
+      className="flex min-h-screen text-white antialiased"
+      style={{ fontFamily: "'Space Mono', monospace" }}
+    >
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap');
+        .unb { font-family: 'Unbounded', sans-serif; }
+        .mono { font-family: 'Space Mono', monospace; }
 
-        <main className="flex-1 ml-72 flex flex-col min-h-screen">
-          <div className="flex-grow p-12 lg:p-20">
-            <div className="max-w-6xl mx-auto space-y-20">
-              <header className="flex flex-col md:flex-row md:items-end justify-between gap-8">
-                <div className="space-y-6">
-                  <div className="flex items-center gap-3">
-                    <div className="w-1.5 h-1.5 bg-black rounded-full" />
-                    <span className="text-[10px] font-black uppercase tracking-[0.4em] text-black/20">
-                      Collection
-                    </span>
-                  </div>
-                  <h1 className="text-6xl font-black tracking-tighter uppercase italic leading-none">
-                    Library<span className="text-black/10">.</span>
-                  </h1>
-                </div>
+        .nav-bar {
+          background: rgba(0,8,7,0.8);
+          backdrop-filter: blur(24px);
+          border-bottom: 1px solid rgba(0,255,200,0.06);
+        }
 
-                <Button
-                  className="h-16 px-10 rounded-full bg-black text-white font-black uppercase tracking-widest hover:scale-105 transition-all shadow-2xl shadow-black/10"
-                  onClick={() => router.push("/create/roadmap")}
-                >
-                  <Plus className="mr-2 h-5 w-5 stroke-[3px]" />
-                  Create New
-                </Button>
-              </header>
+        .search-wrap {
+          position: relative;
+          max-width: 520px;
+        }
+        .search-wrap input {
+          width: 100%;
+          background: rgba(0,255,200,0.03);
+          border: 1px solid rgba(0,255,200,0.08);
+          border-radius: 14px;
+          padding: 14px 18px 14px 46px;
+          font-family: 'Space Mono', monospace;
+          font-size: 12px;
+          color: rgba(255,255,255,0.6);
+          outline: none;
+          transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .search-wrap input::placeholder { color: rgba(255,255,255,0.15); }
+        .search-wrap input:focus {
+          border-color: rgba(0,255,200,0.2);
+          box-shadow: 0 0 20px rgba(0,255,200,0.04);
+        }
+        .search-icon {
+          position: absolute;
+          left: 16px; top: 50%;
+          transform: translateY(-50%);
+          color: rgba(0,255,200,0.3);
+          pointer-events: none;
+        }
 
-              <div className="relative group max-w-2xl">
-                <Search className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-black/20 group-focus-within:text-black transition-colors" />
-                <Input
-                  className="h-20 rounded-[30px] border-black/[0.05] bg-black/[0.02] pl-16 text-xl font-bold placeholder:text-black/10 focus-visible:ring-0 focus-visible:border-black/10 transition-all outline-none"
-                  placeholder="Search for a course..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-              </div>
+        .create-btn {
+          display: inline-flex; align-items: center; gap: 8px;
+          padding: 12px 24px; border-radius: 12px;
+          background: rgba(0,255,200,0.08);
+          border: 1px solid rgba(0,255,200,0.2);
+          color: rgba(0,255,200,0.9);
+          font-family: 'Unbounded', sans-serif;
+          font-size: 10px; font-weight: 700;
+          letter-spacing: 0.08em; text-transform: uppercase;
+          cursor: pointer; transition: all 0.2s;
+        }
+        .create-btn:hover {
+          background: rgba(0,255,200,0.14);
+          border-color: rgba(0,255,200,0.4);
+          box-shadow: 0 0 24px rgba(0,255,200,0.1);
+          transform: translateY(-1px);
+        }
 
-              <div className="relative">
-                {roadmap.length === 0 ? (
-                  <div className="flex min-h-[50vh] flex-col items-center justify-center rounded-[50px] border border-black/[0.05] bg-black/[0.01] p-20 text-center">
-                    <div className="w-20 h-20 bg-black rounded-[30px] flex items-center justify-center text-white mb-8 rotate-3">
-                      <Sparkles className="h-10 w-10" />
-                    </div>
-                    <h2 className="text-3xl font-black uppercase tracking-tighter italic mb-4">
-                      No roadmaps found
-                    </h2>
-                    <p className="text-black/40 font-medium mb-10 max-w-xs uppercase text-[10px] tracking-widest">
-                      Таны суралцах замнал энд харагдах болно.
-                    </p>
-                    <Button
-                      className="h-16 px-12 rounded-full bg-black text-white font-black uppercase tracking-widest"
-                      onClick={() => router.push("/create/roadmap")}
-                    >
-                      Create your first course
-                    </Button>
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {filteredRoadmaps.map((course) => (
-                      <motion.div
-                        key={course.id}
-                        whileHover={{ y: -8 }}
-                        onClick={() =>
-                          router.push(`/user/course?id=${course.id}`)
-                        }
-                        className="group relative bg-white border border-black/[0.06] p-10 rounded-[40px] transition-all duration-500 hover:border-black hover:shadow-[0_30px_60px_rgba(0,0,0,0.05)] flex flex-col justify-between min-h-[280px] cursor-pointer"
-                      >
-                        <div className="space-y-4">
-                          <div className="flex justify-between items-start">
-                            <div className="w-10 h-10 bg-black/[0.03] group-hover:bg-black group-hover:text-white transition-all rounded-2xl flex items-center justify-center">
-                              <ArrowRight
-                                className="-rotate-45 group-hover:rotate-0 transition-transform duration-500"
-                                size={20}
-                              />
-                            </div>
-                            <span className="text-[10px] font-black text-black/10 uppercase tracking-widest">
-                              Course
-                            </span>
-                          </div>
-                          <h3 className="text-2xl font-black tracking-tighter leading-tight uppercase italic group-hover:tracking-normal transition-all duration-500">
-                            {course.title}
-                          </h3>
-                        </div>
+        .roadmap-card {
+          background: rgba(0,255,200,0.02);
+          border: 1px solid rgba(0,255,200,0.07);
+          border-radius: 20px;
+          padding: 28px;
+          cursor: pointer;
+          transition: all 0.3s cubic-bezier(0.23,1,0.32,1);
+          display: flex; flex-direction: column;
+          justify-content: space-between;
+          min-height: 200px;
+          position: relative;
+          overflow: hidden;
+        }
+        .roadmap-card::before {
+          content: '';
+          position: absolute; top: 0; right: 0;
+          width: 80px; height: 80px;
+          background: radial-gradient(circle at top right, rgba(0,255,200,0.06), transparent);
+          pointer-events: none;
+          transition: opacity 0.3s;
+        }
+        .roadmap-card:hover {
+          border-color: rgba(0,255,200,0.2);
+          box-shadow: 0 0 50px rgba(0,255,200,0.05), 0 24px 48px rgba(0,0,0,0.3);
+          transform: translateY(-4px);
+        }
+        .roadmap-card:hover::before { opacity: 2; }
 
-                        <p className="text-black/40 text-sm font-medium line-clamp-2 mt-4">
-                          {course.description ||
-                            "Энэхүү курст тавтай морил. Сургалтын төлөвлөгөөгөө эндээс харна уу."}
-                        </p>
-                      </motion.div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
+        .arrow-box {
+          width: 34px; height: 34px; border-radius: 10px;
+          background: rgba(0,255,200,0.05);
+          border: 1px solid rgba(0,255,200,0.1);
+          display: flex; align-items: center; justify-content: center;
+          transition: all 0.25s;
+        }
+        .roadmap-card:hover .arrow-box {
+          background: rgba(0,255,200,0.12);
+          border-color: rgba(0,255,200,0.3);
+        }
+
+        .teal-divider { height: 1px; background: linear-gradient(to right, rgba(0,255,200,0.2), transparent); }
+
+        .empty-card {
+          display: flex; flex-direction: column; align-items: center; justify-content: center;
+          min-height: 50vh; border-radius: 24px;
+          border: 1px dashed rgba(0,255,200,0.1);
+          background: rgba(0,255,200,0.01);
+          text-align: center; padding: 60px;
+          gap: 20px;
+        }
+      `}</style>
+
+      <aside
+        className="
+"
+        style={{ width: 210 }}
+      >
+        <Sidebar />
+      </aside>
+
+      <main className="flex-1 flex flex-col" style={{ marginLeft: 210 }}>
+        <nav className="nav-bar sticky top-0 z-40 flex justify-between items-center px-10 py-3">
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <div
+              style={{
+                width: 20,
+                height: 1,
+                background: "rgba(0,255,200,0.4)",
+              }}
+            />
+            <span
+              className="mono"
+              style={{
+                fontSize: 9,
+                fontWeight: 700,
+                letterSpacing: "0.3em",
+                textTransform: "uppercase",
+                color: "rgba(0,255,200,0.4)",
+              }}
+            >
+              Library
+            </span>
           </div>
+          <button
+            className="create-btn"
+            onClick={() => router.push("/create/roadmap")}
+          >
+            <Plus size={13} strokeWidth={2.5} />
+            Create New
+          </button>
+        </nav>
 
-          <footer className="px-12 py-10 border-t border-black/[0.03]">
-            <div className="max-w-6xl mx-auto opacity-20 hover:opacity-100 transition-opacity">
-              <Footer />
+        <div className="flex-grow px-10 lg:px-12 py-10">
+          <div
+            style={{
+              maxWidth: 960,
+              margin: "0 auto",
+              display: "flex",
+              flexDirection: "column",
+              gap: 28,
+            }}
+          >
+            <header style={{ paddingBottom: 24 }}>
+              <div
+                className="flex items-center gap-3"
+                style={{ marginBottom: 16 }}
+              >
+                <div
+                  style={{
+                    width: 24,
+                    height: 1,
+                    background: "rgba(0,255,200,0.4)",
+                  }}
+                />
+                <span
+                  className="mono"
+                  style={{
+                    fontSize: 9,
+                    fontWeight: 700,
+                    letterSpacing: "0.3em",
+                    textTransform: "uppercase",
+                    color: "rgba(0,255,200,0.4)",
+                  }}
+                >
+                  Collection
+                </span>
+              </div>
+              <h1
+                className="unb"
+                style={{
+                  fontSize: "clamp(36px,5vw,58px)",
+                  fontWeight: 900,
+                  letterSpacing: "-0.04em",
+                  lineHeight: 1.05,
+                  color: "white",
+                }}
+              >
+                My{" "}
+                <span
+                  style={{
+                    WebkitTextStroke: "1.5px rgba(0,255,200,0.5)",
+                    color: "transparent",
+                    fontStyle: "italic",
+                  }}
+                >
+                  Roadmaps.
+                </span>
+              </h1>
+              <div className="teal-divider" style={{ marginTop: 24 }} />
+            </header>
+
+            <div className="search-wrap">
+              <Search size={15} className="search-icon" />
+              <input
+                placeholder="Search roadmaps..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
             </div>
-          </footer>
-        </main>
-      </div>
+
+            {roadmap.length === 0 ? (
+              <div className="empty-card">
+                <div
+                  style={{
+                    width: 52,
+                    height: 52,
+                    borderRadius: 16,
+                    background: "rgba(0,255,200,0.06)",
+                    border: "1px solid rgba(0,255,200,0.12)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Sparkles size={22} color="rgba(0,255,200,0.5)" />
+                </div>
+                <div>
+                  <h2
+                    className="unb"
+                    style={{
+                      fontSize: 22,
+                      fontWeight: 900,
+                      letterSpacing: "-0.03em",
+                      color: "white",
+                      marginBottom: 8,
+                    }}
+                  >
+                    No roadmaps yet.
+                  </h2>
+                  <p
+                    className="mono"
+                    style={{
+                      fontSize: 10,
+                      color: "rgba(255,255,255,0.2)",
+                      letterSpacing: "0.08em",
+                    }}
+                  >
+                    Your learning paths will appear here.
+                  </p>
+                </div>
+                <button
+                  className="create-btn"
+                  onClick={() => router.push("/create/roadmap")}
+                  style={{ marginTop: 8 }}
+                >
+                  <Plus size={13} strokeWidth={2.5} />
+                  Create your first roadmap
+                </button>
+              </div>
+            ) : (
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(3, 1fr)",
+                  gap: 14,
+                }}
+              >
+                {filteredRoadmaps.map((course, idx) => (
+                  <motion.div
+                    key={course.id}
+                    className="roadmap-card"
+                    initial={{ opacity: 0, y: 16 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: idx * 0.05, duration: 0.3 }}
+                    onClick={() => router.push(`/user/course?id=${course.id}`)}
+                  >
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "flex-start",
+                        marginBottom: 20,
+                      }}
+                    >
+                      <div className="arrow-box">
+                        <ArrowRight
+                          size={15}
+                          color="rgba(0,255,200,0.5)"
+                          style={{ transform: "rotate(-45deg)" }}
+                        />
+                      </div>
+                      <span
+                        className="mono"
+                        style={{
+                          fontSize: 8,
+                          fontWeight: 700,
+                          letterSpacing: "0.2em",
+                          textTransform: "uppercase",
+                          color: "rgba(0,255,200,0.2)",
+                        }}
+                      >
+                        {String(idx + 1).padStart(2, "0")}
+                      </span>
+                    </div>
+
+                    <div style={{ flex: 1 }}>
+                      <h3
+                        className="unb"
+                        style={{
+                          fontSize: 15,
+                          fontWeight: 700,
+                          letterSpacing: "-0.02em",
+                          lineHeight: 1.35,
+                          color: "white",
+                          marginBottom: 10,
+                        }}
+                      >
+                        {course.title}
+                      </h3>
+                      {course.description && (
+                        <p
+                          className="mono"
+                          style={{
+                            fontSize: 10,
+                            color: "rgba(255,255,255,0.25)",
+                            lineHeight: 1.6,
+                            display: "-webkit-box",
+                            WebkitLineClamp: 2,
+                            WebkitBoxOrient: "vertical",
+                            overflow: "hidden",
+                          }}
+                        >
+                          {course.description}
+                        </p>
+                      )}
+                    </div>
+
+                    <div
+                      style={{
+                        marginTop: 20,
+                        height: 1,
+                        background:
+                          "linear-gradient(to right, rgba(0,255,200,0.2), transparent)",
+                      }}
+                    />
+                  </motion.div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+
+        <footer
+          className="px-10 py-8"
+          style={{ borderTop: "1px solid rgba(0,255,200,0.05)" }}
+        >
+          <Footer />
+        </footer>
+      </main>
     </div>
   );
 }
