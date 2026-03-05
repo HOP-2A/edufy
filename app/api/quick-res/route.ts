@@ -1,6 +1,6 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { NextRequest, NextResponse } from "next/server";
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_KEY || "");
+const genAI = new GoogleGenerativeAI(process.env.TaskGEMINI_KEY || "");
 const model = genAI.getGenerativeModel({
   model: "gemini-2.5-flash",
 });
