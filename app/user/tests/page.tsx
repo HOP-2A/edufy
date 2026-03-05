@@ -55,7 +55,7 @@ export default function UserTests() {
       try {
         setLoading(true);
 
-        const res = await fetch(`/api/gettestsbyuserId/${user.id}`);
+        const res = await fetch(`/api/getroadmapbyuserId/${user?.id}`);
 
         if (!res.ok) {
           throw new Error("Failed to fetch tests");

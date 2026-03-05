@@ -85,7 +85,7 @@ export default function RoadmapPage() {
         if (!res.ok) throw new Error("Failed to fetch roadmap");
 
         const data = await res.json();
-        console.log(data);
+
         const sortedData = {
           ...data,
           learningSections: [...data.learningSections].sort(
