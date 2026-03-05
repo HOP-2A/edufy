@@ -153,9 +153,7 @@ export default function Profile() {
             </div>
           </motion.div>
 
-          {/* RIGHT: Saved Content Carousels */}
           <div className="w-full lg:w-[60%] flex flex-col gap-8">
-            {/* Section 1: Saved Posts */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}

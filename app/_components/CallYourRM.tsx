@@ -270,7 +270,7 @@ const WideCarousel: React.FC = () => {
               >
                 <div
                   className="roadmap-card"
-                  onClick={() => router.push(`/roadmap/${item.id}`)}
+                  onClick={() => router.push(`/user/course?id=${item.id}`)}
                 >
                   <span
                     style={{
