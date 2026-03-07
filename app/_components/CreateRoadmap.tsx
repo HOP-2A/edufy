@@ -166,11 +166,7 @@ export default function CreateRoadmap() {
         .rdp-nav_button { color: rgba(255,255,255,0.3) !important; }
       `}</style>
 
-      <aside
-        className="
-"
-        style={{ width: 210 }}
-      >
+      <aside style={{ width: 210 }}>
         <Sidebar />
       </aside>
 
