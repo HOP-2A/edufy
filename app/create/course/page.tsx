@@ -10,8 +10,7 @@ import {
 } from "@/components/ui/accordion";
 import Sidebar from "../../_components/SideBar";
 import Footer from "@/app/_components/Footer";
-import { BookOpen, Check, LinkIcon, Zap, Sparkles } from "lucide-react";
-import { motion } from "framer-motion";
+import { BookOpen, LinkIcon, Zap, Sparkles } from "lucide-react";
 
 type Resource = {
   id: string;

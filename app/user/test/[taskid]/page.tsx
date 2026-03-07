@@ -227,10 +227,10 @@ export default function RoadmapPage() {
               </span>
             </div>
             <h1 className="unb text-4xl font-black tracking-tighter mb-4">
-              {task.title}
+              {task?.title}
             </h1>
             <p className="mono text-xs text-white/30 leading-relaxed max-w-2xl">
-              {task.content}
+              {task?.content}
             </p>
           </header>
 
@@ -254,7 +254,7 @@ export default function RoadmapPage() {
                 <div className="h-12 w-px bg-white/5" />
                 <div className="space-y-1">
                   <p className="mono text-[10px] text-white/40">
-                    Verified Results:{" "}
+                    Verified Results:
                     <span className="text-white font-bold">
                       {stats.correct}/{stats.total}
                     </span>
@@ -275,7 +275,7 @@ export default function RoadmapPage() {
           )}
 
           <div className="space-y-8">
-            {task.taskQuestions.map((q, index) => {
+            {task?.taskQuestions.map((q, index) => {
               const { mainText, choicesText } = splitQuestion(q.text);
               const tfOptions = getTrueFalseOptions(q.text);
 
@@ -327,8 +327,8 @@ export default function RoadmapPage() {
                             )}
                           >
                             <span className="opacity-30 mr-2 text-[8px]">
-                              {opt.label} //
-                            </span>{" "}
+                              {opt.label}
+                            </span>
                             {opt.value}
                           </button>
                         ))}

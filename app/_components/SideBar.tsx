@@ -11,6 +11,8 @@ import {
   Clipboard,
   ChevronDown,
   ArrowUpRight,
+  PackageOpen,
+  Route,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
@@ -22,8 +24,8 @@ const navItems = [
 ];
 
 const community = [
-  { label: "Posts", url: "/community/posts" },
-  { label: "Roadmaps", url: "/community/roadmaps" },
+  { label: "Posts", icon: PackageOpen, url: "/community/posts" },
+  { label: "Roadmaps", icon: Route, url: "/community/roadmaps" },
 ];
 
 const createItems = [{ label: "Roadmap", icon: Map, url: "/create/roadmap" }];
@@ -612,7 +614,6 @@ export default function Sidebar() {
           <SignedIn>
             <motion.div
               whileHover={{ scale: 1.01 }}
-              onClick={() => openUserProfile()}
               className="bottom-card group flex items-center gap-3 p-3.5 rounded-2xl cursor-pointer overflow-hidden relative"
             >
               <span className="stroke-number">U</span>
@@ -631,14 +632,22 @@ export default function Sidebar() {
                   zIndex: 1,
                 }}
               >
-                <div className="shrink-0 relative z-10 border-2 border-white rounded-full shadow-md transition-transform group-hover:scale-105">
-                  <img
-                    src={user?.profilePic}
-                    width={30}
-                    height={30}
-                    className="w-7.5 h-7.5 rounded-full"
-                    alt=""
-                  />
+                <div className="shrink-0 relative z-10 border-2 border-white rounded-full shadow-md transition-transform group-hover:scale-105 w-7.5 h-7.5 flex items-center justify-center overflow-hidden bg-gray-200">
+                  {user?.profilePic ? (
+                    <img
+                      src={user.profilePic}
+                      width={30}
+                      height={30}
+                      className="w-full h-full object-cover"
+                      alt={user?.username}
+                    />
+                  ) : (
+                    <span className="text-xs font-medium text-gray-600 uppercase">
+                      {user?.username?.charAt(0) ||
+                        user?.username?.charAt(0) ||
+                        "?"}
+                    </span>
+                  )}
                 </div>
               </div>
               <div className="flex flex-col relative z-10">

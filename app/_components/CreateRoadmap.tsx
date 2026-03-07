@@ -438,11 +438,14 @@ export default function CreateRoadmap() {
                           </span>
                         </h1>
                       </div>
+
                       <div
                         style={{
                           display: "grid",
-                          gridTemplateColumns: "1fr 1fr",
-                          gap: 16,
+                          gridTemplateColumns:
+                            "repeat(auto-fit, minmax(250px, 1fr))",
+                          gap: 24,
+                          padding: 16,
                         }}
                       >
                         {[
@@ -460,20 +463,34 @@ export default function CreateRoadmap() {
                           <div
                             key={label}
                             style={{
-                              padding: 20,
-                              borderRadius: 16,
-                              background: "rgba(0,255,200,0.02)",
-                              border: "1px solid rgba(0,255,200,0.08)",
+                              padding: 24,
+                              borderRadius: 20,
+                              background: "rgba(0, 0, 0, 0.6)",
+                              backdropFilter: "blur(10px)",
+                              border: "1px solid rgba(0, 255, 200, 0.3)",
+                              transition: "transform 0.2s, box-shadow 0.2s",
+                              cursor: "pointer",
+                            }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.transform =
+                                "translateY(-3px)";
+                              e.currentTarget.style.boxShadow =
+                                "0 6px 12px rgba(0,255,200,0.4)";
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.transform = "translateY(0)";
+                              e.currentTarget.style.boxShadow = "none";
                             }}
                           >
                             <div
                               className="mono"
                               style={{
-                                fontSize: 9,
+                                fontSize: 10,
                                 letterSpacing: "0.2em",
                                 textTransform: "uppercase",
-                                color: "rgba(0,255,200,0.35)",
-                                marginBottom: 14,
+                                color: "#00ffc8",
+                                textShadow: "0 0 6px rgba(0, 255, 200, 0.6)",
+                                marginBottom: 16,
                               }}
                             >
                               {label}
@@ -482,14 +499,33 @@ export default function CreateRoadmap() {
                               mode="single"
                               selected={date}
                               onSelect={setDate}
+                              className="bg-transparent border-none"
+                              classNames={{
+                                caption:
+                                  "flex justify-center pt-1 relative items-center",
+                                caption_label:
+                                  "text-sm font-medium text-[#00ffc8] mono uppercase tracking-wider",
+
+                                head_cell:
+                                  "text-gray-500 rounded-md w-9 font-normal text-[0.8rem]",
+
+                                day: "h-9 w-9 p-0 font-normal text-[#00ffc8] aria-selected:opacity-100 hover:bg-[#00ffc8] hover:text-black rounded-md transition-colors",
+                                day_selected:
+                                  "bg-[#00ffc8] text-black font-bold hover:bg-[#00ffc8] hover:text-black focus:bg-[#00ffc8] focus:text-black",
+                                day_today:
+                                  "border border-[#00ffc8] text-[#00ffc8]",
+                                day_outside: "text-gray-600 opacity-50",
+                                day_disabled: "text-gray-800 opacity-20",
+                              }}
                             />
                             {date && (
                               <div
                                 className="mono"
                                 style={{
-                                  marginTop: 10,
-                                  fontSize: 10,
-                                  color: "rgba(0,255,200,0.5)",
+                                  marginTop: 12,
+                                  fontSize: 11,
+                                  color: "#00ffc8",
+                                  textShadow: "0 0 4px rgba(0, 255, 200, 0.5)",
                                 }}
                               >
                                 {date.toLocaleDateString("en-US", {
@@ -502,6 +538,7 @@ export default function CreateRoadmap() {
                           </div>
                         ))}
                       </div>
+
                       <div>
                         <button
                           className="cr-btn"
@@ -563,7 +600,7 @@ export default function CreateRoadmap() {
                                 marginBottom: 16,
                               }}
                             >
-                              {String(currentIndex + 1).padStart(2, "0")} /{" "}
+                              {String(currentIndex + 1).padStart(2, "0")} /
                               {String(questions.length).padStart(2, "0")}
                             </div>
                             <h1

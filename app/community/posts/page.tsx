@@ -1,7 +1,7 @@
 "use client";
 
 import Sidebar from "@/app/_components/SideBar";
-import { ChangeEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -46,10 +46,13 @@ export default function Home() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const handleInputValues = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleInputValues = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     const { name, value } = e.target;
+
     if (name === "image") {
-      const selectedFile = e.target.files?.[0];
+      const selectedFile = (e.target as HTMLInputElement).files?.[0];
       if (selectedFile) add(selectedFile);
     } else {
       setPostInput((prev) => ({ ...prev, [name]: value }));
@@ -252,11 +255,34 @@ export default function Home() {
                   <div className="flex items-center gap-4">
                     <div className="relative">
                       <div className="absolute inset-0 bg-teal-400 blur-md opacity-20" />
-                      <img
-                        src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${post.user.username}`}
-                        alt="avatar"
-                        className="w-12 h-12 rounded-full border-2 border-teal-500/30 relative z-10 bg-[#0a0b0c]"
-                      />
+
+                      <div>
+                        {user?.profilePic ? (
+                          <img
+                            src={user.profilePic}
+                            alt={user.username}
+                            style={{
+                              width: 40,
+                              height: 40,
+                              borderRadius: "80%",
+                            }}
+                          />
+                        ) : (
+                          <div
+                            style={{
+                              width: 40,
+                              height: 40,
+                              borderRadius: "80%",
+                              backgroundColor: "#ccc",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                            }}
+                          >
+                            {user?.username?.charAt(0).toUpperCase()}
+                          </div>
+                        )}
+                      </div>
                     </div>
                     <div>
                       <h4 className="unb text-[13px] font-bold tracking-tight">
