@@ -105,28 +105,6 @@ export default function RoadmapPage() {
     fetchRoadmap();
   }, [id]);
 
-  const MakeActionItem = async (section: LearningSection) => {
-    try {
-      setCreatingSectionId(section.id);
-      const res = await fetch("/api/create-task-course", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          title: section.title,
-          content: section.title,
-          learningSectionId: section.id,
-        }),
-      });
-      if (!res.ok) throw new Error("Failed to create task");
-      const newTask = await res.json();
-      router.push(`/user/test/${newTask?.[0]?.id}`);
-    } catch (err) {
-      alert("Failed to create task, try again");
-    } finally {
-      setCreatingSectionId(null);
-    }
-  };
-
   const toggleTaskCompletion = async (taskId: string) => {
     if (!roadmap) return;
     setRoadmap((prev) => {
@@ -325,12 +303,13 @@ export default function RoadmapPage() {
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
                           disabled={creatingSectionId === section.id}
-                          onClick={() => MakeActionItem(section)}
-                          className="mono text-[9px] font-bold px-4 py-2 bg-white/5 hover:bg-white/10 rounded-lg uppercase tracking-widest border border-white/10 transition-all"
+                          onClick={() => {
+                            router.push(
+                              `/create-test?title=${section.title}&id=${section.id}`,
+                            );
+                          }}
                         >
-                          {creatingSectionId === section.id
-                            ? "Generating..."
-                            : "Generate AI Test"}
+                          Generate AI Test
                         </motion.button>
                       </div>
 
