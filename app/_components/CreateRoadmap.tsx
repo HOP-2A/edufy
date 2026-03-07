@@ -13,6 +13,7 @@ export default function CreateRoadmap() {
   const [step, setStep] = useState(1);
   const [title, setTitle] = useState("");
   const [purpose, setPurpose] = useState("");
+  const [extraInfo, setExtraInfo] = useState("");
   const [fade, setFade] = useState(true);
   const [questions, setQuestions] = useState<Question[]>([]);
   const [startDate, setStartDate] = useState<Date | undefined>();
@@ -67,6 +68,7 @@ export default function CreateRoadmap() {
         purpose,
         startDate,
         endDate,
+        extraInfo,
       }),
     });
     const data = await res.json();
@@ -166,11 +168,7 @@ export default function CreateRoadmap() {
         .rdp-nav_button { color: rgba(255,255,255,0.3) !important; }
       `}</style>
 
-      <aside
-        className="
-"
-        style={{ width: 210 }}
-      >
+      <aside style={{ width: 210 }}>
         <Sidebar />
       </aside>
 
@@ -543,7 +541,7 @@ export default function CreateRoadmap() {
                         <button
                           className="cr-btn"
                           disabled={!startDate || !endDate || loading}
-                          onClick={getAiQs}
+                          onClick={nextStep}
                         >
                           {loading ? (
                             <span
@@ -578,8 +576,69 @@ export default function CreateRoadmap() {
                       </div>
                     </div>
                   )}
-
                   {step === 4 && (
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 36,
+                      }}
+                    >
+                      <div>
+                        <div
+                          className="mono"
+                          style={{
+                            fontSize: 9,
+                            letterSpacing: "0.3em",
+                            color: "rgba(0,255,200,0.4)",
+                            textTransform: "uppercase",
+                            marginBottom: 16,
+                          }}
+                        >
+                          04 — Extra Information
+                        </div>
+                        <h1
+                          className="unb"
+                          style={{
+                            fontSize: "clamp(28px,4vw,46px)",
+                            fontWeight: 900,
+                            letterSpacing: "-0.04em",
+                            lineHeight: 1.1,
+                            color: "white",
+                          }}
+                        >
+                          Your Extra Information
+                          <br />
+                          <span
+                            style={{
+                              WebkitTextStroke: "1.5px rgba(0,255,200,0.5)",
+                              color: "transparent",
+                              fontStyle: "italic",
+                            }}
+                          >
+                            ( Study Resources etc )?
+                          </span>
+                        </h1>
+                      </div>
+                      <textarea
+                        value={extraInfo}
+                        onChange={(e) => setExtraInfo(e.target.value)}
+                        placeholder="Describe your vision..."
+                        className="cr-textarea"
+                        autoFocus
+                      />
+                      <div>
+                        <button
+                          className="cr-btn"
+                          disabled={!purpose.trim()}
+                          onClick={getAiQs}
+                        >
+                          Continue →
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                  {step === 5 && (
                     <div>
                       {currentIndex < questions.length ? (
                         <div

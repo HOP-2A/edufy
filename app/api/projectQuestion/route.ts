@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import prisma from "@/lib/prisma";
-const genAI = new GoogleGenerativeAI(process.env.TaskGEMINI_KEY || "");
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_KEY || "");
 const model = genAI.getGenerativeModel({
   model: "gemini-2.5-flash",
 });
@@ -10,7 +10,7 @@ export const POST = async (req: NextRequest) => {
   const body = await req.json();
   const prompt = `You are an AI Roadmap Planner.
 
-Your task is to ask ONLY the essential questions needed to create a clear, personalized learning roadmap.
+Your task is to ask ONLY the essential questions needed to create a clear task-based execution roadmap. The roadmap will describe WHAT the user should DO each day or week (like a project management plan), not what topics to learn.
 
 STRICT RULES:
 
@@ -32,7 +32,7 @@ Ask between 8 and 10 questions
 
 Do NOT ask opinion-based or unnecessary preference questions
 
-Only ask questions that directly affect difficulty, time planning, structure, or goals
+Only ask questions that directly affect task planning, schedule structure, workload, goals, or constraints
 
 Questions must be in Mongolian
 
@@ -44,17 +44,22 @@ Prior experience
 
 Weekly available time
 
+Preferred execution structure (daily or weekly tasks)
+
 Clear measurable final goal
 
 Deadline pressure
 
 Real constraints or limitations
 
+Progress checking or milestones
+
 INPUT:
 roadmapTitle: ${body.roadmapTitle}
 startDate: ${body.startDate}
 endDate: ${body.endDate}
 purpose: ${body.purpose}
+extraInformation: ${body.extraInfo}
 
 OUTPUT FORMAT (MUST MATCH EXACTLY):
 {
