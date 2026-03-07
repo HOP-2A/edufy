@@ -321,7 +321,7 @@ export default function UserTests() {
                   color: "white",
                 }}
               >
-                My{" "}
+                My
                 <span
                   style={{
                     WebkitTextStroke: "1.5px rgba(0,255,200,0.5)",

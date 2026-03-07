@@ -20,7 +20,7 @@ export default function Home() {
               {["Course", "Resources", "Community"].map((item) => (
                 <Link
                   key={item}
-                  href={`/${item.toLowerCase()}`}
+                  href={"/signIn"}
                   className="hover:text-white transition-colors"
                 >
                   {item}

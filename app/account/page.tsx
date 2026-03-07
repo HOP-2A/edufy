@@ -98,11 +98,23 @@ export default function Profile() {
             <div className="flex flex-col items-center text-center mb-10">
               <div className="relative mb-6">
                 <div className="absolute inset-0 bg-teal-400 blur-2xl opacity-20" />
-                <img
-                  src={user?.profilePic || "/default-avatar.png"}
-                  alt="profile"
-                  className="w-32 h-32 rounded-[2.5rem] object-cover border-2 border-teal-500/20 relative z-10"
-                />
+                <div className="relative mb-6">
+                  <div className="w-32 h-32 rounded-2xl border border-white/10 bg-white/[0.03] flex items-center justify-center overflow-hidden">
+                    {user?.profilePic ? (
+                      <img
+                        src={user.profilePic}
+                        alt={user?.username || "profile"}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <span className="unb text-3xl font-light text-white/40 tracking-tighter">
+                        {user?.username?.charAt(0).toUpperCase() || "U"}
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-teal-500 rounded-full border-2 border-[#050505]" />
+                </div>
               </div>
               <h1 className="unb text-2xl font-black italic uppercase tracking-tighter mb-2">
                 {user?.username || "Learner"}
