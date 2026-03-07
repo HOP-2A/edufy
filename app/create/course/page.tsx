@@ -281,9 +281,10 @@ export default function RoadmapPage() {
                     <button
                       className="action-btn relative z-10"
                       disabled={creatingSectionId === section.id}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        MakeActionItem(section);
+                      onClick={() => {
+                        router.push(
+                          `/create-test?title=${section.title}&id=${section.id}`,
+                        );
                       }}
                     >
                       {creatingSectionId === section.id ? (

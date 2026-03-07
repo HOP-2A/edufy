@@ -30,9 +30,9 @@ const model = genAI.getGenerativeModel({
 });
 
 export const POST = async (req: NextRequest) => {
-  const { title, content, learningSectionId } = await req.json();
+  const { title, content, learningSectionId, input } = await req.json();
 
-  if (!title || !content || !learningSectionId) {
+  if (!title || !content || !learningSectionId || !input) {
     return NextResponse.json(
       { error: "missing required fields" },
       { status: 400 },
@@ -43,8 +43,10 @@ export const POST = async (req: NextRequest) => {
 You are an AI learning task generator.
 
 INPUT:
+
 LearningSectionTitle: ${title}
 LearningSectionContent: ${content}
+userInput: ${input}
 
 TASK RULES:
 - Create exactly ONE learning task
