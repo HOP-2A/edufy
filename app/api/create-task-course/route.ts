@@ -1,3 +1,4 @@
+import { Input } from "@/components/ui/input";
 import prisma from "@/lib/prisma";
 import { NextResponse, NextRequest } from "next/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
@@ -19,9 +20,9 @@ const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
 export const POST = async (req: NextRequest) => {
   try {
-    const { title, content, learningSectionId } = await req.json();
+    const { title, content, learningSectionId, input } = await req.json();
 
-    if (!title || !content || !learningSectionId) {
+    if (!title || !content || !learningSectionId || !input) {
       return NextResponse.json(
         { error: "Missing required fields" },
         { status: 400 },
@@ -34,6 +35,7 @@ You are an AI learning task generator.
 INPUT:
 LearningSectionTitle: ${title}
 LearningSectionContent: ${content}
+userInput: ${input}
 
 TASK RULES:
 - Create exactly ONE learning task

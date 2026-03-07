@@ -103,30 +103,6 @@ export default function RoadmapPage() {
     fetchRoadmap();
   }, [id]);
 
-  const MakeActionItem = async (section: LearningSection) => {
-    try {
-      setCreatingSectionId(section.id);
-      const res = await fetch("/api/create-task-course", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          title: section.title,
-          content: section.title,
-          learningSectionId: section.id,
-        }),
-      });
-
-      if (!res.ok) throw new Error("Failed to create task");
-      const newTask = await res.json();
-      router.push(`/user/test/${newTask?.[0]?.id}`);
-    } catch (err) {
-      console.error(err);
-      alert("Failed to create task, try again");
-    } finally {
-      setCreatingSectionId(null);
-    }
-  };
-
   if (loading) {
     return (
       <div
@@ -294,7 +270,7 @@ export default function RoadmapPage() {
                         </span>
                       ) : (
                         <span className="flex items-center gap-2">
-                          <Zap size={10} fill="currentColor" /> Initialize Task
+                          <Zap size={10} fill="currentColor" /> Generate AI Test
                         </span>
                       )}
                     </button>
