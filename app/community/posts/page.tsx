@@ -25,6 +25,8 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
+import { useRouter } from "next/navigation";
+
 type Post = {
   id: string;
   caption: string;
@@ -45,6 +47,8 @@ export default function Home() {
   const [photos, setPhotos] = useState<string[]>([]);
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const router = useRouter();
 
   const handleInputValues = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -252,7 +256,10 @@ export default function Home() {
                 className="post-card rounded-[2.5rem] p-6 group"
               >
                 <div className="flex items-center justify-between mb-6 px-2">
-                  <div className="flex items-center gap-4">
+                  <div
+                    className="flex items-center gap-4"
+                    onClick={() => router.push(`/users?id=${post.user.id}`)}
+                  >
                     <div className="relative">
                       <div className="absolute inset-0 bg-teal-400 blur-md opacity-20" />
 
