@@ -28,7 +28,10 @@ const community = [
   { label: "Roadmaps", icon: Route, url: "/community/roadmaps" },
 ];
 
-const createItems = [{ label: "Roadmap", icon: Map, url: "/create/roadmap" }];
+const createItems = [
+  { label: "Generate with AI", icon: Map, url: "/create/roadmap" },
+  { label: "Custom Roadmap", icon: Map, url: "/create/croadmap" },
+];
 
 const myLearningItems = [
   { label: "Roadmap", icon: Map, url: "/user/roadmaps" },
@@ -233,7 +236,7 @@ export default function Sidebar() {
                       color: "white",
                     }}
                   >
-                    Create
+                    Create Roadmap
                   </span>
                   <motion.div
                     animate={{ rotate: createOpen ? 180 : 0 }}
