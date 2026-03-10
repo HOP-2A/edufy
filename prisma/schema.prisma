@@ -28,9 +28,6 @@ model Roadmap {
   userId      String
   user        User             @relation(fields: [userId], references: [id])
   title       String
-  description String           @default("")
-  levelFrom   String?           
-  levelTo     String?          
   purpose     String          
   projectQuestions ProjectQuestion[] 
   learningSections LearningSection[]
@@ -52,7 +49,6 @@ model LearningSection {
   roadmapId   String
   roadmap     Roadmap     @relation(fields: [roadmapId], references: [id])
   title       String      
-  level       String      
   content     String     
   resources   Resource[]
   tasks       Task[]
