@@ -266,7 +266,7 @@ export default function Home() {
                       <div>
                         {user?.profilePic ? (
                           <img
-                            src="https://i.pinimg.com/736x/6e/02/51/6e02519899393fa847d87d57c63e6cf0.jpg"
+                            src={user.profilePic}
                             alt={user.username}
                             style={{
                               width: 40,
