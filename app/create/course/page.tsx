@@ -40,7 +40,6 @@ type Task = {
 type LearningSection = {
   id: string;
   title: string;
-  level: string;
   content: string;
   resources: Resource[];
   tasks: Task[];
@@ -50,9 +49,6 @@ export type Roadmap = {
   id: string;
   userId: string;
   title: string;
-  description: string;
-  levelFrom: string;
-  levelTo: string;
   purpose: string;
   isPublished: boolean;
   learningSections: LearningSection[];
@@ -83,13 +79,7 @@ export default function RoadmapPage() {
 
         const data = await res.json();
 
-        const sortedData = {
-          ...data,
-          learningSections: [...data.learningSections].sort(
-            (a: LearningSection, b: LearningSection) =>
-              getLevelNumber(a.level) - getLevelNumber(b.level),
-          ),
-        };
+        const sortedData = data;
 
         setRoadmap(sortedData);
       } catch (err) {
@@ -205,16 +195,13 @@ export default function RoadmapPage() {
                   }}
                 />
                 <span className="mono text-[10px] font-bold uppercase tracking-[0.4em] text-[rgba(0,255,200,0.5)]">
-                  Route: {roadmap.levelFrom} — {roadmap.levelTo}
+                  Level
                 </span>
               </div>
               <h1 className="unb text-5xl lg:text-6xl font-black tracking-tighter leading-tight">
                 {roadmap.title}
                 <span className="text-[rgba(0,255,200,0.4)]">.</span>
               </h1>
-              <p className="mono text-sm leading-relaxed text-white/30 max-w-2xl">
-                {roadmap.description}
-              </p>
             </div>
           </header>
 
@@ -244,9 +231,6 @@ export default function RoadmapPage() {
                           {(index + 1).toString().padStart(2, "0")}
                         </span>
                         <div>
-                          <div className="mono text-[8px] font-black uppercase text-[rgba(0,255,200,0.5)] mb-1">
-                            Phase {section.level}
-                          </div>
                           <div className="unb text-sm font-bold tracking-tight">
                             {section.title}
                           </div>

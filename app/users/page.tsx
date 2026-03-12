@@ -83,9 +83,6 @@ export default function PublicProfilePage() {
   const publishedRoadmaps =
     userInfo?.roadmaps.filter((r) => r.isPublished) ?? [];
   const allRoadmaps = userInfo?.roadmaps ?? [];
-  const totalSaves =
-    userInfo?.posts.reduce((acc, p) => acc + (p.saves?.length ?? 0), 0) ?? 0;
-  const totalPostSaves = totalSaves;
 
   return (
     <div
@@ -643,13 +640,6 @@ export default function PublicProfilePage() {
                         label: "Posts",
                         value: userInfo.posts.length,
                       },
-                      {
-                        icon: (
-                          <Bookmark size={14} color="rgba(0,255,200,0.5)" />
-                        ),
-                        label: "Total Saves",
-                        value: totalPostSaves,
-                      },
                     ].map((s, i) => (
                       <motion.div
                         key={s.label}
@@ -724,11 +714,7 @@ export default function PublicProfilePage() {
                       color: "rgba(255,255,255,0.15)",
                       letterSpacing: "0.15em",
                     }}
-                  >
-                    {activeTab === "roadmaps"
-                      ? `${publishedRoadmaps.length} published`
-                      : `${totalPostSaves} total saves`}
-                  </span>
+                  ></span>
                 </div>
 
                 <div className="teal-divider" />

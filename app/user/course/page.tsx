@@ -42,7 +42,6 @@ type Task = {
 type LearningSection = {
   id: string;
   title: string;
-  level: string;
   content: string;
   resources: Resource[];
   tasks: Task[];
@@ -87,13 +86,7 @@ export default function RoadmapPage() {
         const res = await fetch(`/api/getroadmapinfo/${id}`);
         if (!res.ok) throw new Error("Failed to fetch roadmap");
         const data = await res.json();
-        const sortedData = {
-          ...data,
-          learningSections: [...data.learningSections].sort(
-            (a: LearningSection, b: LearningSection) =>
-              getLevelNumber(a.level) - getLevelNumber(b.level),
-          ),
-        };
+        const sortedData = data;
         setRoadmap(sortedData);
         setIsPublished(data.isPublished ?? false);
       } catch (err) {
@@ -245,7 +238,7 @@ export default function RoadmapPage() {
                     </span>
                     <div>
                       <div className="mono text-[9px] text-teal-400/50 font-bold uppercase tracking-[0.2em] mb-1">
-                        {section.level || "Module"}
+                        Module
                       </div>
                       <div className="unb text-lg font-bold group-hover:text-teal-400 transition-colors">
                         {section.title}

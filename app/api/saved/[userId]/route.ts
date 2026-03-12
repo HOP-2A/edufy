@@ -5,9 +5,11 @@ export const GET = async (
   req: NextRequest,
   context: { params: Promise<{ userId: string }> },
 ) => {
-  const { userId } = await context.params;  if (!userId) {
+  const { userId } = await context.params;
+  if (!userId) {
     return NextResponse.json({ error: "Missing userId" }, { status: 400 });
-  }  const user = await prisma.user.findUnique({
+  }
+  const user = await prisma.user.findUnique({
     where: { id: userId },
   });
 
