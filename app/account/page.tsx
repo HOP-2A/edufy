@@ -143,7 +143,7 @@ export default function Profile() {
       setIsEditing(false);
       setSaved(true);
       setTimeout(() => setSaved(false), 2500);
-      // Refetch updated data
+
       if (user?.id) {
         const r = await fetch(`/api/users/${user.id}`);
         setFullUser(await r.json());
@@ -155,6 +155,7 @@ export default function Profile() {
     } finally {
       setSaving(false);
       setUploading(false);
+      window.location.reload();
     }
   };
 
@@ -297,7 +298,7 @@ export default function Profile() {
         .saved-toast { position: fixed; bottom: 32px; right: 32px; z-index: 200; display: flex; align-items: center; gap: 10px; padding: 12px 20px; border-radius: 14px; background: rgba(0,20,16,0.95); border: 1px solid rgba(0,255,200,0.2); backdrop-filter: blur(16px); box-shadow: 0 16px 40px rgba(0,0,0,0.4); }
       `}</style>
 
-      <aside className="fixed inset-y-0 z-50" style={{ width: 210 }}>
+      <aside style={{ width: 210 }}>
         <Sidebar />
       </aside>
 
@@ -342,7 +343,6 @@ export default function Profile() {
               transition={{ duration: 0.35 }}
               style={{ display: "flex", flexDirection: "column", gap: 16 }}
             >
-              {/* ══ BANNER ══ */}
               <div className={`profile-banner ${isEditing ? "editing" : ""}`}>
                 <div className="banner-noise" />
                 <div className="banner-gradient" />
@@ -540,7 +540,6 @@ export default function Profile() {
                 </div>
               </div>
 
-              {/* ══ EDIT FIELDS ══ */}
               <AnimatePresence>
                 {isEditing && (
                   <motion.div
@@ -615,7 +614,6 @@ export default function Profile() {
                 )}
               </AnimatePresence>
 
-              {/* ══ SAVE ERROR ══ */}
               <AnimatePresence>
                 {saveError && (
                   <motion.div
@@ -656,7 +654,6 @@ export default function Profile() {
                 )}
               </AnimatePresence>
 
-              {/* ══ ACTION BUTTONS ══ */}
               <AnimatePresence>
                 {isEditing && (
                   <motion.div
@@ -707,7 +704,6 @@ export default function Profile() {
                 )}
               </AnimatePresence>
 
-              {/* ══ TABS ══ */}
               <div
                 style={{
                   display: "flex",
@@ -775,7 +771,6 @@ export default function Profile() {
 
               <div className="teal-divider" />
 
-              {/* ══ ROADMAPS TAB ══ */}
               <AnimatePresence mode="wait">
                 {activeTab === "roadmaps" && (
                   <motion.div
@@ -960,7 +955,6 @@ export default function Profile() {
                   </motion.div>
                 )}
 
-                {/* ══ POSTS TAB ══ */}
                 {activeTab === "posts" && (
                   <motion.div
                     key="posts"

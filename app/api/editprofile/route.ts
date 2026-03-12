@@ -43,9 +43,9 @@ export async function PUT(req: Request) {
         const blob = await put(
           `profile-pics/${userId}-${Date.now()}.${ext}`,
           imageFile,
-          { access: "private" },
+          { access: "public" },
         );
-        profilePic = blob.downloadUrl ?? blob.url;
+        profilePic = blob.url;
       }
 
       const updatedUser = await prisma.user.update({

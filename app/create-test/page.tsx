@@ -19,16 +19,6 @@ export default function RoadmapPage() {
   const [loading, setLoading] = useState(false);
 
   const MakeActionItem = async () => {
-    if (!title || !id) {
-      alert("Missing learning section information.");
-      return;
-    }
-
-    if (!input.trim()) {
-      alert("Please enter an objective.");
-      return;
-    }
-
     try {
       setLoading(true);
 
@@ -60,7 +50,6 @@ export default function RoadmapPage() {
       router.push(`/user/test/${taskId}`);
     } catch (err) {
       console.error(err);
-      alert("Failed to create task, please try again.");
     } finally {
       setLoading(false);
     }
