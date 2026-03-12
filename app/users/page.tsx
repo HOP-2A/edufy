@@ -733,7 +733,7 @@ export default function PublicProfilePage() {
                           <p
                             className="mono"
                             style={{
-                              fontSize: 10,
+                              fontSize: 20,
                               color: "rgba(255,255,255,0.15)",
                               letterSpacing: "0.15em",
                             }}
@@ -890,7 +890,7 @@ export default function PublicProfilePage() {
                           <p
                             className="mono"
                             style={{
-                              fontSize: 10,
+                              fontSize: 20,
                               color: "rgba(255,255,255,0.15)",
                               letterSpacing: "0.15em",
                             }}

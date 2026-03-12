@@ -17,7 +17,7 @@ export default function Home() {
 
           <nav className="flex gap-12 items-center">
             <div className="hidden md:flex gap-8 text-[11px] font-bold uppercase tracking-[0.4em] text-emerald-100/40">
-              {["Course", "Resources", "Community"].map((item) => (
+              {["Courses", "Resources", "Community"].map((item) => (
                 <Link
                   key={item}
                   href={"/signIn"}
@@ -51,6 +51,7 @@ export default function Home() {
       </header>
 
       <main className="flex-grow flex flex-col">
+        {/* Hero Section */}
         <section className="h-screen flex flex-col justify-center px-8 relative overflow-hidden">
           <div className="max-w-7xl mx-auto w-full relative">
             <div className="absolute -top-40 -right-20 w-[500px] h-[500px] bg-emerald-500/10 rounded-full blur-[120px] pointer-events-none" />
@@ -68,9 +69,9 @@ export default function Home() {
 
             <div className="mt-12 flex flex-col md:flex-row justify-between items-end gap-8">
               <p className="max-w-md text-emerald-100/50 text-2xl font-light leading-relaxed">
-                Боловсролын системд хувьсгал хийж буй платформ. <br />
+                The platform revolutionizing the modern education system. <br />
                 <span className="text-white font-medium italic decoration-emerald-500/50 underline underline-offset-8">
-                  — Ирээдүйгээ өөрөө бүтээ.
+                  — Architect your own future.
                 </span>
               </p>
 
@@ -84,9 +85,11 @@ export default function Home() {
           </div>
         </section>
 
+        {/* Features Section */}
         <section className="px-6 py-32 bg-white/5 backdrop-blur-md rounded-t-[60px] border-t border-white/10 shadow-[0_-20px_50px_rgba(0,0,0,0.3)]">
           <div className="max-w-7xl mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+              {/* Journey Card */}
               <div
                 onClick={() => router.push("/signIn")}
                 className="md:col-span-8 group relative h-[550px] bg-[#08332e]/40 border border-white/5 rounded-[40px] overflow-hidden p-12 flex flex-col justify-between transition-all duration-700 hover:border-emerald-500/30 cursor-pointer"
@@ -98,7 +101,8 @@ export default function Home() {
                 </h2>
                 <div className="flex justify-between items-end relative z-10">
                   <p className="text-emerald-100/40 max-w-xs text-lg">
-                    Хамгийн шилдэг контентуудыг үзэж, өөрийгөө хөгжүүлж эхэл.
+                    Access elite content and begin your personal growth
+                    evolution today.
                   </p>
                   <motion.div
                     whileHover={{ scale: 1.05 }}
@@ -111,6 +115,7 @@ export default function Home() {
                 <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10 pointer-events-none" />
               </div>
 
+              {/* Share Knowledge Card */}
               <div className="md:col-span-4 group h-[550px] bg-white/5 border border-white/10 rounded-[40px] p-10 flex flex-col justify-between hover:bg-white/10 transition-all cursor-pointer">
                 <div className="relative">
                   <motion.div
@@ -143,13 +148,14 @@ export default function Home() {
                   </h3>
                   <div className="flex items-center gap-3">
                     <p className="text-emerald-100/30 font-medium">
-                      Багш болох эхний алхам.
+                      Become a certified instructor.
                     </p>
                     <div className="h-[1px] flex-grow bg-white/10 group-hover:bg-emerald-500/50 transition-all" />
                   </div>
                 </div>
               </div>
 
+              {/* Workflow Card */}
               <div className="md:col-span-12 group h-[400px] bg-[#08332e]/30 border border-white/10 rounded-[50px] p-16 flex flex-col md:flex-row items-center justify-between overflow-hidden relative transition-all duration-500 hover:border-emerald-500/40 cursor-pointer shadow-2xl">
                 <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03] pointer-events-none" />
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-px bg-gradient-to-r from-transparent via-emerald-500/20 to-transparent" />
@@ -165,15 +171,15 @@ export default function Home() {
                     Workflow
                   </h3>
                   <p className="text-emerald-100/40 mt-6 text-xl font-light">
-                    Бүх зүйл нэг дор,{" "}
+                    Everything centralized,{" "}
                     <span className="text-emerald-500/60 italic font-medium">
-                      эмх цэгцтэй.
+                      perfectly organized.
                     </span>
                   </p>
                 </div>
 
                 <div className="flex flex-wrap gap-4 relative z-10 mt-12 md:mt-0 justify-center">
-                  {["TASKS", "GRAPHS", "GOALS"].map((label, idx) => (
+                  {["TASKS", "GRAPHS", "GOALS"].map((label) => (
                     <motion.div
                       key={label}
                       whileHover={{
