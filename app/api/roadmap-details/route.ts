@@ -110,7 +110,6 @@ Keep the structure exactly as shown; do not modify keys or JSON format
       data: {
         roadmapId: body.roadmapId,
         title: section.title,
-        level: section.level,
         content: section.content,
       },
     });
