@@ -8,8 +8,10 @@ import {
 } from "@clerk/nextjs";
 import { motion } from "framer-motion";
 import { Sparkles, ArrowRight } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const Page = () => {
+  const router = useRouter();
   return (
     <div className="min-h-screen  flex flex-col items-center justify-center p-6 selection:bg-black selection:text-white">
       <div className="fixed inset-0 -z-10 overflow-hidden">
