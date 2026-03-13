@@ -590,10 +590,11 @@ export default function PublicProfilePage() {
 
                       <div className="info-chips">
                         {userInfo.location && (
-                          <span className="info-chip">
-                            <MapPin size={10} color="rgba(0,255,200,0.4)" />
-                            {userInfo.location}
-                          </span>
+                          <a href={userInfo.location} target="_blank">
+                            <span className="info-chip">
+                              <MapPin size={10} color="rgba(0,255,200,0.4)" />
+                            </span>
+                          </a>
                         )}
                         {userInfo.createdAt && (
                           <span className="info-chip">
