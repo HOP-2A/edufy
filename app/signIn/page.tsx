@@ -6,22 +6,10 @@ import {
   UserButton,
   RedirectToSignUp,
 } from "@clerk/nextjs";
-import { useProvider } from "../../providers/AuthProviders";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { Sparkles, ArrowRight } from "lucide-react";
 
 const Page = () => {
-  const router = useRouter();
-  const { user } = useProvider();
-
-  useEffect(() => {
-    if (user) {
-      router.push("/mainMenu");
-    }
-  }, [user, router]);
-
   return (
     <div className="min-h-screen  flex flex-col items-center justify-center p-6 selection:bg-black selection:text-white">
       <div className="fixed inset-0 -z-10 overflow-hidden">
