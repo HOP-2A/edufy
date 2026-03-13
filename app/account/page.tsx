@@ -183,7 +183,6 @@ export default function Profile() {
   const roadmaps: Roadmap[] = fullUser?.roadmaps ?? [];
   const posts: Post[] = fullUser?.posts ?? [];
   const publishedRoadmaps = roadmaps.filter((r) => r.isPublished);
-  const totalSaves = posts.reduce((acc, p) => acc + (p.saves?.length ?? 0), 0);
 
   if (!user)
     return (
@@ -519,11 +518,6 @@ export default function Profile() {
                       label: "Posts",
                       value: posts.length,
                     },
-                    {
-                      icon: <Bookmark size={14} color="rgba(0,255,200,0.5)" />,
-                      label: "Total Saves",
-                      value: totalSaves,
-                    },
                   ].map((s, i) => (
                     <motion.div
                       key={s.label}
@@ -762,11 +756,7 @@ export default function Profile() {
                     color: "rgba(255,255,255,0.15)",
                     letterSpacing: "0.15em",
                   }}
-                >
-                  {activeTab === "roadmaps"
-                    ? `${publishedRoadmaps.length} published`
-                    : `${totalSaves} total saves`}
-                </span>
+                ></span>
               </div>
 
               <div className="teal-divider" />
